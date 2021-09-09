@@ -1,0 +1,105 @@
+<?php
+/**
+ * Created V/17/07/2020
+ * Updated V/09/07/2021
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+$methods = $this->getConfig();
+$country = $this->getCountry();
+$help    = $this->helper('shippingmax');
+$model   = Mage::getModel('directory/country');
+?>
+
+<table cellspacing="0" class="data data-table shippingmax">
+	<thead>
+		<tr class="headings">
+			<th><?php echo $this->__('Country') ?></th>
+			<th><?php echo $this->__('Preparation times') ?><br /><?php echo $this->__('(before/after cut-off)') ?></th>
+			<th><?php echo $this->__('Delivery times') ?><br /><?php echo $this->__('(min/max/saturday)') ?></th>
+			<th class="last"><?php echo $this->__('Description') ?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php $i = 0 ?>
+		<?php foreach ($methods as $method => $dests): ?>
+			<tr>
+				<td colspan="6" class="last" style="background-color:white !important; text-align:center;">
+					<em><?php echo $method ?></em>
+				</td>
+			</tr>
+			<?php ksort($dests) ?>
+			<?php foreach ($dests as $rates): ?>
+				<?php ksort($rates) ?>
+				<?php foreach ($rates as $rate): ?>
+					<?php if (empty($rate)) continue ?>
+					<tr class="<?php echo ((++$i % 2) == 0) ? 'even' : 'odd' ?> <?php echo (($rate['cnf1min'] != '') && ($rate['cnf1max'] != '') && ($rate['cnf2min'] != '') && ($rate['cnf2max'] != '')) ? 'done' : 'todo' ?>">
+						<td>
+							(<?php echo $country ?>) <?php echo $rate['postcode'],' ',$model->loadByCode($country)->getName() ?>
+							<br /><i><?php echo $rate['code'] ?></i>
+							<br /><i><?php echo $rate['code'] ?>_xyz</i>
+						</td>
+						<td style="white-space:nowrap;">
+							<label>
+								<input type="number"
+									name="<?php echo $rate['name1min'] ?>"
+									value="<?php echo $rate['cnf1min'] ?>" min="0" max="31" step="1" maxlength="2"
+									class="input-text validate-zero-or-greater" />
+							</label>
+							<label>
+								<input type="number"
+									name="<?php echo $rate['name1max'] ?>"
+									value="<?php echo $rate['cnf1max'] ?>" min="0" max="31" step="1" maxlength="2"
+									class="input-text validate-zero-or-greater" />
+							</label>
+						</td>
+						<td style="white-space:nowrap;">
+							<label>
+								<input type="number"
+									name="<?php echo $rate['name2min'] ?>"
+									value="<?php echo $rate['cnf2min'] ?>" min="1" max="31" step="1" maxlength="2"
+									class="input-text validate-greater-than-zero" />
+							</label>
+							<label>
+								<input type="number"
+									name="<?php echo $rate['name2max'] ?>"
+									value="<?php echo $rate['cnf2max'] ?>" min="1" max="31" step="1"maxlength="2"
+									class="input-text validate-greater-than-zero" />
+							</label>
+							<label>
+								<select name="<?php echo $rate['name3'] ?>">
+									<?php if (empty($rate['cnf3'])): ?>
+										<option value="0" selected="selected">-</option>
+										<option value="1"><?php echo $this->__('Yes') ?></option>
+									<?php else: ?>
+										<option value="0">-</option>
+										<option value="1" selected="selected"><?php echo $this->__('Yes') ?></option>
+									<?php endif ?>
+								</select>
+							</label>
+						</td>
+						<td class="last">
+							<?php echo $rate['name'] ?>
+							<?php if (!empty($text = $help->getShippingDate($rate['code'], false, $country, $rate['postcode']))): ?>
+								<br /><i><?php echo $text ?></i>
+							<?php endif ?>
+						</td>
+					</tr>
+				<?php endforeach ?>
+			<?php endforeach ?>
+		<?php endforeach ?>
+	</tbody>
+</table>

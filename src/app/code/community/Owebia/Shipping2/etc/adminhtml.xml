@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright © 2008-2020 Owebia. All rights reserved.
+ * Copyright © 2019-2021 Kyrena. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <owebia_shipping2>
+                                        <title>Owebia Shipping</title>
+                                        <sort_order>100</sort_order>
+                                    </owebia_shipping2>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

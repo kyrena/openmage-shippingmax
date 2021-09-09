@@ -1,0 +1,1116 @@
+/**
+ * Created V/12/04/2019
+ * Updated L/26/07/2021
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Mickaël Vang <mickael~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+/*
+ * Local common variables
+ */
+
+$font-text: sans-serif;
+$color-text-default: #0a2346;
+$color-white: #fff;
+$border-form: #d9d9d9;
+$color-grey-background: #f6f8fa;
+$color-green: #03d3a0;
+$color-blue-main: #6480ff;
+$color-blue-background: #ecf2fa;
+$color-blue-transparent: rgba(48, 127, 226, 0.7);
+$color-blue-shadow: rgba(200, 216, 237, 0.6);
+$color-an-other-grey-949494-text: #949494;
+
+/*
+ * Responsive configuration
+ */
+
+$xl-breakpoint: 1920px;
+$large-breakpoint: 1440px;
+$lg-breakpoint: 1200px;
+$medium-breakpoint: 992px;
+$small-breakpoint: 768px;
+$xs-breakpoint: 576px;
+$iphone-breakpoint: 320px;
+
+$xl-up: "only screen and (min-width: #{$xl-breakpoint})";
+$xl-down: "only screen and (max-width: #{$xl-breakpoint - 1px})";
+$large-only: "only screen and (min-width: #{$large-breakpoint})";
+$large-down: "only screen and (max-width: #{$large-breakpoint - 1px})";
+
+$lg-only: "only screen and (min-width: #{$lg-breakpoint})";
+$lg-down: "only screen and (max-width: #{$lg-breakpoint - 1px})";
+
+$medium-up: "only screen and (min-width: #{$medium-breakpoint})";
+$medium-only: "only screen and (min-width: #{$medium-breakpoint}) and (max-width: #{$large-breakpoint - 1px})";
+$medium-down: "only screen and (max-width: #{$large-breakpoint - 1px})";
+
+$small-up: "only screen and (min-width: #{$small-breakpoint})";
+$small-only: "only screen and (min-width: #{$small-breakpoint}) and (max-width: #{$medium-breakpoint - 1px})";
+$small-down: "only screen and (max-width: #{$medium-breakpoint - 1px})";
+
+$extra-small-only: "only screen and (max-width: #{$small-breakpoint - 1px})";
+$xs-small-only: "only screen and (max-width: #{$xs-breakpoint})";
+$iphone-only: "only screen and (max-width: #{$iphone-breakpoint})";
+
+/*
+ * Placeholders
+ */
+
+@mixin placeholder($color: #999) {
+	&:-moz-placeholder {
+		color: #999;
+		font-size: 13px;
+	} // Firefox 4-18
+	&::-moz-placeholder {
+		color: #999;
+		font-size: 13px;
+	} // Firefox 19+
+	&:-ms-input-placeholder {
+		color: #999;
+		font-size: 13px;
+	} // Internet Explorer 10+
+	&::-webkit-input-placeholder {
+		color: #999;
+		font-size: 13px;
+	} // Safari and Chrome
+}
+
+/*
+ * Style for map
+ */
+
+* {
+	padding: 0;
+	margin: 0;
+	background-clip: padding-box;
+}
+
+html, body {
+	position: fixed;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	max-height: -webkit-fill-available;
+	cursor: default;
+	font-family: $font-text;
+	font-size: 14px;
+	overflow: hidden;
+	//For disable blue highlight when touch/press in mobile (specialy for Chrome browser)
+	-webkit-tap-highlight-color: transparent;
+}
+
+ul {
+	list-style-type: none;
+}
+
+.hide {
+	display: none !important;
+}
+
+label,
+button {
+	cursor: pointer;
+}
+
+.main .map {
+	position: relative;
+	display: flex;
+	z-index: 1;
+	flex: 1 0 50%;
+
+	@media #{$extra-small-only} {
+		flex: 0 0 250px;
+	}
+
+	@media #{$xs-small-only} {
+		flex: 0 0 150px;
+	}
+
+	@media (max-height: 414px) {
+		display: none;
+	}
+}
+
+@media (min-height: 415px) {
+	.alone .main .map {
+		flex: 1 0 100%;
+	}
+	.alone .main .results {
+		position: inherit;
+	}
+	.alone .results .item-container {
+		position: absolute;
+		right: 10px;
+		bottom: 25px;
+		z-index: 500;
+		width: 450px;
+		@media (max-width: 520px) {
+			left: 10px;
+			width: auto;
+		}
+	}
+}
+
+#map {
+	flex: 1 1 auto;
+}
+
+.main .results {
+	flex: 1 1 400px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+#loader {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: none;
+	z-index: 5000;
+	background-color: rgba(0, 0, 0, 0.5);
+	cursor: wait;
+}
+
+#loader.show {
+	display: block;
+}
+
+// ! Top for search bar
+.top {
+	position: relative;
+	display: flex;
+	z-index: 4;
+	flex: 0 0 60px;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 60px;
+	padding: 10px 20px;
+	box-shadow: 0 0 10px $color-blue-shadow;
+	box-sizing: border-box;
+	background-color: $color-white;
+
+	@media #{$small-down} {
+		flex: 0 0 auto;
+		height: auto;
+		min-height: 60px;
+		padding-right: 60px;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+	}
+
+	@media #{$extra-small-only} {
+		padding: 10px 50px 10px 10px;
+	}
+
+	@media #{$xs-small-only} {
+		min-height: inherit;
+		padding: 30px 10px 10px 10px;
+	}
+}
+
+.search-elements {
+	display: flex;
+	align-items: center;
+
+	@media #{$small-down} {
+		//flex-wrap: wrap;
+
+		input[name="postcode"] {
+			flex: 1 0 25%;
+			max-width: 110px;
+			text-align: center;
+		}
+
+		input[name="city"] {
+			flex: 2 0 25%;
+			max-width: 300px;
+		}
+	}
+
+	@media #{$extra-small-only} {
+		justify-content: space-between;
+
+		input[name="postcode"] {
+			max-width: inherit;
+		}
+	}
+}
+
+.search {
+	@media #{$small-down} {
+		width: 100%;
+	}
+
+	input {
+		@include placeholder($color-an-other-grey-949494-text);
+		box-shadow: none;
+		box-sizing: border-box;
+		background-color: $color-white;
+		border: 1px solid $border-form;
+		text-overflow: ellipsis;
+		font-family: $font-text;
+		white-space: nowrap;
+		transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+		overflow: hidden;
+		-webkit-appearance: none;
+
+		&[type="text"],
+		&[type="tel"] {
+			height: 40px;
+			padding: 0 15px;
+			border-radius: 5px;
+			font-size: 13px;
+		}
+
+		&:focus {
+			background-color: $color-white;
+			border-color: $color-blue-main;
+			outline: none;
+		}
+
+		&#postcode {
+			@media #{$small-up} {
+				margin-right: 15px;
+			}
+		}
+
+		&:not(:last-of-type) {
+			margin-right: 10px;
+		}
+	}
+
+	button {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		height: 40px;
+		padding: 0 20px;
+		margin-left: 15px;
+		background-color: $color-blue-main;
+		border: none;
+		border-radius: 5px;
+		color: $color-white;
+		font-family: $font-text;
+		font-size: 15px;
+		font-weight: 500;
+		letter-spacing: 0.5px;
+		transition: background-color 0.2s ease-in-out;
+
+		&.btn-search {
+			@media #{$small-down} {
+				flex: 1 1 auto;
+				justify-content: center;
+				max-width: 200px;
+			}
+
+			@media #{$extra-small-only} {
+				flex: 0 0 40px;
+				width: 40px;
+				padding: 0;
+				margin-left: 10px;
+			}
+		}
+
+		&.btn-show-all {
+			@media #{$small-down} {
+				flex: 1 0 100%;
+				justify-content: center;
+				height: auto;
+				min-height: 24px;
+				padding: 0;
+				margin: 10px 0 0 0;
+				background-color: transparent;
+				color: $color-blue-main;
+				text-decoration: underline;
+				&.double {
+					flex: 1 0 50%;
+				}
+			}
+
+			@media #{$xs-small-only} {
+				margin: 8px 0 0;
+			}
+		}
+
+		&.btn-geoloc {
+			@media #{$small-down} {
+				flex: 1 0 100%;
+				justify-content: center;
+				height: auto;
+				min-height: 24px;
+				padding: 0;
+				margin: 10px 0 0 0;
+				background-color: transparent;
+				color: $color-blue-main;
+				text-decoration: underline;
+				&.double {
+					flex: 1 0 50%;
+				}
+			}
+
+			@media #{$xs-small-only} {
+				margin: 8px 0 0;
+			}
+		}
+
+		&:focus {
+			background-color: darken($color-blue-main, 7%);
+			outline: none;
+		}
+
+		@media #{$medium-up} {
+			&:hover {
+				background-color: darken($color-blue-main, 7%);
+			}
+		}
+
+		.ic-search {
+			color: $color-white;
+			text-overflow: ellipsis;
+			font-family: $font-text;
+			font-size: 15px;
+			font-weight: 500;
+			letter-spacing: 0.5px;
+			white-space: nowrap;
+			overflow: hidden;
+
+			@media #{$extra-small-only} {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				display: inline-block;
+				width: 36px;
+				height: 36px;
+				background: url("../../../images/kyrena/shippingmax/ic-search.svg")
+					center center no-repeat;
+				background-size: 55% auto;
+				font-size: 0;
+				transform: translate(-50%, -50%);
+			}
+		}
+	}
+
+	@media #{$extra-small-only} {
+		input[name="postcode"] {
+			position: relative;
+			z-index: 0;
+			padding-right: 0;
+			margin: 0;
+			border-radius: 5px 0 0 5px;
+			text-align: left;
+
+			&:focus {
+				z-index: 1;
+				border-color: $color-blue-main;
+			}
+		}
+
+		input[name="city"] {
+			position: relative;
+			z-index: 0;
+			margin: 0 0 0 -1px;
+			border-radius: 0 5px 5px 0;
+
+			&:focus {
+				z-index: 1;
+				border-color: $color-blue-main;
+			}
+		}
+	}
+}
+
+.close {
+	@media #{$small-down} {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+	}
+
+	@media #{$extra-small-only} {
+		top: 16px;
+		right: 8px;
+	}
+
+	@media #{$xs-small-only} {
+		top: 0;
+		transform: none;
+	}
+
+	button {
+		position: relative;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		width: 40px;
+		height: 40px;
+		background-color: transparent;
+		border: none;
+		outline: none;
+		opacity: 0.5;
+		font-size: 0;
+		transition: opacity 0.2s ease-in-out;
+
+		@media #{$extra-small-only} {
+			width: 30px;
+			height: 30px;
+		}
+
+		&::after {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			width: 30px;
+			height: 30px;
+			background: url("../../../images/kyrena/shippingmax/ic-cross.svg") center
+				center no-repeat;
+			background-size: 70% auto;
+			transform: translate(-50%, -50%);
+			content: "";
+			pointer-events: none;
+
+			@media #{$extra-small-only} {
+				width: 25px;
+				height: 25px;
+			}
+		}
+
+		@media #{$medium-up} {
+			&:hover {
+				opacity: 1;
+			}
+		}
+
+		&:focus {
+			opacity: 1;
+		}
+	}
+}
+
+// ! Main
+.main {
+	display: flex;
+	flex: 1 1 auto;
+	background-color: $color-grey-background;
+	overflow: hidden;
+
+	&.empty {
+		display: block;
+		height: calc(100% - 60px);
+
+		@media #{$xs-small-only} {
+			height: calc(100% - 80px);
+		}
+
+		.map {
+			display: none;
+		}
+
+		.results {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+			height: 100%;
+			padding: 64px 0 0;
+			box-sizing: border-box;
+
+			p {
+				color: $color-text-default;
+				text-align: center;
+				font-size: 20px;
+
+				&:not(:last-of-type) {
+					margin-bottom: 16px;
+				}
+			}
+
+			.box {
+				p {
+					text-align:left;
+				}
+			}
+		}
+	}
+
+	@media #{$extra-small-only} {
+		flex-direction: column;
+	}
+
+	.results {
+		padding: 15px 15px 0;
+		background-color: $color-grey-background;
+
+		.results-list {
+			margin-bottom: 32px;
+			.screen {
+				width: 100%;
+				margin-top: 10px;
+			}
+		}
+
+		@media #{$small-down} {
+			position: relative;
+			z-index: 2;
+			flex: 1 1 auto;
+			box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.25);
+
+			& > p {
+				margin: 0 15px 15px;
+			}
+		}
+	}
+}
+
+.results-list li {
+	padding-top: 10px;
+
+	&:last-child {
+		padding-bottom: 10px;
+	}
+
+	@media #{$medium-up} {
+		&:hover {
+			.item-container {
+				box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
+					0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.075);
+
+				.name {
+					color: $color-blue-main;
+				}
+
+				button {
+					background-color: $color-blue-main;
+					color: $color-white;
+				}
+			}
+		}
+	}
+
+	&.clicked {
+		.item-container {
+			box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
+				0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.075);
+			border: 1.5px solid $color-blue-transparent;
+
+			.name {
+				color: $color-blue-main;
+			}
+
+			button {
+				background-color: $color-blue-main;
+				color: $color-white;
+			}
+		}
+	}
+
+	&.active {
+		.item-container {
+			box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
+				0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.075);
+			border: 1.5px solid $color-green;
+			.name {
+				color: $color-green;
+			}
+
+			button,
+			button:focus {
+				background-color: $color-green;
+				color: $color-white;
+			}
+		}
+	}
+
+	.item-container {
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-content: flex-start;
+		padding: 15px;
+		box-shadow: 0 6.7px 5.3px rgba(0, 0, 0, 0.028),
+			0 22.3px 17.9px rgba(0, 0, 0, 0.042);
+		background-color: $color-white;
+		border: 1.5px solid transparent;
+		border-radius: 7px;
+		cursor: pointer;
+		transition: box-shadow 0.2s ease-in-out;
+
+		& > * {
+			display: block;
+		}
+
+		& > input[type="radio"] {
+			display: none;
+		}
+
+		.dist-store {
+			position: relative;
+			display: inline-flex;
+			flex: 0 0 auto;
+			order: 1;
+			justify-content: flex-end;
+			align-items: center;
+			align-self: flex-end;
+			margin-top: 10px;
+			font-size: 13px;
+
+			&::before {
+				display: block;
+				width: 10px;
+				height: 13px;
+				margin-right: 4px;
+				background: url("../../../images/kyrena/shippingmax/ic-map.svg") center
+					center no-repeat;
+				background-size: auto 100%;
+				text-align: center;
+				content: "";
+			}
+		}
+
+		& > button {
+			display: inline-flex;
+			flex: 0 0 auto;
+			justify-content: center;
+			align-items: center;
+			height: 22px;
+			padding: 0 12px;
+			margin-top: 10px;
+			background-color: #eaedfd;
+			border: none;
+			border-radius: 5px;
+			color: $color-blue-main;
+			font-size: 12px;
+			transition: all 0.2s ease-in-out;
+
+			@media #{$small-down} {
+				height: 30px;
+			}
+
+			&:focus {
+				background-color: $color-blue-main;
+				outline: none;
+				color: $color-white;
+			}
+		}
+	}
+
+	.item-card_details {
+		position: relative;
+		width: 100%;
+		min-width: 0;
+
+		@media #{$small-down} {
+			position: relative;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+
+		.icn {
+			display: inline-block;
+			float: right;
+			width: 30px;
+			height: 30px;
+			margin-left: 5px;
+			background-repeat: no-repeat;
+			background-position: center;
+			font-size: 0;
+
+			&.ic-inpospaczk,
+			&.ic-inpospacuk {
+				width: 60px;
+				height: 28px;
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-inpost.svg");
+			}
+
+			&.ic-fivepost {
+				width: 40px;
+				height: 30px;
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-fivepost.svg");
+			}
+
+			&.ic-mondialrelay {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-mondialrelay.svg");
+			}
+
+			&.ic-colisprivpts {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-colisprive.svg");
+			}
+
+			&.ic-pocztk48Op {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-pocztex2.svg");
+			}
+
+			&.ic-przesodbpk {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-packeta.svg");
+			}
+
+			&.ic-chronorelais {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-chronopost2.svg");
+			}
+
+			&.ic-dpdfrrelais {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-dpd2.svg");
+			}
+
+			&.ic-boxberry {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-boxberry2.svg");
+			}
+
+			&.ic-pickpoint {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-pickpoint2.svg");
+			}
+
+			&.ic-shiptor {
+				background-image: url("../../../images/kyrena/shippingmax/ic-logo-shiptor2.svg");
+			}
+		}
+
+		.name {
+			margin-bottom: 5px;
+			font-family: $font-text;
+			font-size: 15px;
+			font-weight: 700;
+			line-height: 18px;
+			transition: color 0.2s ease-in-out;
+
+			@media #{$small-down} {
+				flex: 1 1 100%;
+				min-height: 30px;
+			}
+
+			@media #{$xs-small-only} {
+				line-height: 16px;
+			}
+
+			small {
+				font-weight: 400;
+
+				@media #{$small-down} {
+					margin-left: 4px;
+				}
+			}
+		}
+
+		.addr {
+			margin-bottom: 5px;
+			color: #999;
+			font-family: $font-text;
+			font-size: 13px;
+
+			@media #{$small-down} {
+				flex: 0 1 calc(50% - 10px);
+				padding-right: 10px;
+				margin: 0;
+			}
+
+			@media #{$xs-small-only} {
+				flex: 1 0 100%;
+				padding: 0;
+			}
+		}
+
+		.desc {
+			color: $color-text-default;
+			font-family: $font-text;
+			font-size: 13px;
+
+			@media #{$small-down} {
+				flex: 0 1 calc(50% - 10px);
+				padding-left: 10px;
+			}
+
+			@media #{$xs-small-only} {
+				flex: 1 0 100%;
+				padding: 0;
+				margin-top: 7px;
+			}
+		}
+	}
+}
+
+// ! Cursor map
+.leaflet-marker-icon.clicked {
+	-webkit-filter: hue-rotate(160deg);
+	position: relative;
+	z-index: 10000 !important;
+	filter: hue-rotate(160deg);
+}
+
+.leaflet-marker-icon.active {
+	-webkit-filter: hue-rotate(-100deg);
+	z-index: 1000 !important;
+	filter: hue-rotate(-100deg);
+}
+
+.leaflet-marker-icon.userpos {
+	z-index: 1100 !important;
+	cursor: inherit;
+}
+
+// ! Custom select country
+.country-choice {
+	position: relative;
+	display: inline-flex;
+	height: 40px;
+	margin-left: 15px;
+
+	//For disable blue highlight when touch/press in mobile (specialy for Chrome browser)
+	-webkit-tap-highlight-color: transparent;
+
+	.toggle-list {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		display: inline-block;
+		z-index: 1;
+		width: 100%;
+		height: 36px;
+		cursor: pointer;
+		transform: translate(0, -50%);
+
+		&_btn {
+			position: absolute;
+			top: 50%;
+			right: 2px;
+			display: inline-block;
+			width: 36px;
+			height: 36px;
+			background: url("../../../images/kyrena/shippingmax/ic-cross.svg")
+				center center no-repeat;
+			background-size: 35% auto;
+			font-size: 0;
+			transform: translate(0, -50%) rotate(-45deg);
+			transition: all 0.2s ease-in-out;
+
+			@media #{$xs-small-only} {
+				right: 0;
+			}
+		}
+	}
+}
+
+.search-elements {
+	.country-choice {
+		position: relative;
+		width: 80px;
+	}
+
+	@media #{$small-down} {
+		flex-wrap: wrap;
+	}
+
+	@media #{$extra-small-only} {
+		.country-choice {
+			margin-left: 8px;
+		}
+	}
+
+	@media #{$xs-small-only} {
+		.country-choice {
+			width: 70px;
+		}
+	}
+
+	&.country-select {
+		.country-list {
+			width: 180px;
+			height: auto;
+			max-height: 95vh;
+			background-color: $color-white;
+			border: 1px solid $color-blue-main;
+			border-radius: 5px;
+			overflow-x: hidden;
+			overflow-y: auto;
+
+			input {
+				&:not(:checked) + .country-item {
+					display: inline-flex;
+					height: 38px;
+					padding: 0 12px;
+					font-size: 14px;
+
+					span {
+						margin-left: 5px;
+						font-size: 11px;
+					}
+				}
+
+				&:checked + .country-item {
+					background-color: transparent;
+
+					span {
+						margin-left: 5px;
+						font-size: 11px;
+					}
+				}
+			}
+		}
+
+		.toggle-list {
+			right: 0;
+			width: 36px;
+
+			&_btn {
+				transform: translate(0, -50%) rotate(0deg);
+			}
+		}
+
+		@media #{$small-down} {
+			.country-list input:checked + .country-item span,
+			.country-list input:not(:checked) + .country-item span {
+				line-height: normal;
+			}
+		}
+	}
+}
+
+.country-list {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: inline-flex;
+	z-index: 1;
+	align-items: center;
+
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	background-color: $color-white;
+	border: 1px solid $border-form;
+	border-radius: 5px;
+	font-size: 0;
+	transition: all 0.2s ease-in-out;
+	pointer-events: none;
+
+	&.multi {
+		flex-direction: column;
+		align-items: flex-start;
+		padding-right: 36px;
+		cursor: pointer;
+
+		.small {
+			display: inline;
+		}
+	}
+
+	&.multi li:hover .country-item {
+		background-color: #eaedfd !important;
+	}
+
+	& > li {
+		width: calc(100% + 36px);
+
+		&:focus {
+			background-color: #eaedfd;
+		}
+
+		.small {
+			display: none;
+		}
+	}
+
+	& > * {
+		pointer-events: auto;
+	}
+
+	&.multi:focus {
+		background-color: $color-grey-background;
+		color: $color-blue-main;
+		font-weight: 700;
+	}
+
+	@media #{$small-down} {
+		& > li {
+			line-height: 0;
+		}
+	}
+
+	label {
+		display: inline-block;
+		width: 100%;
+
+		.country-item {
+			height: 38px;
+			font-family: $font-text;
+			font-size: 14px;
+		}
+
+		.small {
+			margin-left: 5px;
+			font-size: 11px;
+		}
+	}
+
+	input {
+		position: absolute;
+		width: 0;
+		height: 0;
+		visibility: hidden;
+
+		& + .country-item {
+			display: inline-flex;
+			justify-content: flex-start;
+			align-items: center;
+			width: 100%;
+			padding: 0 12px;
+			box-sizing: border-box;
+			background-color: transparent;
+			font-family: $font-text;
+
+			span {
+				margin: 0;
+				text-overflow: ellipsis;
+				font-size: 0;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+
+			@media #{$xs-small-only} {
+				padding: 0 0 0 12px;
+				background-color: transparent !important;
+			}
+		}
+
+		&:checked + .country-item:not(.single) {
+			color: $color-blue-main;
+		}
+
+		&:not(:checked) + .country-item {
+			display: none;
+		}
+
+		@media #{$small-down} {
+			&:not(:checked) + .country-item {
+				padding: 0;
+				font-size: 0;
+			}
+
+			&:checked + .country-item {
+				font-size: 14px;
+			}
+		}
+	}
+}

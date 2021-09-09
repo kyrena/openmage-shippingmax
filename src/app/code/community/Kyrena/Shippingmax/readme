@@ -1,0 +1,142 @@
+Docs      : https://github.com/kyrena/openmage-shippingmax
+Tracker   : https://github.com/kyrena/openmage-shippingmax
+Composer  : https://packagist.org/packages/kyrena/openmage-shippingmax
+Module    : Kyrena/Shippingmax
+License   : GNU GPL 2+ (https://opensource.org/licenses/gpl-2.0)
+Copyright : 2019-2021 Fabrice Creuzot <fabrice~cellublue~com>
+Copyright : 2019-2021 Jérôme Siau <jerome~cellublue~com>
+Submodule : Owebia/Shipping (lite)
+Sublicense: MIT (https://opensource.org/licenses/mit)
+
+
+IF YOU FOUND A MISTAKE OR A BUG, PLEASE, CONTACT US (IN FRENCH OR IN ENGLISH).
+CSS AND JS FILES ARE MINIFIED WITH clean-css (github.com/jakubpawlowicz/clean-css) AND uglify-js (github.com/mishoo/uglifyjs).
+ALL FILES (INCLUDING DOCUMENTATION AND TRANSLATIONS) ARE LICENSED UNDER THE TERMS OF THE GNU GPL 2+ LICENSE.
+THAT BEING SAID SOME FILES COME FROM OTHER PROJECTS AND ARE UNDER OTHER LICENSES (SEE AT THE END OF THIS FILE).
+
+WARNING! You are using a derived work of Owebia/Shipping2.
+Owebia provide no support for it.
+
+
+Rewrite
+- global | block | adminhtml/sales_order_view_tab_info          | kyrena_shippingmax/adminhtml_rewrite_info
+- global | block | customer/address_renderer_default            | kyrena_shippingmax/rewrite_renderer
+- global | block | sales/order_info                             | kyrena_shippingmax/rewrite_info
+- global | model | owebia_shipping2/os2_data_address            | kyrena_shippingmax/rewrite_address
+- global | model | owebia_shipping2/Os2_data_address            | kyrena_shippingmax/rewrite_address
+- global | model | owebia_shipping2/Os2_Data_address            | kyrena_shippingmax/rewrite_address
+- global | model | owebia_shipping2/Os2_Data_Address            | kyrena_shippingmax/rewrite_address
+- global | model | sales/order_shipment_track                   | kyrena_shippingmax/rewrite_track
+- global | model | sales_resource/quote_address_rate_collection | kyrena_shippingmax/rewrite_rate
+Event
+- adminhtml | adminhtml_init_system_config                                       | shippingmax/observer::hideConfig
+- adminhtml | admin_system_config_changed_section_carriers                       | shippingmax/observer::clearConfig
+- adminhtml | admin_system_config_changed_section_payment                        | shippingmax/observer::clearConfig
+- adminhtml | admin_system_config_changed_section_shippingmax_times              | shippingmax/observer::clearConfig
+- frontend  | controller_action_postdispatch_checkout_onepage_saveShippingMethod | shippingmax/observer::updateShippingAddress
+- global    | sales_convert_quote_address_to_order                               | shippingmax/observer::convertShippingAddress
+- global    | sales_order_place_after                                            | shippingmax/observer::saveDetailsAndUpdateShippingDescription
+- global    | sales_quote_address_save_before                                    | shippingmax/observer::updateShippingDescription
+Cron
+- shippingmax | shippingmax/observer::updateFullFiles
+Database
+- create shippingmax_coords table
+- create shippingmax_order_details table
+- create column estimated_shipping_date in sales_flat_order table
+- update core_config_data where path like carriers/% and payment/%
+Files and directories
+- app/locale/cs_CZ/Kyrena_Shippingmax.csv
+- app/locale/cs_CZ/Owebia_Shipping2.csv
+- app/locale/de_AT/Kyrena_Shippingmax.csv
+- app/locale/de_AT/Owebia_Shipping2.csv
+- app/locale/de_CH/Kyrena_Shippingmax.csv
+- app/locale/de_CH/Owebia_Shipping2.csv
+- app/locale/de_DE/Kyrena_Shippingmax.csv
+- app/locale/de_DE/Owebia_Shipping2.csv
+- app/locale/el_GR/Kyrena_Shippingmax.csv
+- app/locale/el_GR/Owebia_Shipping2.csv
+- app/locale/es_AR/Kyrena_Shippingmax.csv
+- app/locale/es_AR/Owebia_Shipping2.csv
+- app/locale/es_CL/Kyrena_Shippingmax.csv
+- app/locale/es_CL/Owebia_Shipping2.csv
+- app/locale/es_CO/Kyrena_Shippingmax.csv
+- app/locale/es_CO/Owebia_Shipping2.csv
+- app/locale/es_CR/Kyrena_Shippingmax.csv
+- app/locale/es_CR/Owebia_Shipping2.csv
+- app/locale/es_ES/Kyrena_Shippingmax.csv
+- app/locale/es_ES/Owebia_Shipping2.csv
+- app/locale/es_MX/Kyrena_Shippingmax.csv
+- app/locale/es_MX/Owebia_Shipping2.csv
+- app/locale/es_PA/Kyrena_Shippingmax.csv
+- app/locale/es_PA/Owebia_Shipping2.csv
+- app/locale/es_PE/Kyrena_Shippingmax.csv
+- app/locale/es_PE/Owebia_Shipping2.csv
+- app/locale/es_VE/Kyrena_Shippingmax.csv
+- app/locale/es_VE/Owebia_Shipping2.csv
+- app/locale/fr_CA/Kyrena_Shippingmax.csv
+- app/locale/fr_CA/Owebia_Shipping2.csv
+- app/locale/fr_CH/Kyrena_Shippingmax.csv
+- app/locale/fr_CH/Owebia_Shipping2.csv
+- app/locale/fr_FR/Kyrena_Shippingmax.csv
+- app/locale/fr_FR/Owebia_Shipping2.csv
+- app/locale/hu_HU/Kyrena_Shippingmax.csv
+- app/locale/hu_HU/Owebia_Shipping2.csv
+- app/locale/it_CH/Kyrena_Shippingmax.csv
+- app/locale/it_CH/Owebia_Shipping2.csv
+- app/locale/it_IT/Kyrena_Shippingmax.csv
+- app/locale/it_IT/Owebia_Shipping2.csv
+- app/locale/ja_JP/Kyrena_Shippingmax.csv
+- app/locale/nl_NL/Kyrena_Shippingmax.csv
+- app/locale/pl_PL/Kyrena_Shippingmax.csv
+- app/locale/pl_PL/Owebia_Shipping2.csv
+- app/locale/pt_BR/Kyrena_Shippingmax.csv
+- app/locale/pt_PT/Kyrena_Shippingmax.csv
+- app/locale/ro_RO/Kyrena_Shippingmax.csv
+- app/locale/ro_RO/Owebia_Shipping2.csv
+- app/locale/ru_RU/Kyrena_Shippingmax.csv
+- app/locale/ru_RU/Owebia_Shipping2.csv
+- app/locale/sk_SK/Kyrena_Shippingmax.csv
+- app/locale/sk_SK/Owebia_Shipping2.csv
+- app/locale/tr_TR/Kyrena_Shippingmax.csv
+- app/locale/uk_UA/Kyrena_Shippingmax.csv
+- app/locale/uk_UA/Owebia_Shipping2.csv
+- app/locale/zh_CN/Kyrena_Shippingmax.csv
+- app/etc/modules/Kyrena_Shippingmax.xml
+- app/code/community/Kyrena/Shippingmax/
+- app/design/adminhtml/default/default/layout/kyrena/shippingmax.xml
+- app/design/adminhtml/default/default/template/kyrena/shippingmax/
+- app/design/frontend/base/default/layout/kyrena/shippingmax.xml
+- app/design/frontend/base/default/template/kyrena/shippingmax/
+- skin/adminhtml/default/default/css/kyrena/shippingmax/
+- skin/adminhtml/default/default/images/kyrena/shippingmax
+- skin/adminhtml/default/default/js/kyrena/shippingmax/
+- skin/frontend/base/default/css/kyrena/shippingmax/
+- skin/frontend/base/default/images/kyrena/shippingmax/
+- skin/frontend/base/default/js/kyrena/shippingmax/
+- app/etc/modules/Owebia_Shipping2.xml
+- app/code/community/Owebia/Shipping2/
+
+
+If you like, take some of your time to improve the translations, go to https://bit.ly/2HyCCEc
+
+
+Files: /app/code/community/Owebia/Shipping2/*
+Source: https://github.com/owebia/magento1-module-advanced-shipping
+Copyright: 2008-2020 Owebia
+License: MIT (https://opensource.org/licenses/mit)
+
+Files: /skin/frontend/base/default/*/kyrena/shippingmax/leaflet.min.*
+Files: /skin/frontend/base/default/images/kyrena/shippingmax/layers*.png
+Files: /skin/frontend/base/default/images/kyrena/shippingmax/marker*.png
+Source: https://leafletjs.com/ (1.7.1)
+Copyright: 2010-2021 Vladimir Agafonkin
+Copyright: 2010-2011 CloudMade
+License: BSD 2-clauses (https://opensource.org/licenses/BSDplusPatent)
+
+File: /skin/frontend/base/default/js/kyrena/shippingmax/rightclickzoom.min.js (1.0.2)
+Source: https://github.com/GhostGroup/Leaflet.DoubleRightClickZoom
+Copyright: 2015 Mike O'Toole (mikeotoole)
+License: MIT (https://opensource.org/licenses/mit)
+
+Files: /skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-*.svg
+License: These logos are the graphic representation of registered trademarks subject to trademark law.

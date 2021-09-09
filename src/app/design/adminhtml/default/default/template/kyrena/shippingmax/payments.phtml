@@ -1,0 +1,51 @@
+<?php
+/**
+ * Created M/31/03/2020
+ * Updated M/31/03/2020
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+$items = $this->getConfig();
+?>
+
+<?php foreach ($items as $item): ?>
+	<tr id="row_<?php echo $item['id'] ?>">
+		<td class="label">
+			<label for="<?php echo $item['id'] ?>"><?php echo $item['code'] ?></label>
+		</td>
+		<td class="value">
+			<select name="groups[<?php echo $this->getGroup() ?>][fields][remove_<?php echo $item['code'] ?>][value]" class="select" id="<?php echo $item['id'] ?>" title="<?php echo $item['code'] ?>">
+				<?php if (empty($item['value'])): ?>
+					<option value="1">
+						<?php echo $this->helper('adminhtml')->__('Yes') ?> / <?php echo $item['code'] ?>
+					</option>
+					<option value="0" selected="selected">
+						<?php echo $this->helper('adminhtml')->__('No') ?>
+					</option>
+				<?php else: ?>
+					<option value="1" selected="selected">
+						<?php echo $this->helper('adminhtml')->__('Yes') ?> / <?php echo $item['code'] ?>
+					</option>
+					<option value="0">
+						<?php echo $this->helper('adminhtml')->__('No') ?>
+					</option>
+				<?php endif ?>
+			</select>
+		</td>
+		<td class="scope-label"><?php echo $item['scope_label'] ?></td>
+		<td></td>
+	</tr>
+<?php endforeach ?>

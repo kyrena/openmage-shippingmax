@@ -1,0 +1,45 @@
+<?php
+/**
+ * Created V/12/04/2019
+ * Updated V/16/07/2021
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+$locale = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
+$code   = $this->getData('code'); // code du mode de livraison ou id de la commande
+
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $locale ?>" lang="<?php echo $locale ?>">
+<head>
+	<title><?php echo is_numeric($code) ? $code : str_replace('shippingmax_', '', $code) ?></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<meta http-equiv="Content-Language" content="<?php echo $locale ?>" />
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=0" />
+	<meta name="robots" content="noindex" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/kyrena/shippingmax/map.min.css') ?>" media="all" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->getSkinUrl('css/kyrena/shippingmax/leaflet.min.css') ?>" media="all" />
+	<link rel="icon" type="image/x-icon" href="<?php echo $this->getSkinUrl('favicon.ico') ?>" />
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/kyrena/shippingmax/leaflet.min.js') ?>"></script>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/kyrena/shippingmax/rightclickzoom.min.js') ?>"></script>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/kyrena/shippingmax/map.min.js') ?>"></script>
+	<?php echo $this->getChildHtml('heads') ?>
+</head>
+<body class="<?php echo is_numeric($code) ? 'alone' : str_replace('shippingmax_', '', $code) ?>">
+	<?php echo $this->getChildHtml('mapbody') ?>
+</body>
+</html>

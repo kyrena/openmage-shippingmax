@@ -1,0 +1,926 @@
+#
+# If you see this file, that's because you are using a derived work of Owebia/Shipping2 (2.6.10).
+# Owebia provide NO support for it.
+#
+# This derived work is provided with Kyrena/Shippingmax (composer kyrena/openmage-shippingmax)
+# You will found the changes bellow.
+#
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Model/Carrier/Abstract.php Shipping2/Model/Carrier/Abstract.php
+--- Src/Model/Carrier/Abstract.php	2021-02-12 16:55:25.796936030 +0100
++++ Shipping2/Model/Carrier/Abstract.php	2021-02-08 19:01:03.158910960 +0100
+@@ -125,7 +125,8 @@
+             $this->_parser = Mage::getModel('owebia_shipping2/ConfigParser')
+                 ->init(
+                     $this->__getConfigData('config'),
+-                    (boolean)$this->__getConfigData('auto_correction')
++                    (boolean)$this->__getConfigData('auto_correction'),
++                    $this->__getConfigData('title')
+                 );
+         }
+         return $this->_parser;
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
+--- Src/Model/ConfigParser.php	2021-02-12 16:55:25.952934132 +0100
++++ Shipping2/Model/ConfigParser.php	2021-02-12 16:36:54.662449945 +0100
+@@ -4,8 +4,8 @@
+  * See COPYING.txt for license details.
+  */
+ 
+-use PhpParser\Error;
+-use PhpParser\ParserFactory;
++//use PhpParser\Error;
++//use PhpParser\ParserFactory;
+ 
+ class Owebia_Shipping2_Model_ConfigParser
+ {
+@@ -30,38 +30,14 @@
+         else return $value;
+     }
+ 
+-    public static function parseSize($size)
+-    {
+-        $size = trim($size);
+-        $last = $size[strlen($size) - 1];
+-        $size = rtrim($size, $last);
+-        $size = (float) $size;
+-        $last = strtolower($last);
+-        switch ($last) {
+-            case 'g': $size *= 1024;
+-            case 'm': $size *= 1024;
+-            case 'k': $size *= 1024;
+-        }
+-
+-        return $size;
+-    }
+-
+-    public static function formatSize($size)
+-    {
+-        $unit = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+-        $unitIndex = floor(log($size, 1024));
+-        $divisor = $unitIndex == 0 ? 1 : pow(1024, $unitIndex);
+-        return self::toString(round($size / $divisor, 2)) . ' ' . $unit[$unitIndex];
+-    }
+-
+     public static function getInfos()
+     {
+         $properties = array(
+             'server_os' => PHP_OS,
+-            'server_software' => $_SERVER['SERVER_SOFTWARE'],
++            'server_software' => getenv('SERVER_SOFTWARE'),
+             'php_version' => PHP_VERSION,
+-            'memory_limit' => self::formatSize(self::parseSize(ini_get('memory_limit'))),
+-            'memory_usage' => self::formatSize(memory_get_usage(true)),
++            //'memory_limit' => self::formatSize(self::parseSize(ini_get('memory_limit'))),
++            //'memory_usage' => self::formatSize(memory_get_usage(true)),
+         );
+         return $properties;
+     }
+@@ -71,6 +47,7 @@
+         return array(
+             'info'              => Mage::getModel('owebia_shipping2/Os2_Data')->setData(self::getInfos()),
+             'cart'              => Mage::getModel('owebia_shipping2/Os2_Data'),
++            'config'            => Mage::getModel('owebia_shipping2/Os2_Data'),
+             'quote'             => Mage::getModel('owebia_shipping2/Os2_Data'),
+             'selection'         => Mage::getModel('owebia_shipping2/Os2_Data'),
+             'customer'          => Mage::getModel('owebia_shipping2/Os2_Data'),
+@@ -104,7 +81,7 @@
+                 $classes = array();
+                 if ($key == 'about') {
+                     $classes[] = 'json-about';
+-                } elseif ($key == 'conditions' || $key == 'fees') {
++                } elseif ($key == 'conditions' || $key == 'fees' || strpos($key, 'conditions_') === 0 || strpos($key, 'fees_') === 0) {
+                     $classes[] = 'json-formula';
+                 }
+                 $propertyClasses = array('json-property');
+@@ -208,6 +185,7 @@
+         return $escaped;
+     }
+ 
++    protected $_defaultTitle;
+     protected $_input;
+     protected $_config;
+     protected $_messages;
+@@ -218,7 +196,7 @@
+     public $debugOutput = '';
+     public $debugHeader = null;
+ 
+-    public function init($input, $autoCorrection)
++    public function init($input, $autoCorrection, $title = null)
+     {
+         $this->_config = array();
+         $this->_messages = array();
+@@ -227,6 +205,7 @@
+         $this->_debugPrefix = '';
+         $this->_input = $input;
+         $this->_parseInput($autoCorrection);
++        $this->_defaultTitle = $title;
+         return $this;
+     }
+ 
+@@ -362,7 +341,7 @@
+     {
+         $objectArray = array();
+         $this->propertiesSort = array_flip(
+-            array(
++            $this->addCurrencyCodesForFeesAndConditions(array(
+                 'type',
+                 'about',
+                 'enabled',
+@@ -374,7 +353,7 @@
+                 'conditions',
+                 'fees',
+                 'tracking_url',
+-            )
++            ))
+         );
+         foreach ($this->_config as $code => $row) {
+             $object = array();
+@@ -452,7 +431,10 @@
+ 
+     protected function processRowConditions($process, &$row, $isChecking)
+     {
+-        $conditions = $this->getRowProperty($row, 'conditions');
++        $currency = strtolower(Mage::app()->getStore()->getCurrentCurrencyCode());
++        $conditions = $this->getRowProperty($row, 'conditions_'.$currency);
++        $conditions = empty($conditions) ? $this->getRowProperty($row, 'conditions') : $conditions;
++
+         if (isset($conditions)) {
+             $result = $this->processFormula($process, $row, 'conditions', $conditions, $isChecking);
+             if (!$isChecking) {
+@@ -532,7 +514,10 @@
+ 
+     protected function processRowFees($process, &$row, $isChecking)
+     {
+-        $fees = $this->getRowProperty($row, 'fees');
++        $currency = strtolower(Mage::app()->getStore()->getCurrentCurrencyCode());
++        $fees = $this->getRowProperty($row, 'fees_'.$currency);
++        $fees = empty($fees) ? $this->getRowProperty($row, 'fees') : $fees;
++
+         if (isset($fees)) {
+             $result = $this->processFormula($process, $row, 'fees', $fees, $isChecking);
+             if (!$result->success) return $result;
+@@ -566,7 +551,7 @@
+         }
+ 
+         if (!isset($row['label']['value'])) {
+-            $row['label']['value'] = '***';
++            $row['label']['value'] = empty($this->_defaultTitle) ? '***' : $this->_defaultTitle;
+         }
+ 
+         $result = $this->processRowEnabled($row, $isChecking);
+@@ -1013,7 +998,7 @@
+                         $maxValue = trim($feeData[0]);
+ 
+                         $includingMaxValue = $this->_prepareFormulaTableIncludeMaxValue(
+-                            $maxValue{strlen($maxValue) - 1}
++                            $maxValue[strlen($maxValue) - 1]
+                         );
+ 
+                         $maxValue = str_replace(array('[', ']'), '', $maxValue);
+@@ -1148,7 +1133,7 @@
+             $evalResult = (double) $formula;
+         } else {
+             try {
+-                $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
++                /* $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+                 $stmts = $parser->parse('<?php $evalResult = ('. $formula . ');');
+ 
+                 $callbackManager = $this;
+@@ -1163,7 +1148,8 @@
+                     $evaluator->initialize();
+                 }
+ 
+-                $evalResult = $registry->get('evalResult');
++                $evalResult = $registry->get('evalResult'); */
++                @eval('$evalResult = (' . $formula . ');');
+ 
+                 $this->debug(
+                     '      parse and evaluate AST <span class=osh-formula>' . self::esc($formula) . '</span>'
+@@ -1177,25 +1163,6 @@
+         return $evalResult;
+     }
+ 
+-    /**
+-     * @param Owebia_Shipping2_Helper_Evaluator $evaluator
+-     * @param object $node
+-     * @throws \Exception
+-     */
+-    protected function parseNode($evaluator, $node)
+-    {
+-        try {
+-            $evaluator->evaluate($node);
+-            $this->debug(
+-                $evaluator->getDebugOutput()
+-            );
+-        } catch (\Exception $e) {
+-            $this->debug(
+-                $evaluator->getDebugOutput() . $e->getMessage()
+-            );
+-        }
+-    }
+-
+     protected function _parseInputIsValidConfig($config)
+     {
+         if ($config) {
+@@ -1254,7 +1221,7 @@
+         $propertiesCount = count($propertySet);
+         foreach ($propertySet as $j => $property) {
+             $name = $property['property_name'];
+-            if ($name{0} != '"' || $name{strlen($name) - 1} != '"') {
++            if ($name[0] != '"' || $name[strlen($name) - 1] != '"') {
+                 $autoCorrectionWarnings['missing_enquote_of_property_name'] =
+                     'JSON: missing enquote of property name: %s';
+                 $missingEnquoteOfPropertyName[] = self::toString(trim($name, '"'));
+@@ -1364,7 +1331,7 @@
+         $lastJsonError = null;
+         try {
+             $config = self::json_decode($configString);
+-        } catch (Exception $e) {
++        } catch (Throwable $e) {
+             $lastJsonError = $e;
+         }
+         if (!$this->_parseInputIsValidConfig($config)) {
+@@ -1393,7 +1360,7 @@
+             $lastJsonError = null;
+             try {
+                 $config = self::json_decode($configString);
+-            } catch (Exception $e) {
++            } catch (Throwable $e) {
+                 $lastJsonError = $e;
+             }
+         }
+@@ -1447,10 +1414,10 @@
+         $this->_parseInputAddRowsDetectDeprecatedProperties($autoCorrection, $object, $deprecatedProperties);
+ 
+         $reservedKeys = array('*id');
+-        $availableKeys = array(
++        $availableKeys = $this->addCurrencyCodesForFeesAndConditions(array(
+             'type', 'about', 'label', 'enabled', 'description', 'fees', 'conditions',
+             'shipto', 'billto', 'origin', 'customer_groups', 'tracking_url',
+-        );
++        ));
+         if ($autoCorrection) {
+             $availableKeys = array_merge(
+                 $availableKeys,
+@@ -1935,7 +1902,6 @@
+         }
+     }
+ 
+-    /* For auto correction */
+     public function cleanProperty(&$row, $key)
+     {
+         $input = $row[$key]['value'];
+@@ -1998,4 +1964,17 @@
+         }
+         $row[$key]['value'] = $input;
+     }
++
++    protected function addCurrencyCodesForFeesAndConditions($array)
++    {
++        if (empty($this->currencyCodes))
++            $this->_currencyCodes = Mage::getModel('directory/currency')->getConfigAllowCurrencies();
++
++        foreach ($this->_currencyCodes as $code) {
++            $array[] = 'fees_'.strtolower($code);
++            $array[] = 'conditions_'.strtolower($code);
++        }
++
++        return $array;
++    }
+ }
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Model/Os2/Data/AddressFilter.php Shipping2/Model/Os2/Data/AddressFilter.php
+--- Src/Model/Os2/Data/AddressFilter.php	2021-02-12 16:55:25.860935250 +0100
++++ Shipping2/Model/Os2/Data/AddressFilter.php	2021-01-07 18:53:31.837013805 +0100
+@@ -63,7 +63,6 @@
+             'label' => 'Antartica',
+             'replace' => array('AQ', 'BV', 'GS', 'HM', 'TF'),
+         ),
+-        /*UK=>GB*/
+         'EU-27' => array(
+             'label' => 'European Union',
+             'replace' => array(
+@@ -76,10 +75,10 @@
+             'label' => "Département d'Outre-Mer",
+             'replace' => array('GP', 'MQ', 'GF', 'RE', 'YT'),
+         ),
+-        /* Polynésie française, Saint-Pierre-et-Miquelon, Wallis-et-Futuna, Saint-Martin, Saint-Barthélemy */
++        /* Polynésie française, Saint-Pierre-et-Miquelon, Wallis-et-Futuna, Saint-Martin, Saint-Barthélemy, Nouvelle-Calédonie */
+         'COM' => array(
+             'label' => "Collectivités d'Outre-Mer",
+-            'replace' => array('PF', 'PM', 'WF', 'MF', 'BL'),
++            'replace' => array('PF', 'PM', 'WF', 'MF', 'BL', 'NC'),
+         ),
+     );
+ 
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' null Shipping2/Model/Os2/Data/Config.php
+--- null
++++ Shipping2/Model/Os2/Data/Config.php	2021-01-12 17:00:58.837013800 +0100
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Helper/Data.php Shipping2/Helper/Data.php
+--- Src/Helper/Data.php	2021-02-12 16:55:25.992933645 +0100
++++ Shipping2/Helper/Data.php	2021-01-30 13:08:07.620930598 +0100
+@@ -104,6 +104,7 @@
+                     $helper->getInfos(),
+                     array(
+                         'magento_version' => Mage::getVersion(),
++                        'openmage_version' => Mage::getOpenMageVersion(),
+                         'module_version' => (string)$mageConfig->getNode('modules/Owebia_Shipping2/version'),
+                         'carrier_code' => $carrierCode,
+                     )
+@@ -117,6 +118,7 @@
+                     'options' => $cartOptions,
+                 )
+             ),
++            'config' => Mage::getModel('owebia_shipping2/Os2_Data_Config'),
+             'quote' => $quoteWrapper,
+             'selection' => Mage::getModel('owebia_shipping2/Os2_Data_Selection'),
+             'customer' => Mage::getModel(
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/etc/adminhtml.xml Shipping2/etc/adminhtml.xml
+--- Src/etc/adminhtml.xml	2021-02-12 16:55:25.888934910 +0100
++++ Shipping2/etc/adminhtml.xml	2021-01-07 18:53:31.841013766 +0100
+@@ -5,7 +5,6 @@
+  * See COPYING.txt for license details.
+  */
+ -->
+-<!-- Magento 1.4.0 and upper -->
+ <config>
+     <acl>
+         <resources>
+@@ -16,7 +15,7 @@
+                             <config>
+                                 <children>
+                                     <owebia_shipping2>
+-                                        <title>Advanced Shipping Section</title>
++                                        <title>Owebia Shipping</title>
+                                         <sort_order>100</sort_order>
+                                     </owebia_shipping2>
+                                 </children>
+@@ -27,13 +26,4 @@
+             </admin>
+         </resources>
+     </acl>
+-    <translate>
+-        <modules>
+-            <Mage_Shipping>
+-                <files>
+-                    <owebia_shipping2>Owebia_Shipping2.csv</owebia_shipping2>
+-                </files>
+-            </Mage_Shipping>
+-        </modules>
+-    </translate>
+ </config>
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/etc/config.xml Shipping2/etc/config.xml
+--- Src/etc/config.xml	2020-12-24 18:14:10.000000000 +0100
++++ Shipping2/etc/config.xml	2021-02-08 19:25:15.640113468 +0100
+@@ -9,12 +9,9 @@
+     <modules>
+         <Owebia_Shipping2>
+             <version>2.6.10</version>
+-            <depends>
+-                <Mage_Shipping />
+-            </depends>
++            <lite>true</lite>
+         </Owebia_Shipping2>
+     </modules>
+-
+     <global>
+         <models>
+             <owebia_shipping2>
+@@ -31,99 +28,35 @@
+                 <class>Owebia_Shipping2_Helper</class>
+             </owebia_shipping2>
+         </helpers>
+-        <events>
+-            <resource_get_tablename>
+-                <observers>
+-                    <owebia_shipping2>
+-                        <class>owebia_shipping2/observer</class>
+-                        <method>registerAutoloader</method>
+-                    </owebia_shipping2>
+-                </observers>
+-            </resource_get_tablename>
+-        </events>
+         <resources>
+-            <owebia_shipping2_setup>
+-                <setup>
+-                    <module>Owebia_Shipping2</module>
+-                </setup>
+-            </owebia_shipping2_setup>
+             <sales>
+                 <shipping>
+                     <carriers>
+                         <owebiashipping1>
+                             <class>Owebia_Shipping2_Model_Carrier_OwebiaShipping1</class>
+                         </owebiashipping1>
++                        <owebiashipping2>
++                            <class>Owebia_Shipping2_Model_Carrier_OwebiaShipping2</class>
++                        </owebiashipping2>
++                        <owebiashipping3>
++                            <class>Owebia_Shipping2_Model_Carrier_OwebiaShipping3</class>
++                        </owebiashipping3>
+                     </carriers>
+                 </shipping>
+             </sales>
+         </resources>
+     </global>
+-
+-    <admin>
+-        <routers>
+-            <adminhtml>
+-                <args>
+-                    <modules>
+-                        <owebia_shipping2 before="Mage_Adminhtml">Owebia_Shipping2_Adminhtml</owebia_shipping2>
+-                    </modules>
+-                </args>
+-            </adminhtml>
+-        </routers>
+-    </admin>
+     <adminhtml>
+-        <!-- Magento lower than 1.4.0 -->
+-        <acl>
+-            <resources>
+-                <admin>
+-                    <children>
+-                        <system>
+-                            <children>
+-                                <config>
+-                                    <children>
+-                                        <owebia>
+-                                            <title>Owebia Section</title>
+-                                            <sort_order>100</sort_order>
+-                                        </owebia>
+-                                    </children>
+-                                </config>
+-                            </children>
+-                        </system>
+-                    </children>
+-                </admin>
+-            </resources>
+-        </acl>
+         <translate>
+             <modules>
+-                <Mage_Shipping>
++                <Owebia_Shipping2>
+                     <files>
+-                        <owebia_shipping2>Owebia_Shipping2.csv</owebia_shipping2>
++                        <default>Owebia_Shipping2.csv</default>
+                     </files>
+-                </Mage_Shipping>
++                </Owebia_Shipping2>
+             </modules>
+         </translate>
+     </adminhtml>
+-
+-    <frontend>
+-        <translate>
+-            <modules>
+-                <Mage_Shipping>
+-                    <files>
+-                        <owebia_shipping2>Owebia_Shipping2.csv</owebia_shipping2>
+-                    </files>
+-                </Mage_Shipping>
+-            </modules>
+-        </translate>
+-        <routers>
+-            <checkout>
+-                <args>
+-                    <modules>
+-                        <owebia_shipping2 before="Mage_Checkout">Owebia_Shipping2_Checkout</owebia_shipping2>
+-                    </modules>
+-                </args>
+-            </checkout>
+-        </routers>
+-    </frontend>
+-
+     <default>
+         <owebia_shipping2>
+             <general>
+@@ -144,12 +77,11 @@
+         <carriers>
+             <owebiashipping1>
+                 <active>0</active>
+-                <title>Advanced Shipping - Mode de livraison 1</title>
++                <title>Owebia 1</title>
+                 <model>Owebia_Shipping2_Model_Carrier_OwebiaShipping1</model>
+-                <tracking_view_url></tracking_view_url>
+                 <config>{
+    "demo": {
+-      "label": "Frais de port fixes",
++      "label": "Example",
+       "fees": 10
+    }
+ }</config>
+@@ -159,6 +91,38 @@
+                 <stop_to_first_match>0</stop_to_first_match>
+                 <sort_order>1</sort_order>
+             </owebiashipping1>
++            <owebiashipping2>
++                <active>0</active>
++                <title>Owebia 2</title>
++                <model>Owebia_Shipping2_Model_Carrier_OwebiaShipping2</model>
++                <config>{
++   "demo": {
++      "label": "Example",
++      "fees": 10
++   }
++}</config>
++                <debug>0</debug>
++                <auto_escaping>0</auto_escaping>
++                <auto_correction>1</auto_correction>
++                <stop_to_first_match>0</stop_to_first_match>
++                <sort_order>1</sort_order>
++            </owebiashipping2>
++            <owebiashipping3>
++                <active>0</active>
++                <title>Owebia 3</title>
++                <model>Owebia_Shipping2_Model_Carrier_OwebiaShipping3</model>
++                <config>{
++   "demo": {
++      "label": "Example",
++      "fees": 10
++   }
++}</config>
++                <debug>0</debug>
++                <auto_escaping>0</auto_escaping>
++                <auto_correction>1</auto_correction>
++                <stop_to_first_match>0</stop_to_first_match>
++                <sort_order>1</sort_order>
++            </owebiashipping3>
+         </carriers>
+     </default>
+ </config>
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/etc/system.xml Shipping2/etc/system.xml
+--- Src/etc/system.xml	2021-02-12 16:55:26.148931748 +0100
++++ Shipping2/etc/system.xml	2021-01-14 18:46:56.587788358 +0100
+@@ -6,32 +6,192 @@
+  */
+ -->
+ <config>
+-    <tabs>
+-        <owebia>
+-            <label>Owebia</label>
+-            <sort_order>300</sort_order>
+-        </owebia>
+-    </tabs>
+     <sections>
+         <carriers>
+             <show_in_store>1</show_in_store>
+             <groups>
+-                <owebiashipping1 translate="label" module="shipping">
+-                    <label>Advanced Shipping - Mode de livraison 1</label>
++                <owebiashipping3>
++                    <label>Owebia Shipping 3</label>
+                     <frontend_type>text</frontend_type>
+-                    <sort_order>-19</sort_order>
++                    <sort_order>-17</sort_order>
+                     <show_in_default>1</show_in_default>
+                     <show_in_website>1</show_in_website>
+                     <show_in_store>1</show_in_store>
+                     <fields>
+-                        <informations translate="label">
+-                            <label>Informations</label>
+-                            <frontend_model>owebia_shipping2/adminhtml_system_config_form_field_informations</frontend_model>
+-                            <sort_order>0</sort_order>
++                        <active translate="label">
++                            <label>Enabled</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>1</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </active>
++                        <title translate="label">
++                            <label>Title</label>
++                            <frontend_type>text</frontend_type>
++                            <sort_order>2</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </title>
++                        <config translate="label">
++                            <label>Configuration</label>
++                            <frontend_type>textarea</frontend_type>
++                            <sort_order>3</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </config>
++                        <tracking_view_url translate="label">
++                            <label>Tracking URL</label>
++                            <frontend_type>text</frontend_type>
++                            <sort_order>4</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </tracking_view_url>
++                        <debug translate="label">
++                            <label>Debug</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>5</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </debug>
++                        <auto_escaping translate="label">
++                            <label>Auto-escaping</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>7</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+                             <show_in_store>1</show_in_store>
+-                        </informations>
++                        </auto_escaping>
++                        <auto_correction translate="label">
++                            <label>Auto-correction</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>8</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </auto_correction>
++                        <stop_to_first_match translate="label">
++                            <label>Stop to first match</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>9</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </stop_to_first_match>
++                        <sort_order translate="label">
++                            <label>Sort Order</label>
++                            <frontend_type>text</frontend_type>
++                            <sort_order>100</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </sort_order>
++                    </fields>
++                </owebiashipping3>
++                <owebiashipping2>
++                    <label>Owebia Shipping 2</label>
++                    <frontend_type>text</frontend_type>
++                    <sort_order>-18</sort_order>
++                    <show_in_default>1</show_in_default>
++                    <show_in_website>1</show_in_website>
++                    <show_in_store>1</show_in_store>
++                    <fields>
++                        <active translate="label">
++                            <label>Enabled</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>1</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </active>
++                        <title translate="label">
++                            <label>Title</label>
++                            <frontend_type>text</frontend_type>
++                            <sort_order>2</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </title>
++                        <config translate="label">
++                            <label>Configuration</label>
++                            <frontend_type>textarea</frontend_type>
++                            <sort_order>3</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </config>
++                        <tracking_view_url translate="label">
++                            <label>Tracking URL</label>
++                            <frontend_type>text</frontend_type>
++                            <sort_order>4</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </tracking_view_url>
++                        <debug translate="label">
++                            <label>Debug</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>5</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </debug>
++                        <auto_escaping translate="label">
++                            <label>Auto-escaping</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>7</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </auto_escaping>
++                        <auto_correction translate="label">
++                            <label>Auto-correction</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>8</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </auto_correction>
++                        <stop_to_first_match translate="label">
++                            <label>Stop to first match</label>
++                            <frontend_type>select</frontend_type>
++                            <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <sort_order>9</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </stop_to_first_match>
++                        <sort_order translate="label">
++                            <label>Sort Order</label>
++                            <frontend_type>text</frontend_type>
++                            <sort_order>100</sort_order>
++                            <show_in_default>1</show_in_default>
++                            <show_in_website>1</show_in_website>
++                            <show_in_store>1</show_in_store>
++                        </sort_order>
++                    </fields>
++                </owebiashipping2>
++                <owebiashipping1>
++                    <label>Owebia Shipping 1</label>
++                    <frontend_type>text</frontend_type>
++                    <sort_order>-19</sort_order>
++                    <show_in_default>1</show_in_default>
++                    <show_in_website>1</show_in_website>
++                    <show_in_store>1</show_in_store>
++                    <fields>
+                         <active translate="label">
+                             <label>Enabled</label>
+                             <frontend_type>select</frontend_type>
+@@ -51,7 +211,6 @@
+                         </title>
+                         <config translate="label">
+                             <label>Configuration</label>
+-                            <frontend_model>owebia_shipping2/adminhtml_system_config_form_field_config</frontend_model>
+                             <frontend_type>textarea</frontend_type>
+                             <sort_order>3</sort_order>
+                             <show_in_default>1</show_in_default>
+@@ -70,7 +229,6 @@
+                             <label>Debug</label>
+                             <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <comment>{debug_help}</comment>
+                             <sort_order>5</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -80,7 +238,6 @@
+                             <label>Auto-escaping</label>
+                             <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <comment>{auto_escaping_help}</comment>
+                             <sort_order>7</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -90,7 +247,6 @@
+                             <label>Auto-correction</label>
+                             <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <comment>{auto_correction_help}</comment>
+                             <sort_order>8</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -106,7 +262,7 @@
+                             <show_in_store>1</show_in_store>
+                         </stop_to_first_match>
+                         <sort_order translate="label">
+-                            <label>Sort order</label>
++                            <label>Sort Order</label>
+                             <frontend_type>text</frontend_type>
+                             <sort_order>100</sort_order>
+                             <show_in_default>1</show_in_default>
+@@ -119,9 +275,9 @@
+         </carriers>
+     </sections>
+     <sections>
+-        <owebia_shipping2 translate="label">
+-            <label>Advanced Shipping</label>
+-            <tab>owebia</tab>
++        <owebia_shipping2>
++            <label>Owebia Shipping</label>
++            <tab>sales</tab>
+             <frontend_type>text</frontend_type>
+             <sort_order>100</sort_order>
+             <show_in_default>1</show_in_default>
+@@ -129,7 +285,7 @@
+             <show_in_store>1</show_in_store>
+             <groups>
+                 <general translate="label">
+-                    <label>General Configuration</label>
++                    <label>General</label>
+                     <frontend_type>text</frontend_type>
+                     <sort_order>2</sort_order>
+                     <show_in_default>1</show_in_default>
+@@ -156,9 +312,8 @@
+                     <fields>
+                         <process_children translate="label">
+                             <label>Item processing</label>
+-                            <comment>If "Self" is selected, options bellow are ignored</comment>
+                             <frontend_type>select</frontend_type>
+-                            <source_model>owebia_shipping2/system_config_source_ProcessChildren</source_model>
++                            <source_model>owebia_shipping2/system_config_source_processChildren</source_model>
+                             <sort_order>10</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -168,7 +323,7 @@
+                             <label>Item options on</label>
+                             <comment>item.option.*</comment>
+                             <frontend_type>select</frontend_type>
+-                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
++                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
+                             <sort_order>20</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -178,7 +333,7 @@
+                             <label>Item data on</label>
+                             <comment>item.*</comment>
+                             <frontend_type>select</frontend_type>
+-                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
++                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
+                             <sort_order>21</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -188,7 +343,7 @@
+                             <label>Product data on</label>
+                             <comment>product.*</comment>
+                             <frontend_type>select</frontend_type>
+-                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
++                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
+                             <sort_order>22</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -208,7 +363,7 @@
+                             <label>Item options on</label>
+                             <comment>item.option.*</comment>
+                             <frontend_type>select</frontend_type>
+-                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
++                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
+                             <sort_order>20</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -218,7 +373,7 @@
+                             <label>Item data on</label>
+                             <comment>item.*</comment>
+                             <frontend_type>select</frontend_type>
+-                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
++                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
+                             <sort_order>21</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+@@ -228,7 +383,7 @@
+                             <label>Product data on</label>
+                             <comment>product.*</comment>
+                             <frontend_type>select</frontend_type>
+-                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
++                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
+                             <sort_order>23</sort_order>
+                             <show_in_default>1</show_in_default>
+                             <show_in_website>1</show_in_website>
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Helper/Data.php Shipping2/Helper/Data.php
+--- Src/Helper/Data.php
++++ Shipping2/Helper/Data.php
+@@ -128,7 +128,12 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
+                     'quote' => $quoteWrapper,
+                 )
+             ),
+-            'customer_group' => Mage::getModel('owebia_shipping2/Os2_Data_CustomerGroup'),
++            'customer_group' => Mage::getModel(
++                'owebia_shipping2/Os2_Data_CustomerGroup',
++                array(
++                    'quote' => $quoteWrapper,
++                )
++            ),
+             'customvar' => Mage::getModel('owebia_shipping2/Os2_Data_Customvar'),
+             'date' => Mage::getModel('owebia_shipping2/Os2_Data_Date'),
+             'address_filter' => Mage::getModel('owebia_shipping2/Os2_Data_AddressFilter'),
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Model/Os2/Data/CustomerGroup.php Shipping2/Model/Os2/Data/CustomerGroup.php
+--- Src/Model/Os2/Data/CustomerGroup.php
++++ Shipping2/Model/Os2/Data/CustomerGroup.php
+@@ -34,7 +34,7 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
+ 
+     protected $_additionalAttributes = array('*');
+ 
+-    public function __construct()
++    public function __construct($arguments)
+     {
+         $customerGroupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+         if ($customerGroupId == 0) { // Pour les commandes depuis Adminhtml
+@@ -43,6 +43,9 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
+                 $customerGroupId = $adminCustomerGroupId;
+             }
+         }
++        if ($customerGroupId == 0 && isset($arguments['quote'])) { // Pour les commandes depuis l'API
++             $customerGroupId = $arguments['quote']->getData('customer_group_id');
++        }
+         parent::__construct(
+             array(
+                 'id' => $customerGroupId,

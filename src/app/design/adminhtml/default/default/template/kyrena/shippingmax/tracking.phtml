@@ -1,0 +1,89 @@
+<?php
+/**
+ * Created L/13/05/2019
+ * Updated J/15/10/2020
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+$help   = $this->helper('shippingmax');
+$tracks = $this->getShipment()->getAllTracks();
+?>
+
+<div class="field-row grid" id="shipment_tracking_info">
+	<table cellspacing="0" class="data">
+		<thead>
+			<tr class="headings">
+				<th><?php echo $this->__('Carrier') ?></th>
+				<th><?php echo $this->__('Number') ?> / <?php echo $this->__('Shipped At') ?> / <?php echo $this->__('Weight') ?></th>
+				<th class="last" style="width:50px;"><?php echo $this->__('Action') ?></th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<td>
+					<select name="carrier" onchange="selectCarrier(this);" class="select" style="width:97.5%;">
+						<?php foreach ($this->getCarriers() as $code => $name): ?>
+							<option value="<?php echo $code ?>">(<?php echo $code ?>) <?php echo $help->escapeEntities($name) ?></option>
+						<?php endforeach ?>
+					</select>
+					<br /><input type="text" id="tracking_title" name="title" class="input-text" style="width:95%;" />
+				</td>
+				<td><input type="text" id="tracking_number" name="number" class="input-text" placeholder="<?php echo $this->__('Number') ?>" style="width:95%;" /></td>
+				<td class="last"><?php echo $this->getSaveButtonHtml() ?></td>
+			</tr>
+		</tfoot>
+		<?php if (!empty($tracks)): ?>
+			<tbody>
+				<?php foreach ($tracks as $track): ?>
+					<tr>
+						<td>
+							<i><?php echo $track->getCarrierCode() ?></i>
+							<?php /* <br /><i><?php echo $help->escapeEntities($this->getCarrierTitle($track->getCarrierCode())) ?></i> */ ?>
+							<br /><?php echo $help->escapeEntities($track->getData('title')) ?>
+						</td>
+						<td>
+							<?php if ($track->isCustom()): ?>
+								<strong><?php echo $help->escapeEntities($track->getData('number')) ?></strong>
+							<?php else: ?>
+								<?php $url = is_object($info = $track->getNumberDetail()) ? $info->getData('url') : '' ?>
+								<?php if (!empty($url)): ?>
+									<a href="<?php echo $help->escapeEntities($url) ?>" target="_blank"><strong><?php echo $help->escapeEntities($track->getData('number')) ?></strong></a>
+								<?php else: ?>
+									<strong><?php echo $help->escapeEntities($track->getData('number')) ?></strong>
+								<?php endif ?>
+							<?php endif ?>
+							<?php $date = $this->formatDate($track->getData('created_at')) ?>
+							<br /><?php echo empty($track->getData('weight')) ? $date : $this->__('%s - %s kg', $date, Zend_Locale_Format::toNumber($track->getData('weight'), ['precision' => 2])) ?>
+						</td>
+						<td class="last"><a href="#" onclick="deleteTrackingNumber('<?php echo $this->getRemoveUrl($track) ?>'); return false;"><?php echo $this->__('Delete') ?></a></td>
+					</tr>
+				<?php endforeach ?>
+			</tbody>
+		<?php endif ?>
+	</table>
+</div>
+
+<script type="text/javascript">//<![CDATA[
+function selectCarrier(elem) {
+	var option = elem.options[elem.selectedIndex];
+	document.getElementById('tracking_title').value = (option.value && (option.value !== 'custom')) ?
+		option.text.slice(option.text.indexOf(')') + 1).trim() : '';
+}
+function deleteTrackingNumber(url) {
+	if (confirm("<?php echo addslashes($this->__('Are you sure?')) ?>"))
+		submitAndReloadArea(document.getElementById('shipment_tracking_info').parentNode, url)
+}
+//]]></script>

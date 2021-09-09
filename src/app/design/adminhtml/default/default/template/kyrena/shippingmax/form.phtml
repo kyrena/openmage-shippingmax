@@ -1,0 +1,110 @@
+<?php
+/**
+ * Created M/23/04/2019
+ * Updated L/19/07/2021
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+$help = $this->helper('shippingmax');
+$groups = $this->getShippingRates();
+$activeRate = $this->getActiveMethodRate();
+?>
+
+<?php if (!empty($groups)): ?>
+	<div id="order-shipping-method-choose" <?php echo empty($activeRate) ? '' : 'style="display:none;"' ?>>
+		<dl class="shipment-methods">
+			<?php foreach ($groups as $code => $rates): ?>
+				<dt class="<?php echo $code ?>">
+					<strong><?php echo $help->escapeEntities($this->getCarrierName($code)) ?></strong>
+					<?php if (!empty($desc = Mage::getStoreConfig('carriers/'.$code.'/description'))): ?>
+						<div class="desc"><?php echo $desc ?></div>
+					<?php endif ?>
+				</dt>
+				<dd class="<?php echo $code ?>">
+					<?php if ($help->isSpecial($code)): ?>
+						<?php $rate = reset($rates) ?>
+						<?php if ($rate->getErrorMessage()): ?>
+							<ul class="messages">
+								<li class="error-msg"><?php echo $help->escapeEntities($rate->getErrorMessage()) ?></li>
+							</ul>
+						<?php else: ?>
+							<?php echo $this->getChild('shippingmax_selected')->setData('code', $code)->toHtml() ?>
+						<?php endif ?>
+					<?php else: ?>
+						<ul>
+							<?php foreach ($rates as $rate): ?>
+								<?php $code = $rate->getCode() ?>
+								<li>
+									<?php if ($rate->getErrorMessage()): ?>
+										<ul class="messages">
+											<li class="error-msg"><?php echo $help->escapeEntities($rate->getErrorMessage()) ?></li>
+										</ul>
+									<?php else: ?>
+										<input type="radio" name="order[shipping_method]" value="<?php echo $code ?>" onclick="order.setShippingMethod(this.value);" id="s_method_<?php echo $code ?>" <?php echo $this->isMethodActive($code) ? 'checked="checked"' : '' ?> />
+										<label class="normal" for="s_method_<?php echo $code ?>">
+											<?php echo $help->escapeEntities($rate->getMethodTitle()) ?> /
+											<strong>
+												<?php $excl = $this->getShippingPrice($rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()) ?>
+												<?php $incl = $this->getShippingPrice($rate->getPrice(), true) ?>
+												<?php echo $excl ?>
+												<?php if (($incl != $excl) && $this->helper('tax')->displayShippingBothPrices()): ?>
+													(<?php echo $this->__('Incl. Tax') ?> <?php echo $incl ?>)
+												<?php endif ?>
+											</strong>
+										</label>
+									<?php endif ?>
+								</li>
+							<?php endforeach ?>
+						</ul>
+					<?php endif ?>
+				</dd>
+			<?php endforeach ?>
+		</dl>
+	</div>
+	<?php if (!empty($activeRate)): ?>
+		<div id="order-shipping-method-info">
+			<strong><?php echo $help->escapeEntities($this->getCarrierName($activeRate->getCarrier())) ?></strong>
+			<br /><?php echo $help->escapeEntities($activeRate->getMethodTitle()) ?> /
+			<strong>
+				<?php $excl = $this->getShippingPrice($activeRate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()) ?>
+				<?php $incl = $this->getShippingPrice($activeRate->getPrice(), true) ?>
+				<?php echo $excl ?>
+				<?php if (($incl != $excl) && $this->helper('tax')->displayShippingBothPrices()): ?>
+					(<?php echo $this->__('Incl. Tax') ?> <?php echo $incl ?>)
+				<?php endif ?>
+			</strong>
+			<br /><a href="#" onclick="$('order-shipping-method-info').hide(); $('order-shipping-method-choose').show(); return false;"><?php echo $this->__('Click to change shipping method') ?></a>
+		</div>
+	<?php endif ?>
+<?php elseif ($this->getIsRateRequest()): ?>
+	<div class="overlay">
+		<strong><?php echo $this->__('Sorry, no quotes are available for this order at this time.') ?></strong>
+	</div>
+<?php else: ?>
+	<div class="overlay" id="order-shipping-method-summary">
+		<a href="#" onclick="order.loadShippingRates(); return false;"><?php echo $this->__('Get shipping methods and rates') ?></a>
+		<input type="hidden" name="order[has_shipping]" value="" class="required-entry" />
+	</div>
+<?php endif ?>
+
+<div class="overlay" id="shipping-method-overlay" style="display:none;">
+	<span><?php echo $this->__('Shipping method selection is not applicable') ?></span>
+</div>
+
+<script type="text/javascript">
+order.overlay('shipping-method-overlay',  <?php echo $this->getQuote()->isVirtual() ? 'false' : 'true' ?>);
+order.overlay('address-shipping-overlay', <?php echo $this->getQuote()->isVirtual() ? 'false' : 'true' ?>);
+</script>

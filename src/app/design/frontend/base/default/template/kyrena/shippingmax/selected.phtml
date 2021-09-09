@@ -1,0 +1,112 @@
+<?php
+/**
+ * Created V/12/04/2019
+ * Updated L/22/02/2021
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+$help = $this->helper('shippingmax');
+$code = $this->getData('code');
+$rate = $this->getRate($code);
+$item = new Varien_Object($this->getItem($code));
+
+$onclick = $this->getData('onclick');
+if ($this->helper('core')->isModuleEnabled('Magestore_Onestepcheckout'))
+	$onclick = trim('save_shipping_method(shipping_method_url, update_shipping_payment, update_shipping_review); '.$onclick);
+?>
+
+<div class="shippingmax" id="<?php echo $code ?>">
+	<?php echo $this->getChildHtml('messages') ?>
+
+	<?php if (!empty($rate)): ?>
+		<div class="head">
+			<?php $ratecode = $rate->getCode() ?>
+			<?php if (empty($item->getData('id'))): // sans choix ?>
+				<?php if (Mage::app()->getStore()->isAdmin()): ?>
+					<input type="radio" data-special="1" name="order[shipping_method]" class="dummy radio" id="s_method_<?php echo $ratecode ?>" onclick="shippingmax.open('<?php echo $help->getMapUrl($code) ?>');" />
+				<?php else: ?>
+					<input type="radio" data-special="1" name="shipping_method" class="dummy radio" id="s_method_<?php echo $ratecode ?>" onclick="shippingmax.open('<?php echo $help->getMapUrl($code) ?>');" />
+				<?php endif ?>
+			<?php elseif (Mage::app()->getStore()->isAdmin()): // admin selected ou pas ?>
+				<?php if ($this->getIsSelected($rate)): ?>
+					<input type="radio" data-special="1" name="order[shipping_method]" value="<?php echo $ratecode ?>" checked="checked" class="radio" id="s_method_<?php echo $ratecode ?>" onclick="order.setShippingMethod(this.value);" />
+				<?php else: ?>
+					<input type="radio" data-special="1" name="order[shipping_method]" value="<?php echo $ratecode ?>" class="radio" id="s_method_<?php echo $ratecode ?>" onclick="order.setShippingMethod(this.value);" />
+				<?php endif ?>
+			<?php elseif ($this->getIsSelected($rate)): // front selected ?>
+				<?php if (!empty($onclick)): ?>
+					<input type="radio" data-special="1" name="shipping_method" value="<?php echo $ratecode ?>" checked="checked" class="radio" id="s_method_<?php echo $ratecode ?>" onclick="<?php echo $onclick ?>" />
+				<?php else: ?>
+					<input type="radio" data-special="1" name="shipping_method" value="<?php echo $ratecode ?>" checked="checked" class="radio" id="s_method_<?php echo $ratecode ?>" />
+				<?php endif ?>
+			<?php else: // front ?>
+				<?php if (!empty($onclick)): ?>
+					<input type="radio" data-special="1" name="shipping_method" value="<?php echo $ratecode ?>" class="radio" id="s_method_<?php echo $ratecode ?>" onclick="<?php echo $onclick ?>" />
+				<?php else: ?>
+					<input type="radio" data-special="1" name="shipping_method" value="<?php echo $ratecode ?>" class="radio" id="s_method_<?php echo $ratecode ?>" />
+				<?php endif ?>
+			<?php endif ?>
+			<label for="s_method_<?php echo $ratecode ?>">
+				<?php echo $help->escapeEntities($rate->getMethodTitle()) ?>
+				<?php $excl = $this->getShippingPrice($rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()) ?>
+				<?php $incl = $this->getShippingPrice($rate->getPrice(), true) ?>
+				<?php if (Mage::app()->getStore()->isAdmin()): ?>
+					<span class="add-price">/ <strong><?php echo $excl ?></strong></span>
+				<?php else: ?>
+					<?php echo $excl ?>
+				<?php endif ?>
+				<?php if (($incl != $excl) && $this->helper('tax')->displayShippingBothPrices()): ?>
+					(<?php echo $this->__('Incl. Tax') ?> <?php echo $incl ?>)
+				<?php endif ?>
+			</label>
+		</div>
+	<?php endif ?>
+
+	<?php if (!empty($rate) && !empty($item->getData('id'))): ?>
+		<div class="col2-set" onclick="shippingmax.click('<?php echo $code ?>');">
+			<?php if (!empty($desc = $item->getData('description'))): ?>
+				<div class="col-1">
+					<div class="content">
+						<strong class="name"><?php echo $item->getData('name') ?></strong>
+						<address class="addr">
+							<?php echo preg_replace('#^\s+<br ?/?>#', '', Mage::getModel('customer/address')->addData($item->getData())->format('html')) ?>
+						</address>
+					</div>
+				</div>
+				<div class="col-2">
+					<div class="content">
+						<p class="desc"><?php echo $help->formatDesc($desc) ?></p>
+					</div>
+				</div>
+			<?php else: ?>
+				<div class="col-one">
+					<div class="content">
+						<strong class="name"><?php echo $item->getData('name') ?></strong>
+						<address class="addr">
+							<?php echo preg_replace('#^\s+<br ?/?>#', '', Mage::getModel('customer/address')->addData($item->getData())->format('html')) ?>
+						</address>
+					</div>
+				</div>
+			<?php endif ?>
+		</div>
+	<?php endif ?>
+
+	<div class="btn" onclick="shippingmax.click('<?php echo $code ?>');">
+		<button type="button" onclick="shippingmax.open('<?php echo $help->getMapUrl($code) ?>');">
+			<?php echo $this->__('Choose my delivery location') ?>
+		</button>
+	</div>
+</div>

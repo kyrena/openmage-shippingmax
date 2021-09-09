@@ -1,0 +1,26 @@
+<?php
+/**
+ * Created V/12/04/2019
+ * Updated M/16/06/2020
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+ */
+
+class Kyrena_Shippingmax_Model_Carrier_Inpospacuk extends Kyrena_Shippingmax_Model_Carrier_Inpospaczk {
+
+	protected $_code = 'shippingmax_inpospacuk';
+	//otected $_full = true;
+	//otected $_api  = true;
+}

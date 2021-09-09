@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Created J/17/12/2020
+ * Updated S/04/09/2021
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+-->
+
+<config>
+	<menu>
+		<tools translate="title">
+			<title>Tools</title>
+			<sort_order>101</sort_order>
+			<children>
+				<configuration translate="title">
+					<title>Configuration</title>
+					<sort_order>1</sort_order>
+					<action>adminhtml/system_config</action>
+				</configuration>
+				<times translate="label">
+					<title>Delivery times</title>
+					<action>adminhtml/system_config/edit/section/shippingmax_times</action>
+					<sort_order>980</sort_order>
+				</times>
+				<shipping translate="label">
+					<title>Shipping Methods</title>
+					<action>adminhtml/system_config/edit/section/carriers</action>
+					<sort_order>981</sort_order>
+				</shipping>
+				<payment translate="label">
+					<title>Payment Methods</title>
+					<action>adminhtml/system_config/edit/section/payment</action>
+					<sort_order>982</sort_order>
+				</payment>
+			</children>
+		</tools>
+	</menu>
+	<acl>
+		<resources>
+			<admin>
+				<children>
+					<tools translate="title">
+						<title>Tools</title>
+						<sort_order>101</sort_order>
+						<children>
+							<configuration translate="title">
+								<title>Configuration</title>
+								<sort_order>1</sort_order>
+							</configuration>
+							<times translate="label">
+								<title>Delivery times</title>
+								<sort_order>980</sort_order>
+							</times>
+							<shipping translate="label">
+								<title>Shipping Methods</title>
+								<sort_order>981</sort_order>
+							</shipping>
+							<payment translate="label">
+								<title>Payment Methods</title>
+								<sort_order>982</sort_order>
+							</payment>
+						</children>
+					</tools>
+					<system>
+						<children>
+							<config>
+								<children>
+									<shippingmax_times translate="title">
+										<title>Delivery times</title>
+										<sort_order>0</sort_order>
+									</shippingmax_times>
+								</children>
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

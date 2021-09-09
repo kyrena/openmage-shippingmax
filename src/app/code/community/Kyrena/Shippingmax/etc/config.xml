@@ -1,0 +1,1226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Created V/12/04/2019
+ * Updated D/05/09/2021
+ *
+ * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * https://github.com/kyrena/openmage-shippingmax
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+-->
+
+<config>
+	<modules>
+		<Kyrena_Shippingmax>
+			<version>2.0.0</version>
+		</Kyrena_Shippingmax>
+	</modules>
+	<global>
+		<blocks>
+			<shippingmax>
+				<class>Kyrena_Shippingmax_Block</class>
+			</shippingmax>
+			<adminhtml>
+				<rewrite>
+					<sales_order_view_tab_info>Kyrena_Shippingmax_Block_Adminhtml_Rewrite_Info</sales_order_view_tab_info>
+				</rewrite>
+			</adminhtml>
+			<customer>
+				<rewrite>
+					<address_renderer_default>Kyrena_Shippingmax_Block_Rewrite_Renderer</address_renderer_default>
+				</rewrite>
+			</customer>
+			<sales>
+				<rewrite>
+					<order_info>Kyrena_Shippingmax_Block_Rewrite_Info</order_info>
+				</rewrite>
+			</sales>
+		</blocks>
+		<helpers>
+			<shippingmax>
+				<class>Kyrena_Shippingmax_Helper</class>
+			</shippingmax>
+		</helpers>
+		<models>
+			<shippingmax>
+				<class>Kyrena_Shippingmax_Model</class>
+				<resourceModel>shippingmax_resource</resourceModel>
+			</shippingmax>
+			<shippingmax_resource>
+				<class>Kyrena_Shippingmax_Model_Resource</class>
+				<entities>
+					<coords>
+						<table>shippingmax_coords</table>
+					</coords>
+					<details>
+						<table>shippingmax_order_details</table>
+					</details>
+				</entities>
+			</shippingmax_resource>
+			<sales>
+				<rewrite>
+					<order_shipment_track>Kyrena_Shippingmax_Model_Rewrite_Track</order_shipment_track>
+				</rewrite>
+			</sales>
+			<sales_resource>
+				<rewrite>
+					<quote_address_rate_collection>Kyrena_Shippingmax_Model_Rewrite_Rate</quote_address_rate_collection>
+				</rewrite>
+			</sales_resource>
+			<owebia_shipping2>
+				<rewrite>
+					<os2_data_address>Kyrena_Shippingmax_Model_Rewrite_Address</os2_data_address>
+					<Os2_data_address>Kyrena_Shippingmax_Model_Rewrite_Address</Os2_data_address>
+					<Os2_Data_address>Kyrena_Shippingmax_Model_Rewrite_Address</Os2_Data_address>
+					<Os2_Data_Address>Kyrena_Shippingmax_Model_Rewrite_Address</Os2_Data_Address>
+				</rewrite>
+			</owebia_shipping2>
+		</models>
+		<resources>
+			<shippingmax_setup>
+				<setup>
+					<module>Kyrena_Shippingmax</module>
+					<class>Mage_Eav_Model_Entity_Setup</class>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</shippingmax_setup>
+		</resources>
+		<events>
+			<sales_convert_quote_address_to_order>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>convertShippingAddress</method>
+					</shippingmax>
+				</observers>
+			</sales_convert_quote_address_to_order>
+			<sales_quote_address_save_before>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>updateShippingDescription</method>
+					</shippingmax>
+				</observers>
+			</sales_quote_address_save_before>
+			<sales_order_place_after>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>saveDetailsAndUpdateShippingDescription</method>
+					</shippingmax>
+				</observers>
+			</sales_order_place_after>
+		</events>
+		<cache>
+			<types>
+				<shippingmax_places translate="description">
+					<label>Shippingmax</label>
+					<description>Cache of places of delivery.</description>
+					<tags>SHIPPINGMAX_PLACES</tags>
+				</shippingmax_places>
+			</types>
+		</cache>
+		<shippingmax>
+			<maps>
+				<shippingmax_boxberry />
+				<shippingmax_boxberrycash />
+				<shippingmax_chronorelais />
+				<shippingmax_colisprivpts />
+				<shippingmax_dpdfrrelais />
+				<shippingmax_fivepost />
+				<shippingmax_fivepostcash />
+				<shippingmax_inpospacuk />
+				<shippingmax_inpospaczk />
+				<shippingmax_mondialrelay />
+				<shippingmax_pickpoint />
+				<shippingmax_pickpointcash />
+				<shippingmax_pocztk48Op />
+				<shippingmax_przesodbpk />
+				<shippingmax_przesodbpkcash />
+				<shippingmax_shiptor />
+				<shippingmax_shiptorcash />
+				<shippingmax_storepts />
+			</maps>
+			<mixmaps>
+				<shippingmax_boxberry>
+					<shippingmax_fivepost />
+					<shippingmax_pickpoint />
+					<shippingmax_shiptor />
+				</shippingmax_boxberry>
+				<shippingmax_boxberrycash>
+					<shippingmax_fivepostcash />
+					<shippingmax_pickpointcash />
+					<shippingmax_shiptorcash />
+				</shippingmax_boxberrycash>
+				<shippingmax_dpdfrrelais>
+					<shippingmax_colisprivpts />
+				</shippingmax_dpdfrrelais>
+				<shippingmax_fivepost>
+					<shippingmax_boxberry />
+					<shippingmax_pickpoint />
+					<shippingmax_shiptor />
+				</shippingmax_fivepost>
+				<shippingmax_fivepostcash>
+					<shippingmax_boxberrycash />
+					<shippingmax_pickpointcash />
+					<shippingmax_shiptorcash />
+				</shippingmax_fivepostcash>
+				<shippingmax_mondialrelay>
+					<shippingmax_colisprivpts />
+				</shippingmax_mondialrelay>
+				<shippingmax_pickpoint>
+					<shippingmax_boxberry />
+					<shippingmax_fivepost />
+					<shippingmax_shiptor />
+				</shippingmax_pickpoint>
+				<shippingmax_pickpointcash>
+					<shippingmax_boxberrycash />
+					<shippingmax_fivepostcash />
+					<shippingmax_shiptorcash />
+				</shippingmax_pickpointcash>
+				<shippingmax_shiptor>
+					<shippingmax_boxberry />
+					<shippingmax_fivepost />
+					<shippingmax_pickpoint />
+				</shippingmax_shiptor>
+				<shippingmax_shiptorcash>
+					<shippingmax_boxberrycash />
+					<shippingmax_fivepostcash />
+					<shippingmax_pickpointcash />
+				</shippingmax_shiptorcash>
+			</mixmaps>
+			<dadata>
+				<shippingmax_boxberry />
+				<shippingmax_boxberrycash />
+				<shippingmax_fivepost />
+				<shippingmax_fivepostcash />
+				<shippingmax_pickpoint />
+				<shippingmax_pickpointcash />
+				<shippingmax_shiptor />
+				<shippingmax_shiptorcash />
+			</dadata>
+		</shippingmax>
+	</global>
+	<frontend>
+		<events>
+			<controller_action_postdispatch_checkout_onepage_saveShippingMethod>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>updateShippingAddress</method>
+					</shippingmax>
+				</observers>
+			</controller_action_postdispatch_checkout_onepage_saveShippingMethod>
+		</events>
+		<routers>
+			<shippingmax>
+				<use>standard</use>
+				<args>
+					<module>Kyrena_Shippingmax</module>
+					<frontName>shippingmax</frontName>
+				</args>
+			</shippingmax>
+		</routers>
+		<layout>
+			<updates>
+				<shippingmax>
+					<file>kyrena/shippingmax.xml</file>
+				</shippingmax>
+			</updates>
+		</layout>
+		<translate>
+			<modules>
+				<Kyrena_Shippingmax>
+					<files>
+						<default>Kyrena_Shippingmax.csv</default>
+					</files>
+				</Kyrena_Shippingmax>
+			</modules>
+		</translate>
+	</frontend>
+	<admin>
+		<routers>
+			<adminhtml>
+				<args>
+					<modules>
+						<Kyrena_Shippingmax before="Mage_Adminhtml">Kyrena_Shippingmax</Kyrena_Shippingmax>
+					</modules>
+				</args>
+			</adminhtml>
+		</routers>
+	</admin>
+	<adminhtml>
+		<events>
+			<admin_system_config_changed_section_shippingmax_times>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>clearConfig</method>
+					</shippingmax>
+				</observers>
+			</admin_system_config_changed_section_shippingmax_times>
+			<admin_system_config_changed_section_carriers>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>clearConfig</method>
+					</shippingmax>
+				</observers>
+			</admin_system_config_changed_section_carriers>
+			<admin_system_config_changed_section_payment>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>clearConfig</method>
+					</shippingmax>
+				</observers>
+			</admin_system_config_changed_section_payment>
+			<adminhtml_init_system_config>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>hideConfig</method>
+					</shippingmax>
+				</observers>
+			</adminhtml_init_system_config>
+		</events>
+		<layout>
+			<updates>
+				<shippingmax>
+					<file>kyrena/shippingmax.xml</file>
+				</shippingmax>
+			</updates>
+		</layout>
+		<translate>
+			<modules>
+				<Kyrena_Shippingmax>
+					<files>
+						<default>Kyrena_Shippingmax.csv</default>
+					</files>
+				</Kyrena_Shippingmax>
+			</modules>
+		</translate>
+	</adminhtml>
+	<crontab>
+		<jobs>
+			<shippingmax>
+				<run>
+					<model>shippingmax/observer::updateFullFiles</model>
+				</run>
+				<schedule>
+					<cron_expr>0 * * * *</cron_expr>
+				</schedule>
+			</shippingmax>
+		</jobs>
+	</crontab>
+	<default>
+		<shippingmax_times>
+			<general>
+				<cutoff>12</cutoff>
+			</general>
+		</shippingmax_times>
+		<carriers>
+			<shippingmax>
+				<default_map>osm</default_map>
+			</shippingmax>
+			<!-- pickup -->
+			<shippingmax_storelocator>
+				<model>shippingmax/carrier_storelocator</model>
+				<active>0</active>
+				<sallowspecific>1</sallowspecific>
+				<can_show_all>1</can_show_all>
+				<owebia_config><![CDATA[{ "std": { "label": "All", "fees": 0 } }]]></owebia_config>
+				<dst_search>75</dst_search>
+			</shippingmax_storelocator>
+			<shippingmax_storepts>
+				<model>shippingmax/carrier_storepts</model>
+				<active>0</active>
+				<sallowspecific>1</sallowspecific>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example storepts",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 1.99
+    },
+    "std_free": {
+        "label": "Example storepts free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<dst_search>75</dst_search>
+			</shippingmax_storepts>
+			<shippingmax_chronorelais>
+				<model>shippingmax/carrier_chronorelais</model>
+				<img_title>Chronopost</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://www.chronopost.fr/recherchebt-ws-cxf/PointRelaisServiceWS?wsdl]]></api_url>
+				<tracking><![CDATA[https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GF,GP,GR,HU,IE,IT,LT,LU,LV,MQ,MT,NL,PL,PT,RE,RO,SE,SI,SK,YT</allowedcountry>
+				<specificcountry>AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GF,GP,GR,HU,IE,IT,LT,LU,LV,MQ,MT,NL,PL,PT,RE,RO,SE,SI,SK,YT</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example chronorelais",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example chronorelais free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_chronorelais>
+			<shippingmax_colisprivpts>
+				<model>shippingmax/carrier_colisprivpts</model>
+				<img_title>Colis Privé</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://www.colisprive.com/cpls/ws/v1/search.svc/relais]]></api_url>
+				<api_username>DEMO</api_username>
+				<tracking><![CDATA[https://www.colisprive.com/moncolis/pages/detailColis.aspx?numColis={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>FR</allowedcountry>
+				<specificcountry>FR</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example colisprivé",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example colisprivé free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_colisprivpts>
+			<shippingmax_mondialrelay>
+				<model>shippingmax/carrier_mondialrelay</model>
+				<img_title>Mondial Relay</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL]]></api_url>
+				<tracking><![CDATA[https://www.mondialrelay.fr/suivi-de-colis?numeroExpedition={{num}}&codePostal={{postcode}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BE,ES,FR,LU,MC</allowedcountry>
+				<specificcountry>BE,ES,FR,LU,MC</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example mondialrelay",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example mondialrelay free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_mondialrelay>
+			<shippingmax_dpdfrrelais>
+				<model>shippingmax/carrier_dpdfrrelais</model>
+				<img_title>DPD Relais</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://mypudo.pickup-services.com/mypudo/mypudo.asmx?WSDL]]></api_url>
+				<tracking><![CDATA[https://www.dpd.fr/tracex_{num}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>FR</allowedcountry>
+				<specificcountry>FR</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example dpdfrrelais",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example dpdfrrelais free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>20</max_weight>
+			</shippingmax_dpdfrrelais>
+			<shippingmax_inpospacuk>
+				<model>shippingmax/carrier_inpospacuk</model>
+				<img_title>InPost</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api-uk.easypack24.net/v4]]></api_url>
+				<tracking><![CDATA[https://tracking.inpost.co.uk/?number={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>GB</allowedcountry>
+				<specificcountry>GB</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example inpospacuk",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example inpospacuk free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>25</max_weight>
+				<max_points>100</max_points>
+			</shippingmax_inpospacuk>
+			<shippingmax_inpospaczk>
+				<model>shippingmax/carrier_inpospaczk</model>
+				<img_title>InPost</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api-pl.easypack24.net/v4]]></api_url>
+				<tracking><![CDATA[https://inpost.pl/sledzenie-przesylek?number={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>PL</allowedcountry>
+				<specificcountry>PL</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example inpospaczk",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example inpospaczk free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>25</max_weight>
+				<max_points>100</max_points>
+			</shippingmax_inpospaczk>
+			<shippingmax_pocztk48Op>
+				<model>shippingmax/carrier_pocztk48Op</model>
+				<img_title>Pocztex</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://mapa.ecommerce.poczta-polska.pl/widget/pickuppoints/json/getByLatLng/]]></api_url>
+				<tracking><![CDATA[https://emonitoring.poczta-polska.pl/?numer={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>PL</allowedcountry>
+				<specificcountry>PL</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example pocztk48Op",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example pocztk48Op free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_points>100</max_points>
+			</shippingmax_pocztk48Op>
+			<shippingmax_przesodbpk>
+				<model>shippingmax/carrier_przesodbpk</model>
+				<img_title>Zásilkovna</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://www.zasilkovna.cz/api/v4/__API_KEY__/branch.json]]></api_url>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BE,BG,CZ,DE,DK,EE,ES,FI,FR,GR,HR,HU,LT,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA</allowedcountry>
+				<specificcountry>BE,BG,CZ,DE,DK,EE,ES,FI,FR,GR,HR,HU,LT,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example przesodbpk",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example przesodbpk free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_points>100</max_points>
+			</shippingmax_przesodbpk>
+			<shippingmax_przesodbpkcash>
+				<model>shippingmax/carrier_przesodbpkcash</model>
+				<img_title>Zásilkovna</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://www.zasilkovna.cz/api/v4/__API_KEY__/branch.json]]></api_url>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BG,CZ,DE,EE,ES,GR,HR,HU,LT,LV,PL,PT,RO,RU,SI,SK,UA</allowedcountry>
+				<specificcountry>BG,CZ,DE,EE,ES,GR,HR,HU,LT,LV,PL,PT,RO,RU,SI,SK,UA</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example przesodbpkcash",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example przesodbpkcash free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_amounts>
+					<bg>
+						<currency>BGN</currency>
+						<amount>1400</amount>
+					</bg>
+					<cz>
+						<currency>CZK</currency>
+						<amount>20000</amount>
+					</cz>
+					<de>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</de>
+					<ee>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</ee>
+					<es>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</es>
+					<gr>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</gr>
+					<hr>
+						<currency>HRK</currency>
+						<amount>5200</amount>
+					</hr>
+					<hu>
+						<currency>HUF</currency>
+						<amount>220000</amount>
+					</hu>
+					<lt>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</lt>
+					<lv>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</lv>
+					<pl>
+						<currency>PLN</currency>
+						<amount>2000</amount><!-- 3000 -->
+					</pl>
+					<pt>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</pt>
+					<ro>
+						<currency>RON</currency>
+						<amount>3500</amount>
+					</ro>
+					<ru>
+						<currency>RUB</currency>
+						<amount>200000</amount>
+					</ru>
+					<si>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</si>
+					<sk>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</sk>
+					<ua>
+						<currency>UAH</currency>
+						<amount>20000</amount>
+					</ua>
+				</max_amounts>
+				<max_points>100</max_points>
+			</shippingmax_przesodbpkcash>
+			<shippingmax_boxberry>
+				<model>shippingmax/carrier_boxberry</model>
+				<img_title>Boxberry</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListPoints]]></api_url>
+				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
+				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example boxberry",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example boxberry free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_boxberry>
+			<shippingmax_boxberrycash>
+				<model>shippingmax/carrier_boxberrycash</model>
+				<img_title>Boxberry</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListPoints]]></api_url>
+				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
+				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example boxberrycash",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example boxberrycash free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+ 				<max_amounts>
+					<am>
+						<currency>AMD</currency>
+						<!--amount></amount-->
+					</am>
+					<by>
+						<currency>BYN</currency>
+						<!--amount></amount-->
+					</by>
+					<kg>
+						<currency>KGS</currency>
+						<!--amount></amount-->
+					</kg>
+					<kz>
+						<currency>KZT</currency>
+						<!--amount></amount-->
+					</kz>
+					<ru>
+						<currency>RUB</currency>
+						<amount>300000</amount>
+					</ru>
+				</max_amounts>
+			</shippingmax_boxberrycash>
+			<shippingmax_fivepost>
+				<model>shippingmax/carrier_fivepost</model>
+				<img_title>5post</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api-preprod-omni.x5.ru/]]></api_url>
+				<tracking><![CDATA[https://fivepost.ru/tracking?id={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>RU</allowedcountry>
+				<specificcountry>RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example fivepost",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example fivepost free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>15</max_weight>
+			</shippingmax_fivepost>
+			<shippingmax_fivepostcash>
+				<model>shippingmax/carrier_fivepostcash</model>
+				<img_title>5post</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api-preprod-omni.x5.ru/]]></api_url>
+				<tracking><![CDATA[https://fivepost.ru/tracking?id={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>RU</allowedcountry>
+				<specificcountry>RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example fivepostcash",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example fivepostcash free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>15</max_weight>
+ 				<max_amounts>
+					<ru>
+						<currency>RUB</currency>
+						<!--amount></amount-->
+					</ru>
+				</max_amounts>
+			</shippingmax_fivepostcash>
+			<shippingmax_pickpoint>
+				<model>shippingmax/carrier_pickpoint</model>
+				<img_title>PickPoint</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://e-solution.pickpoint.ru/apitest/]]></api_url>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BY,RU</allowedcountry>
+				<specificcountry>BY,RU</specificcountry>
+				<allowed_methods>PickPoint</allowed_methods>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example pickpoint",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example pickpoint free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_pickpoint>
+			<shippingmax_pickpointcash>
+				<model>shippingmax/carrier_pickpointcash</model>
+				<img_title>PickPoint</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://e-solution.pickpoint.ru/apitest/]]></api_url>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>RU</allowedcountry>
+				<specificcountry>RU</specificcountry>
+				<allowed_methods>PickPoint</allowed_methods>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example pickpointcash",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example pickpointcash free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+ 				<max_amounts>
+					<ru>
+						<currency>RUB</currency>
+						<amount>15000</amount>
+					</ru>
+				</max_amounts>
+			</shippingmax_pickpointcash>
+			<shippingmax_shiptor>
+				<model>shippingmax/carrier_shiptor</model>
+				<img_title>Shiptor</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api.shiptor.ru/public/v1]]></api_url>
+				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BY,KZ,RU</allowedcountry>
+				<specificcountry>BY,KZ,RU</specificcountry>
+				<allowed_methods>shiptor</allowed_methods>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example shiptor",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example shiptor free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>10</max_weight>
+			</shippingmax_shiptor>
+			<shippingmax_shiptorcash>
+				<model>shippingmax/carrier_shiptorcash</model>
+				<img_title>Shiptor</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api.shiptor.ru/public/v1]]></api_url>
+				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BY,KZ,RU</allowedcountry>
+				<specificcountry>BY,KZ,RU</specificcountry>
+				<allowed_methods>shiptor</allowed_methods>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example shiptorcash",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example shiptorcash free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>10</max_weight>
+ 				<max_amounts>
+					<by>
+						<currency>BYN</currency>
+						<!--amount></amount-->
+					</by>
+					<kz>
+						<currency>KZT</currency>
+						<!--amount></amount-->
+					</kz>
+					<ru>
+						<currency>RUB</currency>
+						<amount>150000</amount>
+					</ru>
+				</max_amounts>
+			</shippingmax_shiptorcash>
+			<!-- home -->
+			<shippingmax_colisprivdom>
+				<model>shippingmax/carrier_colisprivdom</model>
+				<active>0</active>
+				<tracking><![CDATA[https://www.colisprive.com/moncolis/pages/detailColis.aspx?numColis={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>FR</allowedcountry>
+				<specificcountry>FR</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example colisprivé",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example colisprivé free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_colisprivdom>
+			<shippingmax_dhldestand>
+				<model>shippingmax/carrier_dhldestand</model>
+				<active>0</active>
+				<tracking><![CDATA[https://gls-group.eu/PL/pl/sledzenie-paczek?match={{num}}]]></tracking>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example dhldestand",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example dhldestand free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_dhldestand>
+			<shippingmax_glsdeeurob>
+				<model>shippingmax/carrier_glsdeeurob</model>
+				<active>0</active>
+				<tracking><![CDATA[https://gls-group.eu/DE/de/paketverfolgung?match={{num}}]]></tracking>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example glsdeeurob",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example glsdeeurob free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_glsdeeurob>
+			<shippingmax_glsplstand>
+				<model>shippingmax/carrier_glsplstand</model>
+				<active>0</active>
+				<tracking><![CDATA[https://gls-group.eu/PL/pl/sledzenie-paczek?match={{num}}]]></tracking>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example glsplstand",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example glsplstand free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_glsplstand>
+			<shippingmax_glsplstandcash>
+				<model>shippingmax/carrier_glsplstandcash</model>
+				<active>0</active>
+				<tracking><![CDATA[https://gls-group.eu/PL/pl/sledzenie-paczek?match={{num}}]]></tracking>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example glsplstandcash Cash On Delivery",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example glsplstandcash Cash On Delivery free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_glsplstandcash>
+			<shippingmax_pocztk48st>
+				<model>shippingmax/carrier_pocztk48st</model>
+				<active>0</active>
+				<tracking><![CDATA[https://emonitoring.poczta-polska.pl/?numer={{num}}]]></tracking>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example pocztk48st",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example pocztk48st free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_pocztk48st>
+			<shippingmax_pocztpecom>
+				<model>shippingmax/carrier_pocztpecom</model>
+				<active>0</active>
+				<tracking><![CDATA[https://emonitoring.poczta-polska.pl/?numer={{num}}]]></tracking>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example pocztpecom",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example pocztpecom free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_pocztpecom>
+			<shippingmax_przesstand>
+				<model>shippingmax/carrier_przesstand</model>
+				<active>0</active>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>AE,AT,BE,BG,CH,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,HU,IE,IT,LT,LU,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA,US</allowedcountry>
+				<specificcountry>AE,AT,BE,BG,CH,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,HU,IE,IT,LT,LU,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA,US</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example przesstand",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example przesstand free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_przesstand>
+			<shippingmax_przesstandcash>
+				<model>shippingmax/carrier_przesstandcash</model>
+				<active>0</active>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>AT,BG,CZ,DE,EE,ES,GR,HR,HU,IT,LT,LV,PL,PT,RO,RU,SI,SK,UA</allowedcountry>
+				<specificcountry>AT,BG,CZ,DE,EE,ES,GR,HR,HU,IT,LT,LV,PL,PT,RO,RU,SI,SK,UA</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example przesstandcash Cash On Delivery",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example przesstandcash Cash On Delivery free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_amounts>
+					<at>
+						<currency>EUR</currency>
+						<amount>500</amount>
+					</at>
+					<bg>
+						<currency>BGN</currency>
+						<amount>1400</amount>
+					</bg>
+					<cz>
+						<currency>CZK</currency>
+						<amount>20000</amount>
+					</cz>
+					<de>
+						<currency>EUR</currency>
+						<amount>500</amount>
+					</de>
+					<ee>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</ee>
+					<es>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</es>
+					<gr>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</gr>
+					<hr>
+						<currency>HRK</currency>
+						<amount>5200</amount>
+					</hr>
+					<hu>
+						<currency>HUF</currency>
+						<amount>220000</amount>
+					</hu>
+					<it>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</it>
+					<lt>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</lt>
+					<lv>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</lv>
+					<pl>
+						<currency>PLN</currency>
+						<amount>3000</amount>
+					</pl>
+					<pt>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</pt>
+					<ro>
+						<currency>RON</currency>
+						<amount>3500</amount>
+					</ro>
+					<ru>
+						<currency>RUB</currency>
+						<amount>54000</amount>
+					</ru>
+					<si>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</si>
+					<sk>
+						<currency>EUR</currency>
+						<amount>700</amount>
+					</sk>
+					<ua>
+						<currency>UAH</currency>
+						<amount>20000</amount>
+					</ua>
+				</max_amounts>
+			</shippingmax_przesstandcash>
+			<shippingmax_boxberryhome>
+				<model>shippingmax/carrier_boxberryhome</model>
+				<active>0</active>
+				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
+				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example boxberryhome",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example boxberryhome free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_boxberryhome>
+			<shippingmax_boxberryhomecash>
+				<model>shippingmax/carrier_boxberryhomecash</model>
+				<active>0</active>
+				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
+				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example boxberryhomecash",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example boxberryhomecash free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+ 				<max_amounts>
+					<am>
+						<currency>AMD</currency>
+						<!--amount></amount-->
+					</am>
+					<by>
+						<currency>BYN</currency>
+						<!--amount></amount-->
+					</by>
+					<kg>
+						<currency>KGS</currency>
+						<!--amount></amount-->
+					</kg>
+					<kz>
+						<currency>KZT</currency>
+						<!--amount></amount-->
+					</kz>
+					<ru>
+						<currency>RUB</currency>
+						<amount>300000</amount>
+					</ru>
+				</max_amounts>
+			</shippingmax_boxberryhomecash>
+			<shippingmax_shiptorhome>
+				<model>shippingmax/carrier_shiptorhome</model>
+				<active>0</active>
+				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BY,KZ,RU</allowedcountry>
+				<specificcountry>BY,KZ,RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example shiptorhome",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example shiptorhome free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+			</shippingmax_shiptorhome>
+			<shippingmax_shiptorhomecash>
+				<model>shippingmax/carrier_shiptorhomecash</model>
+				<active>0</active>
+				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>BY,KZ,RU</allowedcountry>
+				<specificcountry>BY,KZ,RU</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example shiptorhomecash",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example shiptorhomecash free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+ 				<max_amounts>
+					<by>
+						<currency>BYN</currency>
+						<!--amount></amount-->
+					</by>
+					<kz>
+						<currency>KZT</currency>
+						<!--amount></amount-->
+					</kz>
+					<ru>
+						<currency>RUB</currency>
+						<amount>150000</amount>
+					</ru>
+				</max_amounts>
+			</shippingmax_shiptorhomecash>
+		</carriers>
+	</default>
+</config>
