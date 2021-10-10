@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/04/09/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -266,8 +266,9 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		// en cas de mix (par exemple si colisprivpts est désactivé et que mondialrelay est activé)
 		$mixmaps = Mage::getConfig()->getNode('global/shippingmax/mixmaps')->asArray();
 		foreach ($mixmaps as $code => $candidates) {
-			if (array_key_exists($fullcode, $candidates) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId))
-			    return $code;
+			if (array_key_exists($fullcode, $candidates) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId) &&
+			    Mage::getStoreConfigFlag('carriers/'.$code.'/mix_'.str_replace('shippingmax_', '', $fullcode), $storeId))
+				return $code;
 		}
 
 		return $fullcode;

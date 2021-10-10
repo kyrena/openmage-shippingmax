@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/26/07/2021
- * Updated J/05/08/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -21,7 +21,7 @@
 class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Model_Carrier {
 
 	protected $_code = 'shippingmax_dpdfrrelais';
-	protected $_full = true;
+	protected $_full = false;
 	protected $_api  = true;
 
 	public function loadItemsFromApi(object $address) {
@@ -82,7 +82,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 					'country_id'  => 'FR',
 					'description' => implode("\n", array_filter([
 						(string) $result->LOCAL_HINT,
-						$this->getDesc($result)
+						$this->createDesc($result)
 					]))
 				];
 			}
@@ -91,7 +91,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 		return $items;
 	}
 
-	private function getDesc($data) {
+	protected function createDesc($data) {
 
 		if (empty($data->OPENING_HOURS_ITEMS))
 			return '';

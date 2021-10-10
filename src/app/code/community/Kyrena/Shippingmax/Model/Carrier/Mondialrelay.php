@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/05/08/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -29,9 +29,9 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 		$items = [];
 		ini_set('default_socket_timeout', 20);
 
-		// https://www.mondialrelay.fr/solutionspro/documentation-technique/cahier-des-charges-informatiques/
-		// https://www.mondialrelay.fr/media/108937/Solution-Web-Service-V5.6.pdf
 		try {
+			// https://www.mondialrelay.fr/solutionspro/documentation-technique/cahier-des-charges-informatiques/
+			// https://www.mondialrelay.fr/media/108937/Solution-Web-Service-V5.6.pdf
 			$client = new SoapClient($this->getConfigData('api_url'), ['trace' => 1]);
 			$params = [
 				'Enseigne'  => $this->getConfigData('api_username'),
@@ -84,7 +84,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 					'postcode'    => $result->CP,
 					'city'        => $result->Ville,
 					'country_id'  => $result->Pays,
-					'description' => $this->getDesc($result),
+					'description' => $this->createDesc($result),
 					'dst'         => round($result->Distance / 1000, 1)
 				];
 			}
@@ -97,7 +97,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 
 		// France (avec la Corse et Monaco - sans les DROM/COM)
 		// 05/2019 https://www.mondialrelay.fr/faq/envoyer-un-colis/faites-vous-des-livraisons-dans-les-dom-tom-/
-		if (in_array($request->getData('country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
+		if (in_array($request->getData('dest_country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
 
 			$postcode = trim($request->getData('dest_postcode'));
 			// FR France
@@ -125,7 +125,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 		}
 		// Espagne (avec les Îles Baléares - sans les Îles Canaries, Ceuta et Melilla)
 		// 05/2019 https://www.puntopack.es/preguntas-frecuentes/enviar-un-paquete/entregas-en-las-islas-o-enclaves/
-		else if ($request->getData('country_id') == 'ES') {
+		else if ($request->getData('dest_country_id') == 'ES') {
 
 			$postcode = trim($request->getData('dest_postcode'));
 			// ES 07XXX Baleares (AUTORISÉ)
@@ -146,7 +146,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 		return parent::checkIfAvailable($request);
 	}
 
-	private function getDesc($data) {
+	protected function createDesc($data) {
 
 		$html = [];
 		$days = [

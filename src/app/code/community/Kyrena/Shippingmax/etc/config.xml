@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated D/05/09/2021
+ * Updated M/14/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Kyrena_Shippingmax>
-			<version>2.0.0</version>
+			<version>2.1.0</version>
 		</Kyrena_Shippingmax>
 	</modules>
 	<global>
@@ -1108,6 +1108,7 @@
 			<shippingmax_boxberryhome>
 				<model>shippingmax/carrier_boxberryhome</model>
 				<active>0</active>
+				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListZips]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
@@ -1128,6 +1129,7 @@
 			<shippingmax_boxberryhomecash>
 				<model>shippingmax/carrier_boxberryhomecash</model>
 				<active>0</active>
+				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListZips]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>

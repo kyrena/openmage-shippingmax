@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated D/05/09/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -31,17 +31,11 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 			return $items;
 
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 90);
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
+		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Content-Type: application/json; charset="utf-8"',
 			'Accept: application/json',
+			'Content-Type: application/json; charset="utf-8"',
 			'X-Authorization-Token: ваш_API_ключ'
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -50,7 +44,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 			'method'  => 'getDeliveryPoints',
 			'params'  => ['kladr_id' => $address->getData('kladr')]
 		]));
-		$results = $this->runCurl($ch, true);
+		$results = $this->runCurl($ch, true, 99);
 
 		//echo '<pre>';print_r(array_slice($results['result'], 0, 20));exit;
 		if (!empty($results['result']) && is_array($results['result'])) {
@@ -87,7 +81,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 					'country_id'  => 'RU',
 					'description' => implode("\n", array_filter([
 						$result['trip_description'],
-						$this->getDesc($result)
+						$this->createDesc($result)
 					])),
 					//'max_weight'  => $result['limits']['max_weight']['value'] ?? null, // kg
 					'cod'         => !empty($result['cod']),
@@ -98,7 +92,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 		return $items;
 	}
 
-	private function getDesc($data) {
+	protected function createDesc($data) {
 
 		if ($data['work_schedule'] == 'Пн,Вт,Ср,Чт,Пт,Сб,Вс: круглосуточно')
 			return '24/7';

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated S/04/09/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -40,13 +40,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 			// mode CURL
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 			curl_setopt($ch, CURLOPT_USERPWD, $this->getConfigData('api_username').':'.$this->getConfigData('api_password', true));
-			curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 
 			$results = $this->runCurl($ch, false);
 			$results = explode("\n", utf8_encode($results)); // le fichier est en iso-8859-1
@@ -95,7 +89,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 							'postcode'    => $data['CODE_POSTAL'],
 							'city'        => $data['VILLE'],
 							'country_id'  => $data['PAYS'],
-							'description' => $this->getDescCurl($data)
+							'description' => $this->createDescCurl($data)
 						];
 					}
 				}
@@ -133,7 +127,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 						'postcode'    => $result['address']['zip'],
 						'city'        => $result['address']['city'],
 						'country_id'  => $result['address']['country'],
-						'description' => $this->getDescApi($result['openingHours']),
+						'description' => $this->createDescApi($result['openingHours']),
 						'dst'         => round($result['distance'], 1)
 					];
 				}
@@ -146,7 +140,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 	protected function checkIfAvailable(object $request) {
 
 		// France (sans la Corse, sans Monaco, sans les DROM/COM)
-		if (in_array($request->getData('country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
+		if (in_array($request->getData('dest_country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
 
 			$postcode = trim($request->getData('dest_postcode'));
 			// FR France
@@ -178,7 +172,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 		return parent::checkIfAvailable($request);
 	}
 
-	private function getDescCurl($values) {
+	protected function createDescCurl($values) {
 
 		$html = [];
 		$days = [
@@ -210,7 +204,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 		return implode("\n", $html);
 	}
 
-	private function getDescApi($values) {
+	protected function createDescApi($values) {
 
 		$html = [];
 		$days = [

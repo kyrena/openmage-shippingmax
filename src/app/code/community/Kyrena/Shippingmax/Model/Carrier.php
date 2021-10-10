@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/04/09/2021
+ * Updated J/23/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -81,6 +81,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 	protected $_maxPoints = 50;             // map.phtml self.maxpts
 	protected $_cacheLifetime = 3600;       // 1 heure en secondes
 	protected $_fullCacheLifetime = 432000; // 5 jours en secondes
+	protected $_postcodesOnly = false;
 
 	public function isFull() {
 		return $this->_full;
@@ -105,7 +106,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 			$str = trim(round($address->getData('lat'), 6).'/'.round($address->getData('lng'), 6));
 
 		$skey = $this->_code.'_'.md5($str); // clef pour le cache des résultats de la recherche actuelle
-		if ($this->_code == 'shippingmax_colisprivdom')
+		if ($this->_postcodesOnly)
 			$skey = $this->_code;
 
 		$cache = $this->getCacheFile();
@@ -183,16 +184,17 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		}
 
 		// en cas de mix, recommence et fusionne
+		// par exemple shippingmax_mondialrelay et shippingmax_colisprivpts
 		$mixmaps = Mage::getConfig()->getNode('global/shippingmax/mixmaps')->asArray();
 		if (array_key_exists($this->_code, $mixmaps)) {
 
 			foreach (array_keys($mixmaps[$this->_code]) as $mixmap) {
 
-				$mixmap = substr($mixmap, strpos($mixmap, '_') + 1); // supprime shippingmax_
-				if ($this->getConfigFlag('mix_'.$mixmap)) {
+				$split = (array) explode('_', $mixmap); // (yes)
+				if ($this->getConfigFlag('mix_'.$split[1])) {
 
 					try {
-						$subitems = Mage::getSingleton('shippingmax/carrier_'.$mixmap)->loadItemsFromCache($address, true);
+						$subitems = Mage::getSingleton($split[0].'/carrier_'.$split[1])->loadItemsFromCache($address, true);
 
 						if (!empty($subitems) && is_array($subitems)) {
 							// marque
@@ -227,7 +229,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 		// PRÉPARE LES RÉSULTATS
 		// filtre les points relais
-		if (!empty($items) && ($this->_code != 'shippingmax_colisprivdom')) {
+		if (!empty($items) && !$this->_postcodesOnly) {
 			foreach ($items as $key => &$item) {
 				if (empty($item['id']) || !$this->checkItem($address, $item))
 					unset($items[$key]);
@@ -252,7 +254,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 			}
 
 			$maxPoints = $this->getConfigData('max_points');
-			if (!in_array($this->_code, ['shippingmax_storelocator', 'shippingmax_colisprivdom']) && (count($items) > $maxPoints))
+			if (!$this->_postcodesOnly && ($this->_code != 'shippingmax_storelocator') && (count($items) > $maxPoints))
 				$items = array_slice($items, 0, max(10, $maxPoints), true);
 
 			// sauvegarde dans le cache openmage
@@ -265,7 +267,14 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		return [];
 	}
 
-	protected function runCurl($ch, bool $json) {
+	protected function runCurl($ch, bool $json, int $timeout = 20) {
+
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 
 		$result = curl_exec($ch);
 		$result = (($result === false) || (curl_errno($ch) !== 0)) ? trim('CURL_ERROR '.curl_errno($ch).' '.curl_error($ch)) : $result;
@@ -275,7 +284,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 			Mage::throwException($this->_code.' '.$result);
 
 		if ($json)
-			$result = @json_decode($result, true);
+			$result = @json_decode(trim($result), true);
 
 		return $result;
 	}
@@ -328,7 +337,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 	protected function checkMaxAmount(object $request) {
 
 		$maxAmounts = $this->getConfigData('max_amounts');
-		$key = strtolower($request->getDestCountryId());
+		$key = strtolower($request->getData('dest_country_id'));
 
 		if (!empty($maxAmounts) && !empty($maxAmounts[$key]['amount'])) {
 

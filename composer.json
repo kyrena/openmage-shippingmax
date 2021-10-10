@@ -34,6 +34,13 @@
         "ext-curl": "*",
         "ext-soap": "*"
     },
+    "replace": {
+        "kyrena/openmage-shippingmax-alone": "*",
+        "owebia/magento1-module-advanced-shipping": "*",
+        "openmage-module-fostering/owebia_shipping_2": "*",
+        "openmage-module-fostering/man4x_mondialrelay": "*",
+        "openmage-module-fostering/mondialrelay_pointsrelais": "*"
+    },
     "minimum-stability": "dev",
     "extra": {
         "map": [

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated J/05/08/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -32,17 +32,11 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 		$items = [];
 
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/jwt-generate-claims/rs256/1?apikey='.$this->getConfigData('api_password', true));
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
+		curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/jwt-generate-claims/rs256/1?apikey='.$this->getConfigData('api_password', true));
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Content-Type: application/x-www-form-urlencoded',
-			'Accept: application/json'
+			'Accept: application/json',
+			'Content-Type: application/x-www-form-urlencoded'
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'subject=OpenAPI&audience=A122019!');
 		$results = $this->runCurl($ch, true);
@@ -53,17 +47,11 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 		$jwt = $results['jwt'];
 		do {
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/api/v1/pickuppoints/query').
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 			curl_setopt($ch, CURLOPT_POST, true);
-			curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
+			curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/api/v1/pickuppoints/query').
 			curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Accept: application/json',
 				'Content-Type: application/json; charset="utf-8"',
-				'Accept: application/json',
 				'Authorization: "Bearer '.$jwt.'"'
 			]);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
@@ -102,7 +90,7 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 						'country_id'  => $mapping[$country],
 						'description' => implode("\n", array_filter([
 							$result['additional'],
-							//$this->getDesc($result['workHours'])
+							//$this->createDesc($result['workHours'])
 						])),
 						//'max_weight'  => $result['cellLimits']['maxWeight'] / 1000, // g
 						'cod'         => !empty($result['cashAllowed']) || !empty($result['cardAllowed']),

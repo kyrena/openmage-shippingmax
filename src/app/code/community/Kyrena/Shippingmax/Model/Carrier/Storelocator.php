@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/23/04/2020
- * Updated J/05/08/2021
+ * Updated M/14/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -26,9 +26,14 @@ class Kyrena_Shippingmax_Model_Carrier_Storelocator extends Kyrena_Shippingmax_M
 
 	public function loadItemsFromApi(object $address) {
 
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
 		$heads   = [];
 		$items   = [];
-		$results = array_filter(explode("\n", file_get_contents($this->getConfigData('api_url'))));
+		$results = $this->runCurl($ch, false);
+		$results = array_filter(explode("\n", $results));
 
 		if (count($results) > 2) {
 

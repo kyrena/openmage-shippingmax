@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/04/09/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -20,7 +20,7 @@
 
 class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action {
 
-	private function loadItems(object $address, string $code, $session = null) {
+	protected function loadItems(object $address, string $code, $session = null) {
 
 		$this->_countries = Mage::helper('shippingmax')->getCarrierCountries($code);
 
@@ -105,19 +105,19 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		return (!empty($items) && is_array($items)) ? $items : [];
 	}
 
-	private function isAjax() {
+	protected function isAjax() {
 		return ($this->getRequest()->isXmlHttpRequest() || !empty($this->getRequest()->getParam('isAjax')));
 	}
 
-	private function initOurLayoutMessages() {
+	protected function initOurLayoutMessages() {
 		$this->_initLayoutMessages(Mage::helper('shippingmax')->getSession(true));
 	}
 
-	private function getSession() {
+	protected function getSession() {
 		return Mage::helper('shippingmax')->getSession();
 	}
 
-	private function getShippingAddress() {
+	protected function getShippingAddress() {
 
 		$address = Mage::helper('shippingmax')->getSession()->getQuote()->getShippingAddress();
 		$session = Mage::getSingleton('customer/session');
@@ -132,7 +132,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		}
 
 		if (empty($address->getData('country_id')))
-			$address->setData('country_id', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_DEFAULT_COUNTRY));
+			$address->setData('country_id', Mage::getStoreConfig('general/country/default'));
 
 		return $address;
 	}
@@ -198,7 +198,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		// construit la liste des pays autorisés
 		if (!is_numeric($code)) {
 
-			$default = Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_DEFAULT_COUNTRY);
+			$default = Mage::getStoreConfig('general/country/default');
 
 			// tout les pays
 			// le pays sélectionné toujours en premier
@@ -445,8 +445,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 				' - <a href="'.Mage::getUrl('*/*/debugclearsession', ['pass' => $pass]).'">clear session</a>'.
 				' - <a href="'.Mage::getUrl('*/*/debugsetaddress', ['pass' => $pass]).'">set address</a>';
 			$text =
-				'<b>shippingAdress:</b>'."\n".trim($address->format('text')).
-					"\nlat:".$address->getData('lat')."\nlng:".$address->getData('lng')."\n\n".
+				'<b>shippingAdress:</b>'."\n".trim($address->format('text'))."\n\n".
 				'<b>session:keys:</b> '.print_r(array_keys($session), true).
 				'<br><b>session:data:</b> '.print_r($session, true).
 				'<br><b>cache:keys/count:</b> '.print_r($cache, true);

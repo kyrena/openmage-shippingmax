@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/21/05/2021
- * Updated M/10/08/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -129,7 +129,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 			'</div>');
 
 		// marquage
-		$element->setLegend($element->getLegend().((in_array($defaultCountry, $selCountries) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId)) ? ' *' : ''));
+		$element->setLegend($element->getData('legend').((in_array($defaultCountry, $selCountries) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId)) ? ' *' : ''));
 
 		return parent::render($element);
 	}
@@ -138,7 +138,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 		return $this->_html;
 	}
 
-	private function getStoreId() {
+	protected function getStoreId() {
 
 		$store   = $this->getRequest()->getParam('store');
 		$website = $this->getRequest()->getParam('website');

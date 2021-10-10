@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated D/05/09/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -30,16 +30,10 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/login');
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Content-Type: application/json; charset="utf-8"',
-			'Accept: application/json'
+			'Accept: application/json',
+			'Content-Type: application/json; charset="utf-8"'
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'Login'    => $this->getConfigData('api_username'),
@@ -52,16 +46,10 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/clientpostamatlist').
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 90);
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Content-Type: application/json; charset="utf-8"',
-			'Accept: application/json'
+			'Accept: application/json',
+			'Content-Type: application/json; charset="utf-8"'
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'SessionId' => $results['SessionId'],
@@ -69,7 +57,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		]));
 
 		$mapping = ['BY' => 'BY', 'RUS' => 'RU'];
-		$results = $this->runCurl($ch, true);
+		$results = $this->runCurl($ch, true, 99);
 
 		//echo '<pre>';print_r(array_slice($results, 0, 20));exit;
 		if (!empty($results) && is_array($results)) {
@@ -121,7 +109,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 					'country_id'  => $mapping[$country],
 					'description' => implode("\n", array_filter([
 						$result['OutDescription'],
-						$this->getDesc($result['WorkTime']),
+						$this->createDesc($result['WorkTime']),
 					])),
 					//'max_weight'  => $result['MaxWeight'] ?? null, // kg
 					'cod'         => !empty($result['Cash']),
@@ -132,7 +120,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		return $items;
 	}
 
-	private function getDesc($data) {
+	protected function createDesc($data) {
 
 		$data = (array) explode(',', $data); // (yes)
 		if (count($data) != 7)

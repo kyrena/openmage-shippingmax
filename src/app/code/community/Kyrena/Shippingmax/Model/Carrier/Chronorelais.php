@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/11/07/2019
- * Updated J/05/08/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -30,8 +30,8 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 		$drom  = ['RE' => 'REU', 'MQ' => 'MTQ', 'GP' => 'GLP', 'YT' => 'MYT', 'GF' => 'GUF'];
 		ini_set('default_socket_timeout', 20);
 
-		// https://www.chronopost.fr/fr/plateformes-e-commerce
 		try {
+			// https://www.chronopost.fr/fr/plateformes-e-commerce
 			$client = new SoapClient($this->getConfigData('api_url'), ['trace' => 1]);
 			$params = [
 				'accountNumber'      => $this->getConfigData('api_username'),
@@ -86,7 +86,7 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 					'postcode'    => $result->codePostal,
 					'city'        => $result->localite,
 					'country_id'  => $result->codePays,
-					'description' => $this->getDesc($result),
+					'description' => $this->createDesc($result),
 					//'max_weight'  => $result->poidsMaxi ?? null // kg
 				];
 			}
@@ -95,7 +95,7 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 		return $items;
 	}
 
-	private function getDesc($data) {
+	protected function createDesc($data) {
 
 		$html = [];
 		$days = [

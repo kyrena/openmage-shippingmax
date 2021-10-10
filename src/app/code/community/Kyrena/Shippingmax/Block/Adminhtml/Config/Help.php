@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/26/06/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -22,36 +22,47 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
-		if (mb_stripos($element->getHtmlId(), 'openmage') !== false)
+		$legend = $element->getData('legend');
+
+		// pour la configuration des autres modes de livraison
+		if (stripos($element->getHtmlId(), 'openmage') !== false)
 			return sprintf('<p class="box" style="margin-top:16px;">%s</p>', $element->getData('legend'));
 
+		// pour la configuration des modes de livraison d'owebia
 		$version = $this->helper('shippingmax')->getOwebiaVersion();
-		if (mb_stripos($element->getHtmlId(), 'owebia') !== false) {
+		if (stripos($element->getHtmlId(), 'owebia') !== false) {
 			if (empty(Mage::getConfig()->getNode('modules/Owebia_Shipping2/lite')))
-				return sprintf('<p class="box" style="margin-top:16px;">%s %s <span class="f-right"><a href="%s">github.com/owebia</a></span></p>',
-					'Owebia/Shipping', $version, 'https://github.com/owebia/magento1-module-advanced-shipping');
+				return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="f-right"><a href="%s">github.com/owebia</a></span></p>',
+					'Owebia/Shipping', $version, $legend,
+					'https://github.com/owebia/magento1-module-advanced-shipping');
 			else
-				return sprintf('<p class="box" style="margin-top:16px;">%s %s %s <span class="f-right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',
-					'Owebia/Shipping', $version.'-lite', '(without jquery/editor/phpparser/doc)',
+				return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="f-right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',
+					'Owebia/Shipping', $version.'-lite', $legend,
 					'https://github.com/kyrena/openmage-shippingmax',
 					'https://github.com/owebia/magento1-module-advanced-shipping');
 		}
 
+		// pour la configuration des modes de livraison de kyrena
 		$version = $this->helper('shippingmax')->getVersion();
-		if (!empty($element->getData('legend')))
-			return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp;|&nbsp; %s <span class="f-right"><a href="%s">github.com/kyrena</a></span></p>',
-				'Kyrena/Shippingmax', $version, $element->getData('legend'), 'https://github.com/kyrena/openmage-shippingmax');
+		if (!empty($legend))
+			return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="f-right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',
+				'Kyrena/Shippingmax', $version, $legend,
+				'https://github.com/kyrena/openmage-shippingmax',
+				'https://github.com/owebia/magento1-module-advanced-shipping');
 
+		// entête modes de livraison et délais de livraison
 		$msg = $this->checkRewrites();
 		if ($msg !== true)
 			return sprintf('<p class="box">%s %s <span class="f-right"><a href="%s">github.com/kyrena</a></span></p><p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
-				'Kyrena/Shippingmax', $version, 'https://github.com/kyrena/openmage-shippingmax',
+				'Kyrena/Shippingmax', $version,
+				'https://github.com/kyrena/openmage-shippingmax',
 				$this->__('INCOMPLETE MODULE INSTALLATION'),
 				$this->__('There is conflict (<em>%s</em>).', $msg));
 
-		$var = ini_get('max_input_vars');
+		$var = (int) ini_get('max_input_vars');
 		return sprintf('<p class="box">%s %s <span class="no-display" id="inptvars"></span> <span class="f-right"><a href="%s">github.com/kyrena</a></span></p>%s',
-			'Kyrena/Shippingmax', $version, 'https://github.com/kyrena/openmage-shippingmax',
+			'Kyrena/Shippingmax', $version,
+			'https://github.com/kyrena/openmage-shippingmax',
 			'<script type="text/javascript">self.addEventListener("load", function () {'.
 			' var nb = document.querySelectorAll("input, select, textarea").length, elem = document.getElementById("inptvars");'.
 			' if ('.$var.' <= nb) {'.
@@ -61,7 +72,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 			'});</script>');
 	}
 
-	private function checkRewrites() {
+	protected function checkRewrites() {
 
 		$rewrites = [
 			['block' => 'adminhtml/sales_order_view_tab_info'],

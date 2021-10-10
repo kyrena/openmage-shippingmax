@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/02/02/2021
- * Updated J/05/08/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -27,8 +27,11 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 
 	public function loadItemsFromApi(object $address) {
 
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
+
 		$items   = [];
-		$results = @json_decode(trim(file_get_contents($this->getConfigData('api_url'))), true);
+		$results = $this->runCurl($ch, true, 99);
 
 		//echo '<pre>';print_r(array_slice($results['data'], 0, 20));exit;
 		if (!empty($results['data']) && is_array($results['data'])) {
@@ -48,7 +51,7 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 					'city'        => $result['city'],
 					'region'      => $result['region'] ?? null,
 					'country_id'  => strtoupper($result['country']),
-					'description' => $this->getDesc($result['openingHours']['regular']),
+					'description' => $this->createDesc($result['openingHours']['regular']),
 					//'max_weight'  => $result['maxWeight'] ?? null, // kg
 					'cod'         => ($result['creditCardPayment'] == 'yes') && (stripos($result['name'], 'ZBOX') === false) && (stripos($result['name'], 'Z BOX') === false) && (stripos($result['name'], 'Z-BOX') === false) && (stripos($result['name'], 'ALZABOX') === false) && (stripos($result['name'], 'ALZA-BOX') === false) && (stripos($result['name'], 'ALZA BOX') === false),
 				];
@@ -58,7 +61,7 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 		return $items;
 	}
 
-	private function getDesc($data) {
+	protected function createDesc($data) {
 
 		$html = [];
 		$days = [

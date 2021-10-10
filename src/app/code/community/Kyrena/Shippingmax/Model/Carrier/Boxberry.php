@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated J/05/08/2021
+ * Updated L/04/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -29,15 +29,17 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 	public function loadItemsFromApi(object $address) {
 
 		$url = $this->getConfigData('api_url');
-		// tous les points relais
 		if (stripos($url, 'prepaid') !== false)
 			$url = preg_replace('#prepaid=\d?#i', 'prepaid=1', $url);
 		else
 			$url = (strpos($url, '?') === false) ? $url.'?prepaid=1' : $url.'&prepaid=1';
 
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+
 		$items   = [];
 		$mapping = ['051' => 'AM', '112' => 'BY', '417' => 'KG', '398' => 'KZ', '643' => 'RU'];
-		$results = @json_decode(trim(file_get_contents($url)), true);
+		$results = $this->runCurl($ch, true);
 
 		//echo '<pre>';print_r(array_slice($results, 0, 20));exit;
 		if (!empty($results) && is_array($results)) {
@@ -73,7 +75,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 					'country_id'  => $mapping[$country],
 					'description' => implode("\n", array_filter([
 						trim($result['TripDescription']),
-						$this->getDesc($result['WorkShedule'])
+						$this->createDesc($result['WorkShedule'])
 					])),
 					//'max_weight'  => $result['LoadLimit'] ?? null, // kg
 					'cod'         => ($result['OnlyPrepaidOrders'] != 'Yes'),
@@ -84,7 +86,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 		return $items;
 	}
 
-	private function getDesc($data) {
+	protected function createDesc($data) {
 
 		if (empty($data))
 			return '';

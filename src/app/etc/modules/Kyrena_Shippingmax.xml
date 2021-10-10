@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated S/30/01/2021
+ * Updated V/10/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -31,7 +31,7 @@
 				<Owebia_Shipping2 />
 			</depends>
 			<!-- see https://www.luigifab.fr/openmage/modules for more information -->
-			<update>https://raw.githubusercontent.com/kyrena/openmage-shippingmax/master/app/code/community/Kyrena/Shippingmax/etc/config.xml</update>
+			<update>https://raw.githubusercontent.com/kyrena/openmage-shippingmax/master/src/app/code/community/Kyrena/Shippingmax/etc/config.xml</update>
 		</Kyrena_Shippingmax>
 	</modules>
 </config>

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/05/08/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -26,8 +26,11 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 
 	public function loadItemsFromApi(object $address) {
 
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/machines');
+
 		$items   = [];
-		$results = @json_decode(file_get_contents(trim($this->getConfigData('api_url'), '/').'/machines'), true);
+		$results = $this->runCurl($ch, true, 49);
 
 		//echo '<pre>';print_r(array_slice($results['_embedded']['machines'], 0, 20));exit;
 		if (!empty($results['_embedded']['machines']) && is_array($results['_embedded']['machines'])) {

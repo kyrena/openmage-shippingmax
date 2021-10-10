@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/31/07/2021
+ * Updated M/14/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -29,8 +29,11 @@ class Kyrena_Shippingmax_Block_Selected extends Mage_Checkout_Block_Onepage_Ship
 		// Mage_Checkout_Block_Onepage_Shipping_Method_Available ($this)
 		// Mage_Adminhtml_Block_Sales_Order_Create_Shipping_Method_Form
 		$object = Mage::app()->getStore()->isAdmin() ? Mage::getBlockSingleton('adminhtml/sales_order_create_shipping_method_form') : $this;
-		if ($data['item']['country_id'] != $object->getAddress()->getData('country_id'))
-			return false; // n'autorise pas le changement de pays
+		if ($data['item']['country_id'] != $object->getAddress()->getData('country_id')) {
+			// sauf pour Monaco qui est considéré comment France avec Mondial Relay
+			if (!(($code == 'shippingmax_mondialrelay') && ($data['item']['country_id'] == 'FR') && ($object->getAddress()->getData('country_id') == 'MC')))
+				return false; // n'autorise pas le changement de pays
+		}
 
 		$countries = Mage::helper('shippingmax')->getCarrierCountries($code);
 		return in_array($data['item']['country_id'], $countries) ? $data['item'] : false;

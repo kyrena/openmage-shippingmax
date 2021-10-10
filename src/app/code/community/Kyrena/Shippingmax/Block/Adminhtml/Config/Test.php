@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/25/04/2019
- * Updated V/16/07/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -46,7 +46,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Test extends Mage_Adminhtml_Bloc
 		return sprintf('<span id="%s">%s</span>', $element->getHtmlId(), $element->getValue());
 	}
 
-	private function getStoreId() {
+	protected function getStoreId() {
 
 		$store   = $this->getRequest()->getParam('store');
 		$website = $this->getRequest()->getParam('website');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Created J/22/07/2021
+ * Created M/14/09/2021
  * Updated V/17/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
@@ -18,13 +18,26 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Kyrena_Shippingmax_Model_Carrier_Boxberryhomecash extends Kyrena_Shippingmax_Model_Carrier_Boxberryhome {
+// de manière à empécher de lancer cette procédure plusieurs fois
+$lock = Mage::getModel('index/process')->setId('shippingmax_setup');
+if ($lock->isLocked())
+	Mage::throwException('Please wait, upgrade is already in progress...');
 
-	protected $_code = 'shippingmax_boxberryhomecash';
-	//otected $_full = true;
-	//otected $_api  = true;
+$lock->lockAndBlock();
+$this->startSetup();
 
-	public function getCacheFile() {
-		return Mage::getBaseDir('var').'/shippingmax_boxberryhome.dat';
-	}
+// de manière à continuer quoi qu'il arrive
+ignore_user_abort(true);
+set_time_limit(0);
+
+try {
+	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("KZ","RU");');
+	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("FR","MC") AND postcode LIKE "98000";');
 }
+catch (Throwable $t) {
+	$lock->unlock();
+	throw $t;
+}
+
+$this->endSetup();
+$lock->unlock();

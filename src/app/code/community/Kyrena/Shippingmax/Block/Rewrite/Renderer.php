@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/04/06/2020
- * Updated L/30/08/2021
+ * Updated M/28/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -85,9 +85,9 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 			return $code;
 
 		if (mb_stripos(__FILE__, 'vendor/kyrena') === false)
-			return parent::render($address, $output);
+			return ($output == 'telephone') ? $address->getData('telephone') : parent::render($address, $output);
 
-		$code = empty($code) ? Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_DEFAULT_COUNTRY) : $code;
+		$code = empty($code) ? Mage::getStoreConfig('general/country/default') : $code;
 
 		// formatage du numéro de téléphone
 		// https://github.com/giggsey/libphonenumber-for-php
@@ -98,7 +98,10 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 				$phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
 				$phoneNumb = $phoneUtil->parse($telephone, $code);
 
-				if ($phoneUtil->getRegionCodeForNumber($phoneNumb) == $code) {
+				if ($output == 'telephone') {
+					$telephone = $phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::E164);
+				}
+				else if ($phoneUtil->getRegionCodeForNumber($phoneNumb) == $code) {
 					$telephone = $phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::NATIONAL);
 					if (in_array($output, [null, 'html']) && Mage::app()->getStore()->isAdmin())
 						$telephone .= ' ['.$phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::INTERNATIONAL).']';
@@ -111,6 +114,9 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 				Mage::logException($t);
 			}
 		}
+
+		if ($output == 'telephone')
+			return $telephone;
 
 		// génération du template de l'adresse
 		// https://github.com/adamlc/address-format

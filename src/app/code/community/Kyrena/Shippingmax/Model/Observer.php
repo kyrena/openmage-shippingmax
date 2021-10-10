@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/04/09/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -29,7 +29,7 @@ class Kyrena_Shippingmax_Model_Observer {
 		// shippingmax_pocztk48Op_std = ok
 		// shippingmax_pocztk48Op = truc_muche = ko
 		$fullcode = $observer->getData('controller_action')->getRequest()->getPost('shipping_method');
-		if ((mb_stripos($fullcode, 'shippingmax') === false) || (substr_count($fullcode, '_') < 2))
+		if (!$help->isSpecial($fullcode) || (substr_count($fullcode, '_') < 2))
 			return;
 
 		$session = $help->getSession();
@@ -123,7 +123,7 @@ class Kyrena_Shippingmax_Model_Observer {
 			// modifie le code du mode de livraison (en cas de mix)
 			$order->setOrigShippingMethod($fullcode);
 			if (!empty($item->getData('carrier')))
-				$fullcode = preg_replace('#shippingmax_[^_]+#', 'shippingmax_'.$item->getData('carrier'), $fullcode);
+				$fullcode = preg_replace('#^[^_]+_[^_]+#', $item->getData('carrier'), $fullcode);
 
 			$address->setShippingMethod($fullcode);
 			$order->setShippingMethod($fullcode);
@@ -261,21 +261,21 @@ class Kyrena_Shippingmax_Model_Observer {
 	}
 
 	// CRON shippingmax
-	// toutes les 4 heures, oui mais on s'assure aussi que le fichier a expiré
+	// toutes les heures, oui mais on s'assure aussi que le fichier a expiré
 	public function updateFullFiles($cron = null) {
 
 		$app = Mage::app();
 		$msg = [];
 
-		$helper   = Mage::helper('shippingmax');
+		$help     = Mage::helper('shippingmax');
 		$storeIds = Mage::getResourceModel('core/store_collection')->getAllIds();
 		$carriers = Mage::getModel('shipping/config')->getAllCarriers();
-		$extra    = ['shippingmax_storelocator', 'shippingmax_colisprivdom'];
 		$address  = new Varien_Object(['lat' => -1, 'lng' => -1]);
+		$hasError = false;
 
 		foreach ($carriers as $code => $carrier) {
 
-			if (method_exists($carrier, 'isFull') && $carrier->isFull() && (in_array($code, $extra) || $helper->isSpecial($code))) {
+			if (method_exists($carrier, 'isFull') && ($carrier->isFull() === true)) {
 
 				try {
 					foreach ($storeIds as $storeId) {
@@ -283,26 +283,26 @@ class Kyrena_Shippingmax_Model_Observer {
 						if ($code == 'shippingmax_storelocator')
 							$active = Mage::getStoreConfigFlag('carriers/'.$code.'/api_url', $storeId);
 						else
-							$active = Mage::getStoreConfigFlag('carriers/'.$helper->getEnabledCarrierCode($code, $storeId).'/active', $storeId);
+							$active = Mage::getStoreConfigFlag('carriers/'.$help->getEnabledCarrierCode($code, $storeId).'/active', $storeId);
 
 						if ($active) {
 
 							$cache = $carrier->getCacheFile();
-							$life  = $carrier->getFullCacheLifetime() - 900; // -15 min
+							$life  = $carrier->getFullCacheLifetime() - 600; // 10 minutes en secondes
 
 							if (!is_file($cache) || (filemtime($cache) < (time() - $life))) {
 
-								$msg[] = date('c');
+								$start = microtime(true);
 								$items = $carrier->loadItemsFromApi($address);
 
 								// sauvegarde dans le cache fichier et dans le cache openmage
 								// voir aussi Kyrena_Shippingmax_Model_Carrier::loadItemsFromCache
 								if (!empty($items) && is_array($items)) {
 
-									$msg[] = ' » '.$code.': '.count($items).' items';
-
 									// met à jour le fichier et le cache
 									file_put_contents($cache, serialize($items));
+									$msg[] = $code.': '.floor(microtime(true) - $start).' seconds, '.floor(filesize($cache) / 1024).' k downloaded at '.floor(filesize($cache) / 1024).' k/s, '.count($items).' items';
+
 									if ($app->useCache('shippingmax_places'))
 										$app->saveCache(serialize($items), $code, ['SHIPPINGMAX_PLACES'], $carrier->getFullCacheLifetime());
 
@@ -314,13 +314,11 @@ class Kyrena_Shippingmax_Model_Observer {
 									}
 								}
 								else {
-									$msg[] = ' » '.$code.': ERROR, no data downloaded!';
+									$msg[] = $code.': '.floor(microtime(true) - $start).' seconds, ERROR, read your '.Mage::getStoreConfig('dev/log/exception_file').' or check your API credentials';
 								}
-
-								$msg[] = date('c');
 							}
 							else {
-								$msg[] = ' » '.$code.': already up to date';
+								$msg[] = $code.': already up to date';
 							}
 
 							if (is_object($cron))
@@ -330,17 +328,21 @@ class Kyrena_Shippingmax_Model_Observer {
 						}
 					}
 
-					$msg[] = ' » '.$code.': disabled';
+					$msg[] = $code.': disabled';
 				}
 				catch (Throwable $t) {
+					$hasError = true;
 					Mage::logException($t);
-					$msg[] = ' » '.$code.': '.$t->getMessage();
+					$msg[] = $code.': '.$t->getMessage();
 				}
 			}
 		}
 
-		if (is_object($cron))
+		if (is_object($cron)) {
 			$cron->setData('messages', implode("\n", $msg));
+			if ($hasError) // pour le statut du cron
+				Mage::throwException("\n\n".$cron->getData('messages')."\n\n");
+		}
 
 		return $msg;
 	}

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated J/05/08/2021
+ * Updated V/08/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -30,13 +30,13 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 
 		$code = (string) substr($element->getHtmlId(), -2); // (yes)
 		if (empty(self::$_config))
-			self::$_config = $this->getConfig();
+			self::$_config = $this->getArrayConfig();
 
 		if (!array_key_exists($code, self::$_config))
 			return '';
 
-		$this->setConfig(self::$_config[$code]);
-		$this->setCountry($code);
+		$this->setData('config', self::$_config[$code]);
+		$this->setData('country', $code);
 		$this->setElement($element);
 
 		$html = $this->toHtml();
@@ -49,7 +49,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		return preg_replace('#<table.*#', '<div class="grid">', $this->_getHeaderHtml($element)).$html.str_replace('</tbody></table>', '</div>', $this->_getFooterHtml($element));
 	}
 
-	private function getConfig() {
+	protected function getArrayConfig() {
 
 		$ids     = Mage::getResourceModel('core/store_collection')->setOrder('name', 'asc')->getColumnValues('store_id');
 		$dromcom = $this->helper('shippingmax')->getFranceDromCom(false);
@@ -99,6 +99,9 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 					// réessaye avec des codes postaux trouvés dans la config du mode de livraison
 					if ($code == 'shippingmax_colisprivdom') {
 						$cps = ($country == 'FR') ? ['all' => [75001, 75002, 69001, 69002, 38000]] : [];
+					}
+					else if (in_array($code, ['shippingmax_boxberryhome', 'shippingmax_boxberryhomecash'])) {
+						$cps = ($country == 'RU') ? ['all' => [181270, 192212, 307200, 350009, 350010, 350011, 350012, 460014, 460015]] : [];
 					}
 					else {
 						$cps = Mage::getStoreConfig('carriers/'.$code.((strpos($code, 'owebiashipping') === false) ? '/owebia_config' : '/config'), $storeId);
@@ -162,7 +165,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		return $items;
 	}
 
-	private function getArrayData(object $rate, int $storeId, string $country, $postcode = null, $ckey = null) {
+	protected function getArrayData(object $rate, int $storeId, string $country, $postcode = null, $ckey = null) {
 
 		$code = $rate->getData('carrier').'_'.$rate->getData('method');
 		$ckey = empty($ckey) ? $code : $code.'_'.$ckey;

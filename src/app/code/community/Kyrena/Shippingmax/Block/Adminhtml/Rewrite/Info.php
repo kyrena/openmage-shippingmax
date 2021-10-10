@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/04/2019
- * Updated J/20/05/2021
+ * Updated M/28/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -26,7 +26,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Rewrite_Info extends Mage_Adminhtml_Blo
 		$desc  = $order->getShippingDescription();
 
 		$order->setShippingDescription('~!!!~');
-		$html = preg_replace('#<strong>~!!!~</strong>.+</fieldset>#sU', $this->getInfos().'<br />'.$order->getShippingMethod().'</fieldset>', parent::_toHtml());
+		$html = preg_replace('#<strong>~!!!~</strong>.+</fieldset>#sU', $this->getInfos().'<br /><i>'.$order->getData('shipping_method').'</i></fieldset>', parent::_toHtml());
 		$order->setShippingDescription($desc);
 
 		return $html;
@@ -46,6 +46,29 @@ class Kyrena_Shippingmax_Block_Adminhtml_Rewrite_Info extends Mage_Adminhtml_Blo
 			$html[] = '<strong style="font-size:115%;">'.$order->getOrigData('shipping_description').'</strong> ';
 		if ($showPrice)
 			$html[] = '<span style="float:right;">'.$order->formatPrice($order->getShippingInclTax()).'</span> ';
+
+		if ($showTitle) {
+			$locale = Mage::getSingleton('core/translate')->getLocale();
+			if (Mage::getStoreConfig('general/locale/code', $order->getStoreId()) != $locale) {
+
+				$label = Mage::getStoreConfig('carriers/'.$help->getCarrierCode($order->getData('shipping_method')).'/title', 0);
+				if ($label == $order->getOrigData('shipping_description'))
+					$label = '';
+
+				// essaye d'afficher le libellé du mode de livraison dans la langue de l'utilisateur du back-office
+				$storeIds = array_filter(Mage::getResourceModel('core/store_collection')->getAllIds());
+				foreach ($storeIds as $storeId) {
+					if ($locale == Mage::getStoreConfig('general/locale/code', $storeId)) {
+						$label = (empty($label) ? '' : $label.' / ').Mage::getStoreConfig('carriers/'.$help->getCarrierCode($order->getData('shipping_method')).'/title', $storeId);
+						break;
+					}
+				}
+
+				if (!empty($label) && ($label != $order->getOrigData('shipping_description')))
+					$html[] = '<br />('.$label.') ';
+			}
+		}
+
 		if ($showDelay && !empty($delay))
 			$html[] = '<br />'.$delay;
 

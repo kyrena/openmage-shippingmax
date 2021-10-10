@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated J/05/08/2021
+ * Updated M/14/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -23,19 +23,14 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivdom extends Kyrena_Shippingmax_M
 	protected $_code = 'shippingmax_colisprivdom';
 	protected $_full = true;
 	protected $_api  = true;
+	protected $_postcodesOnly = true;
 	protected $_fullCacheLifetime = 3600; // 1 heure en secondes
 
 	public function loadItemsFromApi(object $address) {
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_USERPWD, $this->getConfigData('api_username').':'.$this->getConfigData('api_password', true));
-		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 
 		$items   = [];
 		$results = explode("\n", $this->runCurl($ch, false));

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/04/09/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -32,7 +32,7 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 		return 'https://nominatim.openstreetmap.org/search'.
 			'?q='.(empty($city) ? urlencode($postcode) : urlencode($postcode).','.urlencode($city)).
 			'&countrycodes='.urlencode(strtoupper($country)).
-			'&accept-language='.Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE).
+			'&accept-language='.Mage::getStoreConfig('general/locale/code').
 			'&format=json';
 	}
 
@@ -62,23 +62,29 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 			$url = $this->getApiUrl(null, $postcode, $country);
 		}
 
+		if (($country == 'FR') && ($postcode == '98000'))
+			$country = 'MC';
+
 		$this->load($key = md5($str), 'addrkey');
 
 		if (empty($this->getId())) {
 
-			if (in_array($country, ['KZ', 'RU']) && !empty($key = Mage::getStoreConfig('carriers/shippingmax/dadataru_api_key'))) {
+			if (in_array($country, ['KZ', 'RU']) && !empty($subkey = Mage::getStoreConfig('carriers/shippingmax/dadataru_api_key'))) {
 
 				// https://dadata.ru/api/clean/address/
 				try {
 					$results = $this->sendRequest($url, [
-						'Content-Type: application/json; charset="utf-8"',
 						'Accept: application/json',
-						'Authorization: Token '.$key,
+						'Content-Type: application/json; charset="utf-8"',
+						'Authorization: Token '.$subkey,
 						'X-Secret: '.Mage::getStoreConfig('carriers/shippingmax/dadataru_api_token')
 					], json_encode([$str]));
 
 					if (empty($results) || !is_array($results))
 						Mage::throwException(sprintf('No results from dadata (%s - %s - %s)', $city, $postcode, $country));
+
+					if (!empty($results['error']))
+						Mage::throwException(sprintf('No results from dadata (%s - %s - %s)', $results['status'], $results['error'], $results['message']));
 
 					//echo '<pre>';print_r($results);exit;
 					if (!empty($results[0]['geo_lat']) && !empty($results[0]['geo_lon']) &&
@@ -198,7 +204,7 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 		return 'https://nominatim.openstreetmap.org/reverse'.
 			'?lat='.urlencode(trim($lat)).
 			'&lon='.urlencode(trim($lng)).
-			'&accept-language='.Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE).
+			'&accept-language='.Mage::getStoreConfig('general/locale/code').
 			'&format=json';
 	}
 
@@ -216,19 +222,22 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 
 		if (empty($this->getId())) {
 
-			if ($dadata && !empty($key = Mage::getStoreConfig('carriers/shippingmax/dadataru_api_key'))) {
+			if ($dadata && !empty($subkey = Mage::getStoreConfig('carriers/shippingmax/dadataru_api_key'))) {
 
 				// https://dadata.ru/api/geolocate/
 				try {
 					$results = $this->sendRequest('https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address', [
-						'Content-Type: application/json; charset="utf-8"',
 						'Accept: application/json',
-						'Authorization: Token '.$key,
+						'Content-Type: application/json; charset="utf-8"',
+						'Authorization: Token '.$subkey,
 						'X-Secret: '.Mage::getStoreConfig('carriers/shippingmax/dadataru_api_token')
 					], json_encode(['lat' => $lat, 'lon' => $lng]));
 
 					if (empty($results) || !is_array($results))
 						Mage::throwException(sprintf('No reverse results from dadata (%s - %s)', $lat, $lng));
+
+					if (!empty($results['error']))
+						Mage::throwException(sprintf('No reverse results from dadata (%s - %s - %s)', $results['status'], $results['error'], $results['message']));
 
 					//echo '<pre>';print_r($results);exit;
 					if (!empty($results['suggestions'][0]['data']['country_iso_code']) &&
@@ -303,7 +312,7 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 		return $this;
 	}
 
-	private function sendRequest(string $url, $headers = null, $post = null) {
+	protected function sendRequest(string $url, $headers = null, $post = null) {
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/31/03/2020
- * Updated M/29/12/2020
+ * Updated V/08/10/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -42,7 +42,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Carriers extends Mage_Adminhtml_
 
 		ksort($config);
 
-		$this->setConfig($config);
+		$this->setData('config', $config);
 		$this->setGroup('shippingmax');
 
 		return $this->toHtml();

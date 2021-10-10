@@ -385,6 +385,7 @@ var shippingmax = new (function () {
 		var data = [];
 
 		Array.prototype.forEach.call(form.elements, function (elem) {
+
 			if (elem.nodeName === 'INPUT') {
 				if (['checkbox', 'radio'].indexOf(elem.getAttribute('type')) > -1) {
 					if (elem.checked)

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/05/08/2021
+ * Updated J/30/09/2021
  *
  * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
@@ -26,33 +26,22 @@ class Kyrena_Shippingmax_Model_Carrier_Pocztk48Op extends Kyrena_Shippingmax_Mod
 
 	public function loadItemsFromApi(object $address) {
 
-		$items   = [];
-		$methods = ['POCZTA', 'ORLEN', 'AUTOMAT_POCZTOWY', 'RUCH', 'ZABKA', 'FRESHMARKET']; //$this->getConfigData('allowed_methods');
-
-		// <html>
-		// <body>
 		// <script src="https://mapa.ecommerce.poczta-polska.pl/widget/scripts/ppwidget.js"></script>
 		// <script>PPWidgetApp.toggleMap(callback); function callback() { }</script>
-		// </body>
-		// </html>
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
+		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Content-Type: application/json; charset="utf-8"',
-			'Accept: application/json'
+			'Accept: application/json',
+			'Content-Type: application/json; charset="utf-8"'
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'latitude'  => $address->getData('lat'),
 			'longitude' => $address->getData('lng'),
-			'type'      => $methods
+			'type'      => ['POCZTA', 'ORLEN', 'AUTOMAT_POCZTOWY', 'RUCH', 'ZABKA', 'FRESHMARKET'] //explode(',', $this->getConfigData('allowed_methods'))
 		]));
+
+		$items   = [];
 		$results = $this->runCurl($ch, true);
 
 		//echo '<pre>';print_r(array_slice($results, 0, 20));exit;
