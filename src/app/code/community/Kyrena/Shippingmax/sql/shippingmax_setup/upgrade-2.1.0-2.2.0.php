@@ -1,7 +1,7 @@
 <?php
 /**
- * Created M/14/09/2021
- * Updated V/17/09/2021
+ * Created J/28/10/2021
+ * Updated J/28/10/2021
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -31,8 +31,11 @@ ignore_user_abort(true);
 set_time_limit(0);
 
 try {
-	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("KZ","RU");');
-	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("FR","MC") AND postcode LIKE "98000";');
+	$config = Mage::getModel('core/config_data')->load('carriers/shippingmax/dadataru_api_key', 'path');
+	if (empty($config->getData('value')))
+		$this->run('TRUNCATE '.$this->getTable('shippingmax_coords'));
+	else
+		$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id NOT IN ("KZ","RU");');
 }
 catch (Throwable $t) {
 	$lock->unlock();

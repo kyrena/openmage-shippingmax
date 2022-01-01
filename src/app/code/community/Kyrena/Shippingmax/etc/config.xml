@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated M/14/09/2021
+ * Updated J/09/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Kyrena_Shippingmax>
-			<version>2.1.0</version>
+			<version>2.2.0</version>
 		</Kyrena_Shippingmax>
 	</modules>
 	<global>
@@ -140,6 +140,7 @@
 				<shippingmax_dpdfrrelais />
 				<shippingmax_fivepost />
 				<shippingmax_fivepostcash />
+				<shippingmax_inpospacit />
 				<shippingmax_inpospacuk />
 				<shippingmax_inpospaczk />
 				<shippingmax_mondialrelay />
@@ -278,14 +279,6 @@
 					</shippingmax>
 				</observers>
 			</admin_system_config_changed_section_carriers>
-			<admin_system_config_changed_section_payment>
-				<observers>
-					<shippingmax>
-						<class>shippingmax/observer</class>
-						<method>clearConfig</method>
-					</shippingmax>
-				</observers>
-			</admin_system_config_changed_section_payment>
 			<adminhtml_init_system_config>
 				<observers>
 					<shippingmax>
@@ -314,14 +307,14 @@
 	</adminhtml>
 	<crontab>
 		<jobs>
-			<shippingmax>
+			<shippingmax_update_files>
 				<run>
 					<model>shippingmax/observer::updateFullFiles</model>
 				</run>
 				<schedule>
 					<cron_expr>0 * * * *</cron_expr>
 				</schedule>
-			</shippingmax>
+			</shippingmax_update_files>
 		</jobs>
 	</crontab>
 	<default>
@@ -451,11 +444,35 @@
 }]]></owebia_config>
 				<max_weight>20</max_weight>
 			</shippingmax_dpdfrrelais>
+			<shippingmax_inpospacit>
+				<model>shippingmax/carrier_inpospacit</model>
+				<img_title>InPost</img_title>
+				<active>0</active>
+				<api_url><![CDATA[https://api-it.easypack24.net/v4/machines]]></api_url>
+				<tracking><![CDATA[https://inpost.it/trova-il-tuo-pacco?number={{num}}]]></tracking>
+				<sallowspecific>1</sallowspecific>
+				<allowedcountry>IT</allowedcountry>
+				<specificcountry>IT</specificcountry>
+				<owebia_config><![CDATA[{
+    "std": {
+        "label": "Example inpospacit",
+        "conditions": "!{cart.free_shipping} && {cart.price+tax+discount} < 50",
+        "fees": 4.99
+    },
+    "std_free": {
+        "label": "Example inpospacit free",
+        "conditions": "{cart.free_shipping} || {cart.price+tax+discount} >= 50",
+        "fees": 0
+    }
+}]]></owebia_config>
+				<max_weight>25</max_weight>
+				<max_points>100</max_points>
+			</shippingmax_inpospacit>
 			<shippingmax_inpospacuk>
 				<model>shippingmax/carrier_inpospacuk</model>
 				<img_title>InPost</img_title>
 				<active>0</active>
-				<api_url><![CDATA[https://api-uk.easypack24.net/v4]]></api_url>
+				<api_url><![CDATA[https://api-uk.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://tracking.inpost.co.uk/?number={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>GB</allowedcountry>
@@ -479,7 +496,7 @@
 				<model>shippingmax/carrier_inpospaczk</model>
 				<img_title>InPost</img_title>
 				<active>0</active>
-				<api_url><![CDATA[https://api-pl.easypack24.net/v4]]></api_url>
+				<api_url><![CDATA[https://api-pl.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://inpost.pl/sledzenie-przesylek?number={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>PL</allowedcountry>
@@ -508,6 +525,7 @@
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>PL</allowedcountry>
 				<specificcountry>PL</specificcountry>
+				<allowed_methods>POCZTA,ORLEN,AUTOMAT_POCZTOWY,RUCH,ZABKA,FRESHMARKET</allowed_methods>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example pocztk48Op",

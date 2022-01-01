@@ -1,10 +1,10 @@
 <?php
 /**
  * Created J/04/02/2021
- * Updated M/20/07/2021
+ * Updated J/04/11/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -36,18 +36,15 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Blo
 			->getFirstItem();
 
 		if (!empty($lastjob->getId())) {
-			$job = $this->__('Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).',
+			$txt = $this->__('Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).',
 				Mage::getSingleton('core/locale')->date($lastjob->getData('finished_at'))->toString(Zend_Date::DATETIME_LONG),
 				'href="'.$this->helper('adminhtml')->getUrl('*/cronlog_history/view', ['id' => $lastjob->getId()]).'"',
 				$lastjob->getId());
-			if (!$this->helper('core')->isModuleEnabled('Luigifab_Cronlog'))
-				$job = strip_tags($job);
+			$summary = [$this->helper('core')->isModuleEnabled('Luigifab_Cronlog') ? $txt : strip_tags($txt)];
 		}
 		else {
-			$job = $this->__('No cron jobs sucessfully finished for the pick up stations file update.');
+			$summary = [$this->__('No cron jobs sucessfully finished for the pick up stations file update.')];
 		}
-
-		$summary = [$job];
 
 		// fichiers
 		$files = glob(Mage::getBaseDir('var').'/shippingmax_*.dat');
@@ -57,7 +54,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Blo
 				$summary[] = sprintf('%s<br />&nbsp; <em>%s = %s k<br />&nbsp; file lifetime: %d hours, %d day(s)</em>',
 					basename($file),
 					$this->formatDate(date('Y-m-d H:i:s', filemtime($file)), Mage_Core_Model_Locale::FORMAT_TYPE_SHORT, true),
-					Zend_Locale_Format::toNumber(filesize($file) / 1024, ['precision' => 2]),
+					$this->helper('shippingmax')->getNumber(filesize($file) / 1024, ['precision' => 2]),
 					$model->getFullCacheLifetime() / 60 / 60,
 					$model->getFullCacheLifetime() / 60 / 60 / 24
 				);

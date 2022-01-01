@@ -1,9 +1,9 @@
 /**
  * Created V/12/04/2019
- * Updated D/05/09/2021
+ * Updated M/07/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -181,6 +181,43 @@ var shippingmax = new (function () {
 				self.map.setZoom(15);
 		}
 
+		if (!document.querySelector('.alone')) {
+			L.Control.Bigmap = L.Control.extend({
+				options: { position: 'topleft' },
+				onAdd: function (map) {
+					var elem  = L.DomUtil.create('div', 'leaflet-control-fullscreen leaflet-bar leaflet-control');
+					this.link = L.DomUtil.create('a', 'leaflet-control-fullscreen-button leaflet-bar-part', elem);
+					this.link.href = '';
+					this._map = map;
+					L.DomEvent.disableClickPropagation(this.link);
+					L.DomEvent.on(this.link, 'click', this.action, this);
+					return elem;
+				},
+				action: function (ev) {
+					L.DomEvent.stop(ev);
+					if (ev.detail > 1)
+						return;
+					var btn = this.getContainer().classList, div = document.querySelector('.main').classList;
+					if (btn.contains('leaflet-fullscreen-on')) {
+						btn.remove('leaflet-fullscreen-on');
+						div.remove('full-map');
+						if (div = document.querySelector('.item.clicked.active'))
+							div.scrollIntoView();
+						else if (div = document.querySelector('.item.clicked'))
+							div.scrollIntoView();
+						else if (div = document.querySelector('.item.active'))
+							div.scrollIntoView();
+					}
+					else {
+						btn.add('leaflet-fullscreen-on');
+						div.add('full-map');
+					}
+					this._map.invalidateSize();
+				}
+			});
+			self.map.addControl(new L.Control.Bigmap());
+		}
+
 		L.control.scale({ imperial: false }).addTo(self.map);
 		L.control.layers(maps).addTo(self.map);
 		self.grp.addTo(self.map);
@@ -236,6 +273,7 @@ var shippingmax = new (function () {
 				shadowAnchor: null
 			}).addTo(self.grp); //.bindPopup(mkr.name)
 			mkr.on('click', shippingmax.goToDetailFromMarker);
+			mkr.on('dblclick', L.DomEvent.stop);
 			mkr.superId = id;
 
 			self.mkrs[id] = mkr;
@@ -259,11 +297,12 @@ var shippingmax = new (function () {
 
 	this.formAjax = function (form, lat, lng) {
 
-		try {
-			var data, xhr = new XMLHttpRequest(), loader = document.getElementById('loader');
-			if (!loader.classList.contains('show')) {
+		var data, xhr = new XMLHttpRequest(), loader = document.getElementById('loader').classList;
 
-				loader.classList.add('show');
+		try {
+			if (!loader.contains('show')) {
+
+				loader.add('show');
 
 				if (shippingmax.showAll)
 					shippingmax.showAll = false;
@@ -342,10 +381,10 @@ var shippingmax = new (function () {
 									self.parent.shippingmax.show(json);
 								}
 								else {
+									shippingmax.reset(true);
 									mkr = self.mkrs[json.id];
 									mkr.getElement().classList.add('active');
 									self.map.setView(mkr.getLatLng());
-									shippingmax.reset(true);
 									document.getElementById('pt' + json.id).classList.add('active', 'clicked');
 								}
 							}
@@ -359,7 +398,7 @@ var shippingmax = new (function () {
 								alert(json);
 							}
 
-							loader.classList.remove('show');
+							loader.remove('show');
 						}
 						catch (e) {
 							console.error(e, xhr.responseText); // SyntaxError: Unexpected end of JSON input
@@ -375,6 +414,7 @@ var shippingmax = new (function () {
 		}
 		catch (e) {
 			console.error(e);
+			loader.remove('show');
 		}
 
 		return true;
@@ -405,40 +445,64 @@ var shippingmax = new (function () {
 
 	this.goToDetailFromMarker = function (ev) {
 
+		// ne fait rien si formAjax est en cours
+		if (document.activeElement && (document.activeElement.nodeName === 'BUTTON'))
+			return;
+
+		var mkr = ev.target, css = mkr.getElement().classList, already = css.contains('clicked');
 		shippingmax.reset();
 
-		var mkr = ev.target;
-		mkr.getElement().classList.add('clicked');
+		// désélectionne ou sélectionne
+		if (already) {
+			css.remove('clicked');
+		}
+		else {
+			var elem = document.getElementById('pt' + mkr.superId), form = document.querySelector('form.results');
 
-		if (ev.move !== false)
-			self.map.setView(mkr.getLatLng());
-
-		var elem = document.getElementById('pt' + mkr.superId), form = document.querySelector('form.results');
-		elem.classList.add('clicked');
-
-		if (form.scrollHeight > form.offsetHeight) {
-			if (window.innerWidth < 992) {
-				form.scrollTop = elem.offsetTop;
+			if (ev.move !== false) {
+				css.add('clicked');
+				elem.classList.add('clicked');
+				self.map.setView(mkr.getLatLng());
 			}
-			else {
-				form.scrollTop = elem.offsetTop - form.offsetHeight / 2 + 80;
-				var rect = elem.getBoundingClientRect();
-				if ((rect.top < 0) && (rect.bottom <= window.innerHeight))
+			else if (document.querySelector('.alone')) {
+				// pour la carte d'une commande
+				css.add('clicked');
+				elem.classList.add('clicked');
+			}
+
+			if (form.scrollHeight > form.offsetHeight) {
+				if (window.innerWidth < 992) {
 					form.scrollTop = elem.offsetTop;
+				}
+				else {
+					form.scrollTop = elem.offsetTop - form.offsetHeight / 2 + 80;
+					var rect = elem.getBoundingClientRect();
+					if ((rect.top < 0) && (rect.bottom <= window.innerHeight))
+						form.scrollTop = elem.offsetTop;
+				}
 			}
 		}
 	};
 
 	this.goToMarkerFromDetail = function (elem) {
 
+		// ne fait rien si formAjax est en cours
+		if (document.activeElement && (document.activeElement.nodeName === 'BUTTON'))
+			return;
+
+		var css = elem.classList, already = css.contains('clicked');
 		this.reset();
 
-		elem = elem.parentNode.parentNode;
-		elem.classList.add('clicked');
-
-		var mkr = self.mkrs[elem.getAttribute('id').slice(2)];
-		mkr.getElement().classList.add('clicked');
-		self.map.setView(mkr.getLatLng(), 15);
+		// désélectionne ou sélectionne
+		if (already) {
+			css.remove('clicked');
+		}
+		else {
+			css.add('clicked');
+			var mkr = self.mkrs[elem.getAttribute('id').slice(2)];
+			mkr.getElement().classList.add('clicked');
+			self.map.setView(mkr.getLatLng(), 15);
+		}
 	};
 
 	this.reset = function (active) {

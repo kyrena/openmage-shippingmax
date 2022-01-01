@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/30/09/2021
+ * Updated J/28/10/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -29,8 +29,9 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 		if (($country == 'FR') && (stripos($city, 'cedex') !== false))
 			$city = preg_replace('#\s+cedex\s*[\d]*\s*#i', '', $city);
 
+		// Nominatim assumes we are looking for a place called xyz near the postcode xyz
 		return 'https://nominatim.openstreetmap.org/search'.
-			'?q='.(empty($city) ? urlencode($postcode) : urlencode($postcode).','.urlencode($city)).
+			'?q='.(empty($city) ? urlencode($postcode) : urlencode($city).','.urlencode($postcode)).
 			'&countrycodes='.urlencode(strtoupper($country)).
 			'&accept-language='.Mage::getStoreConfig('general/locale/code').
 			'&format=json';

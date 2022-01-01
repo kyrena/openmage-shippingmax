@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/04/09/2021
+ * Updated L/06/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -55,7 +55,7 @@ self.data    =  <?php echo json_encode($items) ?>;
 <div class="top">
 	<div class="search">
 		<?php if (!is_numeric($code)): ?>
-			<form action="<?php echo $this->getUrl('*/*/update', ['code' => $code]) ?>" method="post" class="address" onsubmit="return shippingmax.formAjax(this);">
+			<form action="<?php echo $this->getUrl('*/*/update', ['code' => $code, 'q' => ($code == 'shippingmax_storelocator') ? $this->getRequest()->getParam('q') : null]) ?>" method="post" class="address" onsubmit="return shippingmax.formAjax(this);">
 				<div class="search-elements">
 
 					<?php if ($useStreet): ?>
@@ -125,7 +125,7 @@ self.data    =  <?php echo json_encode($items) ?>;
 		<button type="button" onclick="if (typeof self.parent.shippingmax.close == 'function') { self.parent.shippingmax.close(true); } else { self.close(); }"><?php echo $this->__('Close') ?></button>
 	</div>
 </div>
-<div class="main <?php echo empty($items) ? 'empty' : '' ?>">
+<div class="<?php echo is_numeric($code) ? 'main full-map alone' : 'main '.(empty($items) ? ' empty' : '') ?>">
 	<div class="map">
 		<div id="map"></div>
 	</div>

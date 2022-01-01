@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/04/10/2021
+ * Updated M/07/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -51,6 +51,8 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 			$params['Security'] = mb_strtoupper(md5(implode('', $params).
 				$this->getConfigData('api_password', true)));
 
+			//  problem: SoapFault exception: [Client] SOAP-ERROR: Encoding: Violation of encoding rules: SoapClient->__call('WSI4_PointRelai...
+			// solution: remove wsdl cache (rm /tmp/wsdl*)
 			$results = $client->WSI4_PointRelais_Recherche($params)->WSI4_PointRelais_RechercheResult;
 		}
 		catch (Throwable $t) {
@@ -161,18 +163,25 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 
 		foreach ($days as $day => $str) {
 
-			// fermé toute la journée
-			if (($str[0] == '0000') && ($str[2] == '0000')) {
-				$html[] = $day.'#closed';
-			}
-			// fermé le matin ou fermé l'après midi
-			else if (($str[0] == '0000') && ($str[2] != '0000')) {
-				$html[] = $day.'#'.
-					substr($str[2], 0, 2).'#'.substr($str[2], 2, 2).'#'.
-					substr($str[3], 0, 2).'#'.substr($str[3], 2, 2);
+			// if (($str[0] == '0000') && ($str[2] == '0000'))
+			// else if (($str[0] == '0000') && ($str[2] != '0000'))
+			// else if (($str[0] != '0000') && ($str[2] == '0000'))
+			// else
+
+			if ($str[0] == '0000') {
+				// fermé toute la journée
+				if ($str[2] == '0000') {
+					$html[] = $day.'#closed';
+				}
+				// fermé le matin ou fermé l'après midi
+				else {
+					$html[] = $day.'#'.
+						substr($str[2], 0, 2).'#'.substr($str[2], 2, 2).'#'.
+						substr($str[3], 0, 2).'#'.substr($str[3], 2, 2);
+				}
 			}
 			// ouvert non stop
-			else if (($str[0] != '0000') && ($str[2] == '0000')) {
+			else if ($str[2] == '0000') {
 				$html[] = $day.'#'.
 					substr($str[0], 0, 2).'#'.substr($str[0], 2, 2).'#'.
 					substr($str[1], 0, 2).'#'.substr($str[1], 2, 2);

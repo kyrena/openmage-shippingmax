@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/30/09/2021
+ * Updated V/22/10/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -24,11 +24,11 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 
 		$legend = $element->getData('legend');
 
-		// pour la configuration des autres modes de livraison
+		// entête autres modes de livraison
 		if (stripos($element->getHtmlId(), 'openmage') !== false)
-			return sprintf('<p class="box" style="margin-top:16px;">%s</p>', $element->getData('legend'));
+			return sprintf('<p class="box" style="margin-top:16px;">%s</p>', $legend);
 
-		// pour la configuration des modes de livraison d'owebia
+		// entête modes de livraison d'owebia
 		$version = $this->helper('shippingmax')->getOwebiaVersion();
 		if (stripos($element->getHtmlId(), 'owebia') !== false) {
 			if (empty(Mage::getConfig()->getNode('modules/Owebia_Shipping2/lite')))
@@ -42,7 +42,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 					'https://github.com/owebia/magento1-module-advanced-shipping');
 		}
 
-		// pour la configuration des modes de livraison de kyrena
+		// entête modes de livraison de kyrena
 		$version = $this->helper('shippingmax')->getVersion();
 		if (!empty($legend))
 			return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="f-right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',

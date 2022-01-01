@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/21/05/2021
- * Updated J/30/09/2021
+ * Updated J/09/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -34,6 +34,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 		'shippingmax_glsdeeurob'     => 'ic-logo-gls.svg',
 		'shippingmax_glsplstand'     => 'ic-logo-gls.svg',
 		'shippingmax_glsplstandcash' => 'ic-logo-gls.svg',
+		'shippingmax_inpospacit'     => 'ic-logo-inpost.svg',
 		'shippingmax_inpospacuk'     => 'ic-logo-inpost.svg',
 		'shippingmax_inpospaczk'     => 'ic-logo-inpost.svg',
 		'shippingmax_mondialrelay'   => 'ic-logo-mondialrelay.svg',
@@ -55,6 +56,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
 		$html = [];
+		$help = $this->helper('shippingmax');
 		$code = (string) str_replace('carriers_', '', $element->getId()); // (yes)
 
 		$storeId    = $this->getStoreId();
@@ -62,8 +64,9 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 		$maxWeight  = Mage::getStoreConfig('carriers/'.$code.'/max_weight');
 
 		$defaultCountry = Mage::getStoreConfig('general/country/default', $storeId);
-		$allCountries   = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/allowedcountry', $storeId)));
-		$selCountries   = $this->helper('shippingmax')->getCarrierCountries($code, $storeId);
+		$allCountries   = Mage::getStoreConfig('carriers/'.$code.'/allowedcountry', $storeId);
+		$allCountries   = empty($allCountries) ? [] : array_filter(explode(',', $allCountries));
+		$selCountries   = $help->getCarrierCountries($code, $storeId);
 
 		// pays du mode de livraison
 		// fait la liste, si elle est vide, c'est que tous les pays sont autorisés
@@ -74,7 +77,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 			$key  = strtolower($country);
 
 			if (!empty($maxAmounts[$key]['amount'])) {
-				$max = Zend_Locale_Format::toNumber($maxAmounts[$key]['amount'], ['precision' => 2]);
+				$max = $help->getNumber($maxAmounts[$key]['amount'], ['precision' => 2]);
 				if ($country == $defaultCountry)
 					$html['all'][] = '<u><span title="'.addslashes($this->__('Default Country')).' - '.$name.', max '.$max.' '.$maxAmounts[$key]['currency'].'">'.$country.'</span></u>';
 				else
@@ -101,7 +104,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 			$key  = strtolower($country);
 
 			if (!empty($maxAmounts[$key]['amount'])) {
-				$max = Zend_Locale_Format::toNumber($maxAmounts[$key]['amount'], ['precision' => 2]);
+				$max = $help->getNumber($maxAmounts[$key]['amount'], ['precision' => 2]);
 				if ($country == $defaultCountry)
 					$html['sel'][] = '<u title="'.addslashes($this->__('Default Country')).'"><strong>'.$country.'</strong>&nbsp;<em>('.$name.', max '.$max.'&nbsp;'.$maxAmounts[$key]['currency'].')</em></u>';
 				else

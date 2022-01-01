@@ -3,13 +3,13 @@ Tracker   : https://github.com/kyrena/openmage-shippingmax
 Composer  : https://packagist.org/packages/kyrena/openmage-shippingmax
 Module    : Kyrena/Shippingmax
 License   : GNU GPL 2+ (https://opensource.org/licenses/gpl-2.0)
-Copyright : 2019-2021 Fabrice Creuzot <fabrice~cellublue~com>
-Copyright : 2019-2021 Jérôme Siau <jerome~cellublue~com>
+Copyright : 2019-2022 Fabrice Creuzot <fabrice~cellublue~com>
+Copyright : 2019-2022 Jérôme Siau <jerome~cellublue~com>
 Submodule : Owebia/Shipping (lite)
 Sublicense: MIT (https://opensource.org/licenses/mit)
 
 
-IF YOU FOUND A MISTAKE OR A BUG, PLEASE, CONTACT US (IN FRENCH OR IN ENGLISH).
+IF YOU FOUND A MISTAKE OR A BUG, PLEASE CONTACT US (IN FRENCH OR IN ENGLISH).
 CSS AND JS FILES ARE MINIFIED WITH clean-css (github.com/jakubpawlowicz/clean-css) AND uglify-js (github.com/mishoo/uglifyjs).
 ALL FILES (INCLUDING DOCUMENTATION AND TRANSLATIONS) ARE LICENSED UNDER THE TERMS OF THE GNU GPL 2+ LICENSE.
 THAT BEING SAID SOME FILES COME FROM OTHER PROJECTS AND ARE UNDER OTHER LICENSES (SEE AT THE END OF THIS FILE).
@@ -31,19 +31,18 @@ Rewrite
 Event
 - adminhtml | adminhtml_init_system_config                                       | shippingmax/observer::hideConfig
 - adminhtml | admin_system_config_changed_section_carriers                       | shippingmax/observer::clearConfig
-- adminhtml | admin_system_config_changed_section_payment                        | shippingmax/observer::clearConfig
 - adminhtml | admin_system_config_changed_section_shippingmax_times              | shippingmax/observer::clearConfig
 - frontend  | controller_action_postdispatch_checkout_onepage_saveShippingMethod | shippingmax/observer::updateShippingAddress
 - global    | sales_convert_quote_address_to_order                               | shippingmax/observer::convertShippingAddress
 - global    | sales_order_place_after                                            | shippingmax/observer::saveDetailsAndUpdateShippingDescription
 - global    | sales_quote_address_save_before                                    | shippingmax/observer::updateShippingDescription
 Cron
-- shippingmax | shippingmax/observer::updateFullFiles
+- shippingmax_update_files | shippingmax/observer::updateFullFiles
 Database
 - create shippingmax_coords table
 - create shippingmax_order_details table
 - create column estimated_shipping_date in sales_flat_order table
-- update core_config_data where path like carriers/% and payment/%
+- update core_config_data where path like carriers/%
 Files and directories
 - app/locale/cs_CZ/Kyrena_Shippingmax.csv
 - app/locale/cs_CZ/Owebia_Shipping2.csv
@@ -126,8 +125,8 @@ Copyright: 2008-2020 Owebia
 License: MIT (https://opensource.org/licenses/mit)
 
 Files: /skin/frontend/base/default/*/kyrena/shippingmax/leaflet.min.*
-Files: /skin/frontend/base/default/images/kyrena/shippingmax/layers*.png
-Files: /skin/frontend/base/default/images/kyrena/shippingmax/marker*.png
+Files: /skin/*/*/default/images/kyrena/shippingmax/layers*.png
+Files: /skin/*/*/default/images/kyrena/shippingmax/marker*.png
 Source: https://leafletjs.com/ (1.7.1)
 Copyright: 2010-2021 Vladimir Agafonkin
 Copyright: 2010-2011 CloudMade
@@ -138,5 +137,5 @@ Source: https://github.com/GhostGroup/Leaflet.DoubleRightClickZoom
 Copyright: 2015 Mike O'Toole (mikeotoole)
 License: MIT (https://opensource.org/licenses/mit)
 
-Files: /skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-*.svg
+Files: /skin/*/*/default/images/kyrena/shippingmax/ic-logo-*.svg
 License: These logos are the graphic representation of registered trademarks subject to trademark law.

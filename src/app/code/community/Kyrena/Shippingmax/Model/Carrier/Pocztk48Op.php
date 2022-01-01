@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/30/09/2021
+ * Updated L/18/10/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -38,7 +38,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pocztk48Op extends Kyrena_Shippingmax_Mod
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'latitude'  => $address->getData('lat'),
 			'longitude' => $address->getData('lng'),
-			'type'      => ['POCZTA', 'ORLEN', 'AUTOMAT_POCZTOWY', 'RUCH', 'ZABKA', 'FRESHMARKET'] //explode(',', $this->getConfigData('allowed_methods'))
+			'type'      => explode(',', $this->getConfigData('allowed_methods'))
 		]));
 
 		$items   = [];

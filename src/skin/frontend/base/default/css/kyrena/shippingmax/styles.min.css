@@ -1,10 +1,10 @@
 /*!
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Mickaël Vang <mickael~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Mickaël Vang <mickael~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <fabrice~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL).
  */
-#shippingmaxDialog *{margin:0;padding:0}#shippingmaxDialog{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;text-align:center;z-index:99000;background-color:rgba(0,0,0,.65);opacity:1}#shippingmaxBox{position:relative;top:5%;display:inline-flex;width:85vw;max-width:inherit;height:80%;overflow:hidden;border-radius:0;background-color:#fff;box-shadow:0 0 2.5em #111;opacity:1}#shippingmaxBox iframe{width:100%;height:100%;border:0}#shippingmaxBox iframe.loader+div.loader{display:block}#shippingmaxBox div.loader{display:none;position:absolute;top:0;right:0;bottom:0;left:0;border:5px solid #fff;background-color:rgba(0,0,0,.5);cursor:wait}@media screen and (max-width:991px){#shippingmaxBox{top:0;width:100vw;height:100%}}
+#shippingmaxDialog *{margin:0;padding:0}#shippingmaxDialog{position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;text-align:center;z-index:99000;background-color:rgba(0,0,0,.65);opacity:1}#shippingmaxBox{position:relative;top:5%;display:inline-flex;width:85vw;max-width:inherit;height:80%;overflow:hidden;border-radius:0;background-color:#fff;box-shadow:0 0 2.5em #111;opacity:1}#shippingmaxBox iframe{width:100%;height:100%;border:0}#shippingmaxBox iframe.loader+div.loader{display:block}#shippingmaxBox div.loader{display:none;position:absolute;top:0;right:0;bottom:0;left:0;border:5px solid #fff;background-color:rgba(0,0,0,.5);cursor:wait}@media screen and (max-width:991px){#shippingmaxBox{top:0;width:100vw;height:100%}}.shippingmax .last{display:inline-block;padding:.2em .4em;width:auto;font-size:.85em;border-radius:5px;color:#666;background-color:#eee}
 /*# sourceMappingURL=styles.min.css.map */

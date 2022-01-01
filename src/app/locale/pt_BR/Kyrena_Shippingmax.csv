@@ -1,5 +1,4 @@
-"Username","Nome do usuário"
-"Username / Company name","Nome do usuário / <span lang=""en"">Company name</span>"
+"User Name / Company Name","Nome do usuário / <span lang=""en"">Company name</span>"
 "Password / Web service key","Senha / <span lang=""en"">Web service key</span>"
 "INCOMPLETE MODULE INSTALLATION","INSTALACAO INCOMPLETA DO MODULO"
 "There is conflict (<em>%s</em>).","Há um conflicto (<em lang=""en"">%s</em>)."

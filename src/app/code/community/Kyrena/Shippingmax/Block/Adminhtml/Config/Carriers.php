@@ -1,10 +1,10 @@
 <?php
 /**
  * Created M/31/03/2020
- * Updated V/08/10/2021
+ * Updated J/02/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -24,25 +24,26 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Carriers extends Mage_Adminhtml_
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
-		$config   = [];
-		$carriers = Mage::getModel('shipping/config')->getAllCarriers();
+		$hid   = $element->getHtmlId();
+		$scope = $element->getScopeLabel();
+		$items = Mage::getModel('shipping/config')->getAllCarriers();
+		$data  = [];
 
-		foreach ($carriers as $code => $carrier) {
+		foreach ($items as $code => $carrier) {
 
 			//if (strncmp($code, 'paypal', 6) === 0)
 			//	continue;
 
-			$config[$code] = [
-				'id'    => str_replace('dynamic_fields', 'remove_'.$code, $element->getHtmlId()),
-				'code'  => $code,
-				'value' => Mage::getStoreConfig('carriers/shippingmax/remove_'.$code),
-				'scope_label' => $element->getScopeLabel()
+			$data[$code] = [
+				'id'          => str_replace('dynamic_fields', 'remove_'.$code, $hid),
+				'code'        => $code,
+				'value'       => Mage::getStoreConfig('carriers/shippingmax/remove_'.$code),
+				'scope_label' => $scope
 			];
 		}
 
-		ksort($config);
-
-		$this->setData('config', $config);
+		ksort($data);
+		$this->setData('config', $data);
 		$this->setGroup('shippingmax');
 
 		return $this->toHtml();

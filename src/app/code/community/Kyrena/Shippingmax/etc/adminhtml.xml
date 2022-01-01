@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created J/17/12/2020
- * Updated S/04/09/2021
+ * Updated V/22/10/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -39,11 +39,6 @@
 					<action>adminhtml/system_config/edit/section/carriers</action>
 					<sort_order>981</sort_order>
 				</shipping>
-				<payment translate="label">
-					<title>Payment Methods</title>
-					<action>adminhtml/system_config/edit/section/payment</action>
-					<sort_order>982</sort_order>
-				</payment>
 			</children>
 		</tools>
 	</menu>
@@ -67,10 +62,6 @@
 								<title>Shipping Methods</title>
 								<sort_order>981</sort_order>
 							</shipping>
-							<payment translate="label">
-								<title>Payment Methods</title>
-								<sort_order>982</sort_order>
-							</payment>
 						</children>
 					</tools>
 					<system>

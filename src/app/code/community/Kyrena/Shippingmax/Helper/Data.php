@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/30/09/2021
+ * Updated J/23/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -37,8 +37,93 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 	}
 
 	public function escapeEntities($data, bool $quotes = false) {
-		return htmlspecialchars($data, $quotes ? ENT_SUBSTITUTE | ENT_COMPAT : ENT_SUBSTITUTE | ENT_NOQUOTES);
+		return empty($data) ? $data : htmlspecialchars($data, $quotes ? ENT_SUBSTITUTE | ENT_COMPAT : ENT_SUBSTITUTE | ENT_NOQUOTES);
 	}
+
+	public function formatDate($date = null, $format = Zend_Date::DATETIME_LONG, $showTime = false) {
+		$object = Mage::getSingleton('core/locale');
+		return str_replace($object->date($date)->toString(Zend_Date::TIMEZONE), '', $object->date($date)->toString($format));
+	}
+
+	public function getHumanEmailAddress(string $email) {
+		return $this->escapeEntities(str_replace(['<', '>', ',', '"'], ['(', ')', ', ', ''], $email));
+	}
+
+	public function getHumanDuration($start, $end = null) {
+
+		if (is_numeric($start) || (!in_array($start, ['', '0000-00-00 00:00:00', null]) && !in_array($end, ['', '0000-00-00 00:00:00', null]))) {
+
+			$data    = is_numeric($start) ? $start : strtotime($end) - strtotime($start);
+			$minutes = (int) ($data / 60);
+			$seconds = $data % 60;
+
+			if ($data > 599)
+				$data = '<strong>'.(($seconds > 9) ? $minutes.':'.$seconds : $minutes.':0'.$seconds).'</strong>';
+			else if ($data > 59)
+				$data = '<strong>'.(($seconds > 9) ? '0'.$minutes.':'.$seconds : '0'.$minutes.':0'.$seconds).'</strong>';
+			else if ($data > 1)
+				$data = ($seconds > 9) ? '00:'.$data : '00:0'.$data;
+			else
+				$data = '⩽&nbsp;1';
+		}
+
+		return empty($data) ? '' : $data;
+	}
+
+	public function getNumber($value, array $options = []) {
+		$options['locale'] = Mage::getSingleton('core/translate')->getLocale();
+		return Zend_Locale_Format::toNumber($value, $options);
+	}
+
+	public function getNumberToHumanSize(int $number) {
+
+		if ($number < 1) {
+			$data = '';
+		}
+		else if (($number / 1024) < 1024) {
+			$data = $number / 1024;
+			$data = $this->getNumber($data, ['precision' => 2]);
+			$data = $this->__('%s kB', preg_replace('#[.,]00[[:>:]]#', '', $data));
+		}
+		else if (($number / 1024 / 1024) < 1024) {
+			$data = $number / 1024 / 1024;
+			$data = $this->getNumber($data, ['precision' => 2]);
+			$data = $this->__('%s MB', preg_replace('#[.,]00[[:>:]]#', '', $data));
+		}
+		else {
+			$data = $number / 1024 / 1024 / 1024;
+			$data = $this->getNumber($data, ['precision' => 2]);
+			$data = $this->__('%s GB', preg_replace('#[.,]00[[:>:]]#', '', $data));
+		}
+
+		return $data;
+	}
+
+	public function getUsername() {
+
+		$file = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		$file = array_pop($file);
+		$file = array_key_exists('file', $file) ? basename($file['file']) : '';
+
+		// backend
+		if ((PHP_SAPI != 'cli') && Mage::app()->getStore()->isAdmin() && Mage::getSingleton('admin/session')->isLoggedIn())
+			$user = sprintf('admin %s', Mage::getSingleton('admin/session')->getData('user')->getData('username'));
+		// cron
+		else if (is_object($cron = Mage::registry('current_cron')))
+			$user = sprintf('cron %d - %s', $cron->getId(), $cron->getData('job_code'));
+		// xyz.php
+		else if ($file != 'index.php')
+			$user = $file;
+		// full action name
+		else if (is_object($action = Mage::app()->getFrontController()->getAction()))
+			$user = $action->getFullActionName();
+		// frontend
+		else
+			$user = sprintf('frontend %d', Mage::app()->getStore()->getData('code'));
+
+		return $user;
+	}
+
 
 	public function getFranceDromCom(bool $fr = true) {
 		return [$fr ? 'FR' : '', $fr ? 'MC' : '', 'BL','GF','GP','MF','MQ','NC','PF','PM','RE','TF','WF','YT'];
@@ -75,7 +160,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 	public function getShippingDate(string $code, bool $days = false, $country = null, $postcode = null, $storeId = null) {
 
 		if (empty($country)) {
-			$address  = Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress();
+			$address  = $this->getSession()->getQuote()->getShippingAddress();
 			$country  = $address->getData('country_id');
 			$postcode = $address->getData('postcode');
 			if (empty($country))
@@ -83,6 +168,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 
 		// recherche du vrai pays surtout pour la France et ses DROM/COM
+		// Mage::getBlockSingleton('shippingmax/rewrite_renderer')
+		// Mage::app()->getLayout()->getBlockSingleton('shippingmax/rewrite_renderer')
 		$fake    = Mage::getModel('customer/address')->setData('country_id', $country)->setData('postcode', $postcode);
 		$country = Mage::getBlockSingleton('shippingmax/rewrite_renderer')->setType(new Varien_Object())->render($fake, 'country');
 		$storeId = is_null($storeId) ? Mage::app()->getStore()->getId() : $storeId;
@@ -223,7 +310,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 	public function getCarrierCountries(string $code, $storeId = null) {
 
 		$allCountries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
-		$selCountries = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/specificcountry', $storeId)));
+		$selCountries = Mage::getStoreConfig('carriers/'.$code.'/specificcountry', $storeId);
+		$selCountries = empty($selCountries) ? [] : array_filter(explode(',', $selCountries));
 		$countries    = empty($selCountries) ? $allCountries : array_intersect($allCountries, $selCountries);
 
 		$config = Mage::getStoreConfig('carriers/'.$code.((strpos($code, 'owebiashipping') === false) ? '/owebia_config' : '/config'), $storeId);
@@ -233,6 +321,68 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 
 		return $countries;
+	}
+
+	public function getItemFromLastOrder(string $code, string $country, object $rate) {
+
+		if (!empty($customer = $this->getSession()->getQuote()->getCustomer()) && !empty($cid = $customer->getId())) {
+
+			$result = ['from_orders' => $country];
+
+			try {
+				$details = Mage::getResourceModel('shippingmax/details_collection')
+					->addFieldToFilter('customer_id', $cid)
+					->addFieldToFilter('details', ['like' => '%"country_id":"'.$country.'"%'])
+					->addFieldToFilter('details', ['like' => '%"carrier":"'.$code.'"%'])
+					->setOrder('order_id', 'desc')
+					->setPageSize(10);
+
+				// cherche d'abord par rapport à l'adresse de livraison
+				$address = $this->getSession()->getQuote()->getShippingAddress();
+				Mage::getModel('shippingmax/coords')->setAddressCoords($address);
+				$items = $rate->getCarrierInstance()->loadItemsFromCache($address);
+				foreach ($details as $detail) {
+					$detail = json_decode($detail->getData('details'), true);
+					if (array_key_exists($detail['id'], $items)) {
+						$result = ['item' => $items[$detail['id']]];
+						$result['lat'] = $result['item']['lat'];
+						$result['lng'] = $result['item']['lng'];
+						$result['country_id']  = $result['item']['country_id'];
+						$result['selected']    = $detail['id'];
+						$result['from_orders'] = $country;
+						$result['item']['from_orders'] = $country;
+						break;
+					}
+				}
+
+				// cherche ensuite par rapport à l'adresse des points relais précédemment sélectionnés
+				if (empty($result['selected'])) {
+					foreach ($details as $detail) {
+						$detail = json_decode($detail->getData('details'), true);
+						$items  = $rate->getCarrierInstance()->loadItemsFromCache(new Varien_Object($detail));
+						if (array_key_exists($detail['id'], $items)) {
+							$result = ['item' => $items[$detail['id']]];
+							$result['lat'] = $result['item']['lat'];
+							$result['lng'] = $result['item']['lng'];
+							$result['country_id']  = $result['item']['country_id'];
+							$result['selected']    = $detail['id'];
+							$result['from_orders'] = $country;
+							$result['item']['from_orders'] = $country;
+							break;
+						}
+					}
+				}
+			}
+			catch (Throwable $t) {
+				Mage::logException($t);
+				$result = ['from_orders' => $country];
+			}
+
+			$this->getSession()->setData($code, $result);
+			return $result;
+		}
+
+		return [];
 	}
 
 	public function getSession(bool $string = false) {

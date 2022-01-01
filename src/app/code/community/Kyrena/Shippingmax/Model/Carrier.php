@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/23/09/2021
+ * Updated V/26/11/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -19,6 +19,12 @@
  */
 
 abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_Carrier_Abstract implements Mage_Shipping_Model_Carrier_Interface {
+
+	protected $_dstSearch = 20;
+	protected $_maxPoints = 50;             // map.phtml self.maxpts
+	protected $_cacheLifetime = 3600;       // 1 heure en secondes
+	protected $_fullCacheLifetime = 432000; // 5 jours en secondes
+	protected $_postcodesOnly = false;
 
 	// openmage
 	public function getTrackingInfo($tracking, $order = null) {
@@ -77,18 +83,12 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 	}
 
 	// kyrena
-	protected $_dstSearch = 20;
-	protected $_maxPoints = 50;             // map.phtml self.maxpts
-	protected $_cacheLifetime = 3600;       // 1 heure en secondes
-	protected $_fullCacheLifetime = 432000; // 5 jours en secondes
-	protected $_postcodesOnly = false;
-
 	public function isFull() {
 		return $this->_full;
 	}
 
 	public function getCacheFile() {
-		return Mage::getBaseDir('var').'/'.$this->_code.'.dat';
+		return Mage::getBaseDir('var').'/shippingmax/'.str_replace('shippingmax_', '', $this->_code).'.dat';
 	}
 
 	public function getFullCacheLifetime() {
@@ -162,6 +162,10 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 					// sauvegarde dans le cache fichier et dans le cache openmage
 					// voir aussi Kyrena_Shippingmax_Model_Observer::updateFullFiles
 					if ($this->_full) {
+
+						$dir = dirname($cache);
+						if (!is_dir($dir))
+							mkdir($dir, 0755);
 
 						// met à jour le fichier et le cache
 						file_put_contents($cache, serialize($items));
@@ -294,7 +298,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 	}
 
 	protected function checkItem(object $address, &$item) {
-		return $this->_full ? $this->checkDistance($address, $item) : true;
+		return $this->checkDistance($address, $item);
 	}
 
 	protected function checkDistance(object $address, &$item) {

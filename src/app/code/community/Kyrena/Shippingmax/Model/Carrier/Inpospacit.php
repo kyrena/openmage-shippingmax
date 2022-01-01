@@ -1,6 +1,6 @@
 <?php
 /**
- * Created V/12/04/2019
+ * Created J/09/12/2021
  * Updated J/09/12/2021
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
@@ -18,10 +18,10 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Kyrena_Shippingmax_Model_Carrier_Inpospacuk extends Kyrena_Shippingmax_Model_Carrier_Inpospaczk {
+class Kyrena_Shippingmax_Model_Carrier_Inpospacit extends Kyrena_Shippingmax_Model_Carrier_Inpospaczk {
 
-	protected $_code = 'shippingmax_inpospacuk';
+	protected $_code = 'shippingmax_inpospacit';
 	//otected $_full = true;
 	//otected $_api  = true;
-	protected $_country = 'GB';
+	protected $_country = 'IT';
 }

@@ -41,6 +41,9 @@
         "openmage-module-fostering/man4x_mondialrelay": "*",
         "openmage-module-fostering/mondialrelay_pointsrelais": "*"
     },
+    "suggest": {
+        "kyrena/openmage-paymentmax": "*"
+    },
     "minimum-stability": "dev",
     "extra": {
         "map": [

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated V/17/09/2021
+ * Updated J/09/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -107,6 +107,7 @@
 						<debug_password translate="label">
 							<label>Password</label>
 							<frontend_type>text</frontend_type>
+							<validate>validate-alphanum</validate>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -357,11 +358,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -445,7 +446,7 @@
 							<show_in_store>0</show_in_store>
 						</api_url>
 						<api_username translate="label">
-							<label>Username</label>
+							<label>User Name</label>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -515,11 +516,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -602,7 +603,7 @@
 							<show_in_store>0</show_in_store>
 						</api_url>
 						<api_username translate="label">
-							<label>Username</label>
+							<label>User Name</label>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -673,11 +674,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -760,7 +761,7 @@
 							<show_in_store>0</show_in_store>
 						</api_url>
 						<api_username translate="label">
-							<label>Username / Company name</label>
+							<label>User Name / Company Name</label>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -840,11 +841,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_colisprivpts>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -927,7 +928,7 @@
 							<show_in_store>0</show_in_store>
 						</api_url>
 						<api_username translate="label">
-							<label>Username</label>
+							<label>User Name</label>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -1006,20 +1007,20 @@
 							<show_in_store>1</show_in_store>
 						</mix_colisprivpts>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</hide_when>
 					</fields>
 				</shippingmax_dpdfrrelais>
-				<!-- pickup GB -->
-				<shippingmax_inpospacuk>
-					<label>GB - (inpospacuk) - InPost GB</label>
+				<!-- pickup IT -->
+				<shippingmax_inpospacit>
+					<label>IT - (inpospacit) - InPost IT</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
 					<sort_order>-990</sort_order>
 					<show_in_default>1</show_in_default>
@@ -1147,20 +1148,20 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</hide_when>
 					</fields>
-				</shippingmax_inpospacuk>
-				<!-- pickup PL -->
-				<shippingmax_inpospaczk>
-					<label>PL - (inpospaczk) - InPost PL</label>
+				</shippingmax_inpospacit>
+				<!-- pickup GB -->
+				<shippingmax_inpospacuk>
+					<label>GB - (inpospacuk) - InPost GB</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
 					<sort_order>-989</sort_order>
 					<show_in_default>1</show_in_default>
@@ -1288,19 +1289,20 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</hide_when>
 					</fields>
-				</shippingmax_inpospaczk>
-				<shippingmax_pocztk48Op>
-					<label>PL - (pocztk48Op) - Pocztex</label>
+				</shippingmax_inpospacuk>
+				<!-- pickup PL -->
+				<shippingmax_inpospaczk>
+					<label>PL - (inpospaczk) - InPost PL</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
 					<sort_order>-988</sort_order>
 					<show_in_default>1</show_in_default>
@@ -1428,20 +1430,19 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</hide_when>
 					</fields>
-				</shippingmax_pocztk48Op>
-				<!-- pickup CZ -->
-				<shippingmax_przesodbpk>
-					<label>CZ - (przesodbpk) - Packeta / Zásilkovna</label>
+				</shippingmax_inpospaczk>
+				<shippingmax_pocztk48Op>
+					<label>PL - (pocztk48Op) - Pocztex</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
 					<sort_order>-987</sort_order>
 					<show_in_default>1</show_in_default>
@@ -1515,6 +1516,15 @@
 							<show_in_website>0</show_in_website>
 							<show_in_store>0</show_in_store>
 						</api_url>
+						<allowed_methods translate="label">
+							<label>Allowed Methods</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>shippingmax/source_pocztk48Op</source_model>
+							<sort_order>15</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</allowed_methods>
 						<test translate="label">
 							<label>Test</label>
 							<frontend_type>label</frontend_type>
@@ -1569,19 +1579,20 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</hide_when>
 					</fields>
-				</shippingmax_przesodbpk>
-				<shippingmax_przesodbpkcash>
-					<label>CZ - (przesodbpkcash) - Packeta / Zásilkovna - Cash on Delivery</label>
+				</shippingmax_pocztk48Op>
+				<!-- pickup CZ -->
+				<shippingmax_przesodbpk>
+					<label>CZ - (przesodbpk) - Packeta / Zásilkovna</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
 					<sort_order>-986</sort_order>
 					<show_in_default>1</show_in_default>
@@ -1709,11 +1720,151 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</hide_when>
+					</fields>
+				</shippingmax_przesodbpk>
+				<shippingmax_przesodbpkcash>
+					<label>CZ - (przesodbpkcash) - Packeta / Zásilkovna - Cash on Delivery</label>
+					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
+					<sort_order>-985</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<general translate="label">
+							<label>General</label>
+							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+							<sort_order>0</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</general>
+						<active translate="label">
+							<label>Enable</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</active>
+						<title translate="label">
+							<label>Title</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</title>
+						<description translate="label">
+							<label>Description</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</description>
+						<sort_order translate="label">
+							<label>Sort Order</label>
+							<frontend_type>text</frontend_type>
+							<validate>validate-number</validate>
+							<sort_order>4</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</sort_order>
+						<showmethod translate="label">
+							<label>Show Method if Not Applicable</label>
+							<frontend_type>select</frontend_type>
+							<sort_order>5</sort_order>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</showmethod>
+						<api>
+							<label>API</label>
+							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</api>
+						<api_url translate="label">
+							<label>Address</label>
+							<frontend_type>text</frontend_type>
+							<sort_order>11</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</api_url>
+						<test translate="label">
+							<label>Test</label>
+							<frontend_type>label</frontend_type>
+							<frontend_model>shippingmax/adminhtml_config_test</frontend_model>
+							<sort_order>19</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</test>
+						<owebia translate="label">
+							<label>Price</label>
+							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</owebia>
+						<owebia_config translate="label">
+							<label>Price</label>
+							<frontend_type>textarea</frontend_type>
+							<frontend_model>shippingmax/adminhtml_config_tooltip</frontend_model>
+							<validate>shippingmax</validate>
+							<sort_order>21</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</owebia_config>
+						<owebia_debug translate="label">
+							<label>Debug</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>22</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</owebia_debug>
+						<owebia_stopfirst translate="label">
+							<label>Stop to first match</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>23</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</owebia_stopfirst>
+						<extra translate="label">
+							<label>Extra</label>
+							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+							<sort_order>90</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</extra>
+						<hide_when translate="label">
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>99</sort_order>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -1724,7 +1875,7 @@
 				<shippingmax_boxberry>
 					<label>RU - (boxberry) - Boxberry</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-985</sort_order>
+					<sort_order>-984</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -1877,11 +2028,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_shiptor>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -1891,7 +2042,7 @@
 				<shippingmax_boxberrycash>
 					<label>RU - (boxberrycash) - Boxberry - Cash on Delivery</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-984</sort_order>
+					<sort_order>-983</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -2044,11 +2195,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_shiptorcash>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -2058,7 +2209,7 @@
 				<shippingmax_fivepost>
 					<label>RU - (fivepost) - 5post</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-983</sort_order>
+					<sort_order>-982</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -2221,11 +2372,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_shiptor>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -2235,7 +2386,7 @@
 				<shippingmax_fivepostcash>
 					<label>RU - (fivepostcash) - 5post - Cash on Delivery</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-982</sort_order>
+					<sort_order>-981</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -2398,11 +2549,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_shiptorcash>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -2412,7 +2563,7 @@
 				<shippingmax_pickpoint>
 					<label>RU - (pickpoint) - PickPoint</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-981</sort_order>
+					<sort_order>-980</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -2485,7 +2636,7 @@
 							<show_in_store>0</show_in_store>
 						</api_url>
 						<api_username translate="label">
-							<label>Username</label>
+							<label>User Name</label>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -2601,11 +2752,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_shiptor>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -2615,7 +2766,7 @@
 				<shippingmax_pickpointcash>
 					<label>RU - (pickpointcash) - PickPoint - Cash on Delivery</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-980</sort_order>
+					<sort_order>-979</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -2688,7 +2839,7 @@
 							<show_in_store>0</show_in_store>
 						</api_url>
 						<api_username translate="label">
-							<label>Username</label>
+							<label>User Name</label>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -2804,11 +2955,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_shiptorcash>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -2818,7 +2969,7 @@
 				<shippingmax_shiptor>
 					<label>RU - (shiptor) - Shiptor</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-979</sort_order>
+					<sort_order>-978</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -2894,7 +3045,7 @@
 							<label>Allowed Methods</label>
 							<frontend_type>multiselect</frontend_type>
 							<source_model>shippingmax/source_shiptor</source_model>
-							<sort_order>12</sort_order>
+							<sort_order>15</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
 							<show_in_store>0</show_in_store>
@@ -2980,11 +3131,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_pickpoint>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -2994,7 +3145,7 @@
 				<shippingmax_shiptorcash>
 					<label>RU - (shiptorcash) - Shiptor - Cash on Delivery</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
-					<sort_order>-978</sort_order>
+					<sort_order>-977</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -3070,7 +3221,7 @@
 							<label>Allowed Methods</label>
 							<frontend_type>multiselect</frontend_type>
 							<source_model>shippingmax/source_shiptor</source_model>
-							<sort_order>12</sort_order>
+							<sort_order>15</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
 							<show_in_store>0</show_in_store>
@@ -3156,11 +3307,11 @@
 							<show_in_store>1</show_in_store>
 						</mix_pickpointcash>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -3253,7 +3404,7 @@
 							<show_in_store>0</show_in_store>
 						</api_url>
 						<api_username translate="label">
-							<label>Username</label>
+							<label>User Name</label>
 							<sort_order>12</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -3315,11 +3466,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -3454,11 +3605,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -3592,11 +3743,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -3731,11 +3882,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -3869,11 +4020,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4007,11 +4158,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4145,11 +4296,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4261,11 +4412,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4376,11 +4527,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4508,11 +4659,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4639,11 +4790,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4754,11 +4905,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4869,11 +5020,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>99</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4923,11 +5074,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -4968,11 +5119,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5013,11 +5164,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5055,11 +5206,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5088,11 +5239,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5121,11 +5272,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5154,11 +5305,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5187,11 +5338,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5220,11 +5371,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5253,11 +5404,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5286,11 +5437,11 @@
 							<show_in_store>1</show_in_store>
 						</extra>
 						<hide_when translate="label">
-							<label>Do not offer this delivery method if one of the following delivery methods is available</label>
+							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
 							<can_be_empty>1</can_be_empty>
 							<sort_order>9999</sort_order>
-							<source_model>shippingmax/source_shippingmethods</source_model>
+							<source_model>shippingmax/source_shipping</source_model>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
@@ -5310,98 +5461,6 @@
 				</owebia_help>
 			</groups>
 		</owebia_shipping2>
-		<payment>
-			<groups>
-				<account translate="label">
-					<label>General</label>
-					<dynamic_group>1</dynamic_group>
-					<expanded>0</expanded>
-					<fields>
-						<head_remove translate="label">
-							<label>Hide and clear configuration</label>
-							<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-							<sort_order>90</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>0</show_in_website>
-							<show_in_store>0</show_in_store>
-						</head_remove>
-						<dynamic_fields>
-							<frontend_model>shippingmax/adminhtml_config_payments</frontend_model>
-							<sort_order>91</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>0</show_in_website>
-							<show_in_store>0</show_in_store>
-						</dynamic_fields>
-					</fields>
-				</account>
-				<paypal_payment_solutions>
-					<expanded>0</expanded>
-				</paypal_payment_solutions>
-				<free>
-					<fields>
-						<active>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</active>
-					</fields>
-				</free>
-				<checkmo>
-					<fields>
-						<active>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</active>
-					</fields>
-				</checkmo>
-				<banktransfer>
-					<fields>
-						<active>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</active>
-					</fields>
-				</banktransfer>
-				<cashondelivery>
-					<fields>
-						<active>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</active>
-					</fields>
-				</cashondelivery>
-				<purchaseorder>
-					<fields>
-						<active>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</active>
-					</fields>
-				</purchaseorder>
-				<authorizenet>
-					<fields>
-						<active>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</active>
-					</fields>
-				</authorizenet>
-				<authorizenet_directpost>
-					<fields>
-						<active>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</active>
-					</fields>
-				</authorizenet_directpost>
-			</groups>
-		</payment>
 		<customer>
 			<groups>
 				<address_templates>

@@ -1,9 +1,9 @@
 /**
  * Created V/12/04/2019
- * Updated L/26/07/2021
+ * Updated V/24/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Mickaël Vang <mickael~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Mickaël Vang <mickael~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -28,30 +28,17 @@ $border-form: #d9d9d9;
 $color-grey-background: #f6f8fa;
 $color-green: #03d3a0;
 $color-blue-main: #6480ff;
-$color-blue-background: #ecf2fa;
 $color-blue-transparent: rgba(48, 127, 226, 0.7);
 $color-blue-shadow: rgba(200, 216, 237, 0.6);
-$color-an-other-grey-949494-text: #949494;
 
 /*
  * Responsive configuration
  */
 
-$xl-breakpoint: 1920px;
 $large-breakpoint: 1440px;
-$lg-breakpoint: 1200px;
 $medium-breakpoint: 992px;
 $small-breakpoint: 768px;
 $xs-breakpoint: 576px;
-$iphone-breakpoint: 320px;
-
-$xl-up: "only screen and (min-width: #{$xl-breakpoint})";
-$xl-down: "only screen and (max-width: #{$xl-breakpoint - 1px})";
-$large-only: "only screen and (min-width: #{$large-breakpoint})";
-$large-down: "only screen and (max-width: #{$large-breakpoint - 1px})";
-
-$lg-only: "only screen and (min-width: #{$lg-breakpoint})";
-$lg-down: "only screen and (max-width: #{$lg-breakpoint - 1px})";
 
 $medium-up: "only screen and (min-width: #{$medium-breakpoint})";
 $medium-only: "only screen and (min-width: #{$medium-breakpoint}) and (max-width: #{$large-breakpoint - 1px})";
@@ -63,27 +50,26 @@ $small-down: "only screen and (max-width: #{$medium-breakpoint - 1px})";
 
 $extra-small-only: "only screen and (max-width: #{$small-breakpoint - 1px})";
 $xs-small-only: "only screen and (max-width: #{$xs-breakpoint})";
-$iphone-only: "only screen and (max-width: #{$iphone-breakpoint})";
 
 /*
  * Placeholders
  */
 
-@mixin placeholder($color: #999) {
+@mixin placeholder($color: #767676) {
 	&:-moz-placeholder {
-		color: #999;
+		color: #767676;
 		font-size: 13px;
 	} // Firefox 4-18
 	&::-moz-placeholder {
-		color: #999;
+		color: #767676;
 		font-size: 13px;
 	} // Firefox 19+
 	&:-ms-input-placeholder {
-		color: #999;
+		color: #767676;
 		font-size: 13px;
 	} // Internet Explorer 10+
 	&::-webkit-input-placeholder {
-		color: #999;
+		color: #767676;
 		font-size: 13px;
 	} // Safari and Chrome
 }
@@ -148,23 +134,51 @@ button {
 	}
 }
 
-@media (min-height: 415px) {
-	.alone .main .map {
-		flex: 1 0 100%;
+.main.full-map {
+	display: block;
+}
+
+.main.full-map .map {
+	height: 100%;
+}
+
+.main.full-map .results {
+	position: inherit;
+	padding: 0;
+}
+
+.main.full-map .results .item.clicked {
+	position: absolute;
+	right: 10px;
+	bottom: 25px;
+	z-index: 500;
+	width: 450px;
+	padding-top: 0;
+	@media (max-width: 520px) {
+		left: 10px;
+		width: auto;
 	}
-	.alone .main .results {
-		position: inherit;
-	}
-	.alone .results .item-container {
+	&::after {
 		position: absolute;
+		top: 10px;
 		right: 10px;
-		bottom: 25px;
-		z-index: 500;
-		width: 450px;
-		@media (max-width: 520px) {
-			left: 10px;
-			width: auto;
+		display: inline-block;
+		width: 30px;
+		height: 30px;
+		background: url("../../../images/kyrena/shippingmax/ic-cross.svg") center center no-repeat;
+		background-size: 70% auto;
+		content: "";
+		opacity: 0.35;
+		pointer-events: none;
+		filter: grayscale(100%);
+		z-index: 10;
+		@media #{$extra-small-only} {
+			width: 25px;
+			height: 25px;
 		}
+	}
+	.name {
+		margin-right: 25px;
 	}
 }
 
@@ -232,8 +246,6 @@ button {
 	align-items: center;
 
 	@media #{$small-down} {
-		//flex-wrap: wrap;
-
 		input[name="postcode"] {
 			flex: 1 0 25%;
 			max-width: 110px;
@@ -261,7 +273,7 @@ button {
 	}
 
 	input {
-		@include placeholder($color-an-other-grey-949494-text);
+		@include placeholder(#949494);
 		box-shadow: none;
 		box-sizing: border-box;
 		background-color: $color-white;
@@ -341,8 +353,13 @@ button {
 				background-color: transparent;
 				color: $color-blue-main;
 				text-decoration: underline;
+				transition: none;
 				&.double {
 					flex: 1 0 50%;
+				}
+				&:hover, &:focus {
+					background-color: transparent;
+					color: darken($color-blue-main, 7%);
 				}
 			}
 
@@ -362,8 +379,13 @@ button {
 				background-color: transparent;
 				color: $color-blue-main;
 				text-decoration: underline;
+				transition: none;
 				&.double {
 					flex: 1 0 50%;
+				}
+				&:hover, &:focus {
+					background-color: transparent;
+					color: darken($color-blue-main, 7%);
 				}
 			}
 
@@ -372,15 +394,9 @@ button {
 			}
 		}
 
-		&:focus {
+		&:focus, &:hover {
 			background-color: darken($color-blue-main, 7%);
 			outline: none;
-		}
-
-		@media #{$medium-up} {
-			&:hover {
-				background-color: darken($color-blue-main, 7%);
-			}
 		}
 
 		.ic-search {
@@ -400,11 +416,11 @@ button {
 				display: inline-block;
 				width: 36px;
 				height: 36px;
-				background: url("../../../images/kyrena/shippingmax/ic-search.svg")
-					center center no-repeat;
+				background: url("../../../images/kyrena/shippingmax/ic-search.svg") center center no-repeat;
 				background-size: 55% auto;
 				font-size: 0;
 				transform: translate(-50%, -50%);
+				-webkit-transform: translate(-50%, -50%);
 			}
 		}
 	}
@@ -453,6 +469,7 @@ button {
 	@media #{$xs-small-only} {
 		top: 0;
 		transform: none;
+		-webkit-transform: none;
 	}
 
 	button {
@@ -478,31 +495,22 @@ button {
 			position: absolute;
 			top: 50%;
 			left: 50%;
-			display: inline-flex;
-			justify-content: center;
-			align-items: center;
+			display: inline-block;
 			width: 30px;
 			height: 30px;
-			background: url("../../../images/kyrena/shippingmax/ic-cross.svg") center
-				center no-repeat;
+			background: url("../../../images/kyrena/shippingmax/ic-cross.svg") center center no-repeat;
 			background-size: 70% auto;
 			transform: translate(-50%, -50%);
+			-webkit-transform: translate(-50%, -50%);
 			content: "";
 			pointer-events: none;
-
 			@media #{$extra-small-only} {
 				width: 25px;
 				height: 25px;
 			}
 		}
 
-		@media #{$medium-up} {
-			&:hover {
-				opacity: 1;
-			}
-		}
-
-		&:focus {
+		&:focus, &:hover {
 			opacity: 1;
 		}
 	}
@@ -511,7 +519,7 @@ button {
 // ! Main
 .main {
 	display: flex;
-	flex: 1 1 auto;
+	flex: 1 1 0;
 	background-color: $color-grey-background;
 	overflow: hidden;
 
@@ -584,26 +592,26 @@ button {
 }
 
 .results-list li {
+
+	cursor: pointer;
 	padding-top: 10px;
 
 	&:last-child {
 		padding-bottom: 10px;
 	}
 
-	@media #{$medium-up} {
-		&:hover {
-			.item-container {
-				box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
-					0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.075);
+	&:hover {
+		.item-container {
+			box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
+				0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.075);
 
-				.name {
-					color: $color-blue-main;
-				}
+			.name {
+				color: $color-blue-main;
+			}
 
-				button {
-					background-color: $color-blue-main;
-					color: $color-white;
-				}
+			button {
+				background-color: $color-blue-main;
+				color: $color-white;
 			}
 		}
 	}
@@ -641,212 +649,217 @@ button {
 			}
 		}
 	}
+}
 
-	.item-container {
+.item-container {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: flex-start;
+	padding: 15px;
+	box-shadow: 0 6.7px 5.3px rgba(0, 0, 0, 0.028),
+		0 22.3px 17.9px rgba(0, 0, 0, 0.042);
+	background-color: $color-white;
+	border: 1.5px solid transparent;
+	border-radius: 7px;
+	transition: box-shadow 0.2s ease-in-out;
+
+	& > * {
+		display: block;
+	}
+
+	& > input[type="radio"] {
+		display: none;
+	}
+
+	.dist-store {
+		position: relative;
+		display: inline-flex;
+		flex: 0 0 auto;
+		order: 1;
+		justify-content: flex-end;
+		align-items: center;
+		align-self: flex-end;
+		margin-top: 10px;
+		font-size: 13px;
+
+		&::before {
+			display: block;
+			width: 10px;
+			height: 13px;
+			margin-right: 4px;
+			background: url("../../../images/kyrena/shippingmax/ic-map.svg") center center no-repeat;
+			background-size: auto 100%;
+			text-align: center;
+			content: "";
+		}
+	}
+
+	& > button {
+		display: inline-flex;
+		flex: 0 0 auto;
+		justify-content: center;
+		align-items: center;
+		height: 22px;
+		padding: 0 12px;
+		margin-top: 10px;
+		background-color: #eaedfd;
+		border: none;
+		border-radius: 5px;
+		color: $color-blue-main;
+		font-size: 12px;
+		transition: all 0.2s ease-in-out;
+
+		@media #{$small-down} {
+			height: 30px;
+		}
+
+		&:focus {
+			background-color: $color-blue-main;
+			color: $color-white;
+			outline: none;
+		}
+	}
+}
+
+.item-card_details {
+	position: relative;
+	width: 100%;
+	min-width: 0;
+
+	@media #{$extra-small-only} {
 		position: relative;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
-		align-content: flex-start;
-		padding: 15px;
-		box-shadow: 0 6.7px 5.3px rgba(0, 0, 0, 0.028),
-			0 22.3px 17.9px rgba(0, 0, 0, 0.042);
-		background-color: $color-white;
-		border: 1.5px solid transparent;
-		border-radius: 7px;
-		cursor: pointer;
-		transition: box-shadow 0.2s ease-in-out;
+	}
 
-		& > * {
-			display: block;
+	.icn {
+		display:none;
+		float: right;
+		width: 30px;
+		height: 30px;
+		margin-left: 5px;
+		background-repeat: no-repeat;
+		background-position: center;
+		font-size: 0;
+
+		&.ic-inpospacit,
+		&.ic-inpospaczk,
+		&.ic-inpospacuk {
+			display: inline-block;
+			width: 60px;
+			height: 28px;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-inpost.svg");
 		}
 
-		& > input[type="radio"] {
-			display: none;
+		&.ic-fivepost {
+			display: inline-block;
+			width: 40px;
+			height: 30px;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-fivepost.svg");
 		}
 
-		.dist-store {
-			position: relative;
-			display: inline-flex;
-			flex: 0 0 auto;
-			order: 1;
-			justify-content: flex-end;
-			align-items: center;
-			align-self: flex-end;
-			margin-top: 10px;
-			font-size: 13px;
-
-			&::before {
-				display: block;
-				width: 10px;
-				height: 13px;
-				margin-right: 4px;
-				background: url("../../../images/kyrena/shippingmax/ic-map.svg") center
-					center no-repeat;
-				background-size: auto 100%;
-				text-align: center;
-				content: "";
-			}
+		&.ic-mondialrelay {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-mondialrelay.svg");
 		}
 
-		& > button {
-			display: inline-flex;
-			flex: 0 0 auto;
-			justify-content: center;
-			align-items: center;
-			height: 22px;
-			padding: 0 12px;
-			margin-top: 10px;
-			background-color: #eaedfd;
-			border: none;
-			border-radius: 5px;
-			color: $color-blue-main;
-			font-size: 12px;
-			transition: all 0.2s ease-in-out;
+		&.ic-colisprivpts {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-colisprive.svg");
+		}
 
-			@media #{$small-down} {
-				height: 30px;
-			}
+		&.ic-pocztk48Op {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-pocztex2.svg");
+		}
 
-			&:focus {
-				background-color: $color-blue-main;
-				outline: none;
-				color: $color-white;
+		&.ic-przesodbpk {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-packeta.svg");
+		}
+
+		&.ic-chronorelais {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-chronopost2.svg");
+		}
+
+		&.ic-dpdfrrelais {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-dpd2.svg");
+		}
+
+		&.ic-boxberry {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-boxberry2.svg");
+		}
+
+		&.ic-pickpoint {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-pickpoint2.svg");
+		}
+
+		&.ic-shiptor {
+			display: inline-block;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-shiptor2.svg");
+		}
+	}
+
+	.name {
+		margin-bottom: 5px;
+		font-family: $font-text;
+		font-size: 15px;
+		font-weight: 700;
+		line-height: 18px;
+		transition: color 0.2s ease-in-out;
+
+		@media #{$extra-small-only} {
+			flex: 1 1 100%;
+		}
+
+		small {
+			font-weight: 400;
+
+			@media #{$extra-small-only} {
+				margin-left: 4px;
 			}
 		}
 	}
 
-	.item-card_details {
-		position: relative;
-		width: 100%;
-		min-width: 0;
+	.addr {
+		margin-bottom: 5px;
+		color: #767676;
+		font-family: $font-text;
+		font-size: 13px;
 
-		@media #{$small-down} {
-			position: relative;
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-between;
+		@media #{$extra-small-only} {
+			flex: 0 1 calc(50% - 10px);
+			padding-right: 10px;
+			margin: 0;
 		}
 
-		.icn {
-			display: inline-block;
-			float: right;
-			width: 30px;
-			height: 30px;
-			margin-left: 5px;
-			background-repeat: no-repeat;
-			background-position: center;
-			font-size: 0;
+		@media #{$xs-small-only} {
+			flex: 1 0 100%;
+			padding: 0;
+		}
+	}
 
-			&.ic-inpospaczk,
-			&.ic-inpospacuk {
-				width: 60px;
-				height: 28px;
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-inpost.svg");
-			}
+	.desc {
+		color: $color-text-default;
+		font-family: $font-text;
+		font-size: 13px;
 
-			&.ic-fivepost {
-				width: 40px;
-				height: 30px;
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-fivepost.svg");
-			}
-
-			&.ic-mondialrelay {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-mondialrelay.svg");
-			}
-
-			&.ic-colisprivpts {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-colisprive.svg");
-			}
-
-			&.ic-pocztk48Op {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-pocztex2.svg");
-			}
-
-			&.ic-przesodbpk {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-packeta.svg");
-			}
-
-			&.ic-chronorelais {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-chronopost2.svg");
-			}
-
-			&.ic-dpdfrrelais {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-dpd2.svg");
-			}
-
-			&.ic-boxberry {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-boxberry2.svg");
-			}
-
-			&.ic-pickpoint {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-pickpoint2.svg");
-			}
-
-			&.ic-shiptor {
-				background-image: url("../../../images/kyrena/shippingmax/ic-logo-shiptor2.svg");
-			}
+		@media #{$extra-small-only} {
+			flex: 0 1 calc(50% - 10px);
+			padding-left: 10px;
 		}
 
-		.name {
-			margin-bottom: 5px;
-			font-family: $font-text;
-			font-size: 15px;
-			font-weight: 700;
-			line-height: 18px;
-			transition: color 0.2s ease-in-out;
-
-			@media #{$small-down} {
-				flex: 1 1 100%;
-				min-height: 30px;
-			}
-
-			@media #{$xs-small-only} {
-				line-height: 16px;
-			}
-
-			small {
-				font-weight: 400;
-
-				@media #{$small-down} {
-					margin-left: 4px;
-				}
-			}
-		}
-
-		.addr {
-			margin-bottom: 5px;
-			color: #999;
-			font-family: $font-text;
-			font-size: 13px;
-
-			@media #{$small-down} {
-				flex: 0 1 calc(50% - 10px);
-				padding-right: 10px;
-				margin: 0;
-			}
-
-			@media #{$xs-small-only} {
-				flex: 1 0 100%;
-				padding: 0;
-			}
-		}
-
-		.desc {
-			color: $color-text-default;
-			font-family: $font-text;
-			font-size: 13px;
-
-			@media #{$small-down} {
-				flex: 0 1 calc(50% - 10px);
-				padding-left: 10px;
-			}
-
-			@media #{$xs-small-only} {
-				flex: 1 0 100%;
-				padding: 0;
-				margin-top: 7px;
-			}
+		@media #{$xs-small-only} {
+			flex: 1 0 100%;
+			padding: 0;
+			margin-top: 7px;
 		}
 	}
 }
@@ -877,6 +890,12 @@ button {
 	height: 40px;
 	margin-left: 15px;
 
+	cursor: pointer;
+	user-select: none;
+	-ms-user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+
 	//For disable blue highlight when touch/press in mobile (specialy for Chrome browser)
 	-webkit-tap-highlight-color: transparent;
 
@@ -887,9 +906,9 @@ button {
 		display: inline-block;
 		z-index: 1;
 		width: 100%;
-		height: 36px;
-		cursor: pointer;
+		height: 38px;
 		transform: translate(0, -50%);
+		-webkit-transform: translate(0, -50%);
 
 		&_btn {
 			position: absolute;
@@ -898,11 +917,11 @@ button {
 			display: inline-block;
 			width: 36px;
 			height: 36px;
-			background: url("../../../images/kyrena/shippingmax/ic-cross.svg")
-				center center no-repeat;
+			background: url("../../../images/kyrena/shippingmax/ic-cross.svg") center center no-repeat;
 			background-size: 35% auto;
 			font-size: 0;
 			transform: translate(0, -50%) rotate(-45deg);
+			-webkit-transform: translate(0, -50%) rotate(-45deg);
 			transition: all 0.2s ease-in-out;
 
 			@media #{$xs-small-only} {
@@ -974,7 +993,8 @@ button {
 			width: 36px;
 
 			&_btn {
-				transform: translate(0, -50%) rotate(0deg);
+				transform: translate(0, -50%) rotate(0);
+				-webkit-transform: translate(0, -50%) rotate(0);
 			}
 		}
 
@@ -986,6 +1006,7 @@ button {
 		}
 	}
 }
+
 
 .country-list {
 	position: absolute;
@@ -1046,6 +1067,10 @@ button {
 		& > li {
 			line-height: 0;
 		}
+	}
+
+	&.single label {
+		cursor: default;
 	}
 
 	label {
@@ -1113,4 +1138,21 @@ button {
 			}
 		}
 	}
+}
+
+/*
+ * pseudo fullscreen button
+ * sur une idée de https://github.com/Leaflet/Leaflet.fullscreen
+ */
+.leaflet-bar .leaflet-control-fullscreen-button {
+	background:#fff url("../../../images/kyrena/shippingmax/fullscreen.svg") no-repeat 2px 2px;
+	background-size: 26px 52px;
+}
+
+.leaflet-bar.leaflet-fullscreen-on .leaflet-control-fullscreen-button {
+	background-position: 2px -24px;
+}
+
+.leaflet-popup-content {
+	margin: 0 !important;
 }

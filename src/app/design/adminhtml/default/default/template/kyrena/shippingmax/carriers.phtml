@@ -1,10 +1,10 @@
 <?php
 /**
  * Created M/31/03/2020
- * Updated V/08/10/2021
+ * Updated V/22/10/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -19,6 +19,7 @@
  */
 
 $items = $this->getData('config');
+$help  = $this->helper('adminhtml');
 ?>
 
 <?php foreach ($items as $item): ?>
@@ -30,17 +31,17 @@ $items = $this->getData('config');
 			<select name="groups[<?php echo $this->getGroup() ?>][fields][remove_<?php echo $item['code'] ?>][value]" class="select" id="<?php echo $item['id'] ?>" title="<?php echo $item['code'] ?>">
 				<?php if (empty($item['value'])): ?>
 					<option value="1">
-						<?php echo $this->helper('adminhtml')->__('Yes') ?> / <?php echo $item['code'] ?>
+						<?php echo $help->__('Yes') ?> / <?php echo $item['code'] ?>
 					</option>
 					<option value="0" selected="selected">
-						<?php echo $this->helper('adminhtml')->__('No') ?>
+						<?php echo $help->__('No') ?>
 					</option>
 				<?php else: ?>
 					<option value="1" selected="selected">
-						<?php echo $this->helper('adminhtml')->__('Yes') ?> / <?php echo $item['code'] ?>
+						<?php echo $help->__('Yes') ?> / <?php echo $item['code'] ?>
 					</option>
 					<option value="0">
-						<?php echo $this->helper('adminhtml')->__('No') ?>
+						<?php echo $help->__('No') ?>
 					</option>
 				<?php endif ?>
 			</select>

@@ -1,10 +1,10 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated M/03/08/2021
+ * Updated V/26/11/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -27,7 +27,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpointcash extends Kyrena_Shippingmax_
 	public function getCacheFile() {
 
 		if (Mage::getStoreConfig('carriers/shippingmax_pickpoint/api_url') == Mage::getStoreConfig('carriers/shippingmax_pickpointcash/api_url'))
-			return Mage::getBaseDir('var').'/shippingmax_pickpoint.dat';
+			return Mage::getBaseDir('var').'/shippingmax/pickpoint.dat';
 
 		return parent::getCacheFile();
 	}

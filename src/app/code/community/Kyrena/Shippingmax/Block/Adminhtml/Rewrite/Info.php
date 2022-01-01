@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/26/04/2019
- * Updated M/28/09/2021
+ * Updated L/25/10/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -19,6 +19,10 @@
  */
 
 class Kyrena_Shippingmax_Block_Adminhtml_Rewrite_Info extends Mage_Adminhtml_Block_Sales_Order_View_Tab_Info {
+
+	protected function _construct() {
+		$this->setModuleName('Mage_Adminhtml');
+	}
 
 	protected function _toHtml() {
 

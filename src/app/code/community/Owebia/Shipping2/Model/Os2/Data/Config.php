@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019-2021 Kyrena. All rights reserved.
+ * Copyright © 2019-2022 Kyrena. All rights reserved.
  * See COPYING.txt for license details.
  */
 

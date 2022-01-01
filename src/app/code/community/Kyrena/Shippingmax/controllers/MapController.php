@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/30/09/2021
+ * Updated J/23/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -40,7 +40,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 					$data = [];
 				// pays mémorisé différent du pays de l'adresse (uniquement le pays de l'adresse est autorisé)
 				// pas de vérification des pays en mode test (lorsque le mode de livraison est désactivé)
-				else if (($data['country_id'] != $address->getData('country_id')) && in_array($address->getData('country_id'), $this->_countries) && Mage::getStoreConfigFlag('carriers/'.$code.'/active'))
+				else if (($data['country_id'] != $address->getData('country_id')) && Mage::getStoreConfigFlag('carriers/'.$code.'/active') && in_array($address->getData('country_id'), $this->_countries))
 					$data = [];
 			}
 
@@ -95,6 +95,8 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			}
 		}
 
+		$items = (!empty($items) && is_array($items)) ? $items : [];
+
 		// admin
 		if (!Mage::getStoreConfigFlag('carriers/'.$code.'/active') && Mage::app()->getStore()->isAdmin()) {
 			Mage::app()->getStore()->setConfig('carriers/'.$code.'/active', 1);
@@ -102,7 +104,19 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 				$address->setCollectShippingRates(true)->collectShippingRates(); //->getGroupedAllShippingRates();
 		}
 
-		return (!empty($items) && is_array($items)) ? $items : [];
+		// filtrage storelocator
+		$search = $this->getRequest()->getParam('q');
+		if (!empty($search) && ($code == 'shippingmax_storelocator') && !empty($items)) {
+			$newItems = [];
+			foreach ($items as $key => $item) {
+				if (stripos($item['name'], $search) !== false)
+					$newItems[$key] = $item;
+			}
+			if (!empty($newItems))
+				$items = $newItems;
+		}
+
+		return $items;
 	}
 
 	protected function isAjax() {
@@ -140,11 +154,12 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	public function preDispatch() {
 
+		Mage::register('turpentine_nocache_flag', true, true);
 		parent::preDispatch();
 
-		if (mb_stripos($this->getFullActionName(), 'debug') === false) {
+		if (stripos($this->getFullActionName(), 'debug') === false) {
 			$code = $this->getRequest()->getParam('code');
-			if (empty($code) || (mb_stripos($code, 'shippingmax_') === false) || empty(Mage::getStoreConfig('carriers/'.$code.'/title'))) {
+			if (empty($code) || (stripos($code, 'shippingmax_') === false) || empty(Mage::getStoreConfig('carriers/'.$code.'/title'))) {
 				if (!is_numeric($code))
 					$this->setFlag('', 'no-dispatch', true);
 			}
@@ -414,6 +429,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			$coords  = Mage::getModel('shippingmax/coords');
 			foreach ($ids as $id => $value) {
 				if (mb_stripos($id, 'shippingmax') !== false) {
+					unset($value['item']['description']);
 					$value['shippingmax'] = '<a href="'.Mage::getUrl('*/*/index', ['code' => $id]).'">map</a>';
 					if (isset($value['city'], $value['postcode'], $value['country_id'])) {
 						$value['nominatim1'] = '<a href="'.$coords->getApiUrl($value['city'], $value['postcode'], $value['country_id']).'">search</a>';
@@ -434,18 +450,17 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 				if (strncasecmp($id, 'shippingmax', 11) === 0) {
 					$value = $app->loadCache($id);
 					$value = empty($value) ? $value : @unserialize($value, ['allowed_classes' => false]);
-					$cache[$id] = count($value);
+					$cache[$id] = count($value).' items';
 				}
 			}
 			ksort($cache);
 
-			$address = $this->getShippingAddress();
-			$link =
-				' - <a href="'.Mage::getUrl('*/*/debugclearcache', ['pass' => $pass]).'">clear cache</a>'.
-				' - <a href="'.Mage::getUrl('*/*/debugclearsession', ['pass' => $pass]).'">clear session</a>'.
-				' - <a href="'.Mage::getUrl('*/*/debugsetaddress', ['pass' => $pass]).'">set address</a>';
+			$link  = ' - <a href="'.Mage::getUrl('*/*/debugsetaddress', ['pass' => $pass]).'">set address</a>';
+			$link .= ' - <a href="'.Mage::getUrl('*/*/debugclearsession', ['pass' => $pass]).'"'.(empty($session) ? ' style="color:#666;"' : '').'>clear session</a>';
+			$link .= ' - <a href="'.Mage::getUrl('*/*/debugclearcache', ['pass' => $pass]).'"'.(empty($cache) ? ' style="color:#666;"' : '').'>clear cache</a>';
+
 			$text =
-				'<b>shippingAdress:</b>'."\n".trim($address->format('text'))."\n\n".
+				'<b>shippingAdress:</b>'."\n".trim($this->getShippingAddress()->format('text'))."\n\n".
 				'<b>session:keys:</b> '.print_r(array_keys($session), true).
 				'<br><b>session:data:</b> '.print_r($session, true).
 				'<br><b>cache:keys/count:</b> '.print_r($cache, true);
@@ -515,6 +530,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			$session->setData('shippingmax_dpdfrrelais',    ['city' => 'Voiron', 'postcode' => '38500', 'country_id' => 'FR']);
 			$session->setData('shippingmax_fivepost',       ['city' => 'Челябинск', 'postcode' => '454000', 'country_id' => 'RU']);
 			$session->setData('shippingmax_fivepostcash',   ['city' => 'Челябинск', 'postcode' => '454000', 'country_id' => 'RU']);
+			$session->setData('shippingmax_inpospacit',     ['city' => 'Roma', 'postcode' => '00121', 'country_id' => 'IT']);
 			$session->setData('shippingmax_inpospacuk',     ['city' => 'Kilmarnock', 'postcode' => 'KA1 2QA', 'country_id' => 'GB']);
 			$session->setData('shippingmax_inpospaczk',     ['city' => 'Chełm', 'postcode' => '22-100', 'country_id' => 'PL']);
 			$session->setData('shippingmax_mondialrelay',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR']);

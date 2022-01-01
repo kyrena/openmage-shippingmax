@@ -19,7 +19,7 @@ External services:
 
 In **System / Configuration / Delivery times**, you can configure _delivery times_ by country of delivery. You are seeing a `*` in section head? This is because all times are not yet configured.
 
-In **System / Configuration / Shipping Methods and Payment Methods / General**, you can _hide and clear configuration_ for a custom selection of unused shipping and payment methods. You are seeing a `*` in section head? This is a mark to inform you that the shipping method is available for the default country of the current store view.
+In **System / Configuration / Shipping Methods / General**, you can _hide and clear configuration_ for a custom selection of unused shipping methods. You are seeing a `*` in section head? This is a mark to inform you that the shipping method is available for the default country of the current store view.
 
 In **System / Configuration / Customer / Address Templates**, templates are managed everywhere automatically with _adamlc/address-format_, phone numbers are formatted with _giggsey/libphonenumber-for-php_.
 
@@ -41,18 +41,19 @@ Demo links may not work, don't panic, it's not a bug.
 
 | Name | Logo/Link | Info |
 | ---- | ---- | ---- |
-| **Chrono Relais** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-chronopost.svg?raw=true" alt="" width="150" height="50"/>](https://www.chronopost.fr/fr/livraison/nos-offres/chrono-relais) | [online demo](https://cellu.blue/ef1sOP): 42100, Saint-Étienne, FR<br>access: account required |
-| **Colis Privé** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-colisprive.svg?raw=true" alt="" width="150" height="50"/>](https://www.colisprive.fr/) | [online demo](https://cellu.blue/YSqL52): 42100, Saint-Étienne, FR<br>access: account required |
-| **Mondial Relay** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-mondialrelay.svg?raw=true" alt="" width="150" height="50"/>](https://www.mondialrelay.fr/) | [online demo](https://cellu.blue/oNmaIV): 42100, Saint-Étienne, FR<br>access: account required |
-| **DPD FR Relais** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-dpd.svg?raw=true" alt="" width="150" height="50"/>](https://www.dpd.fr/recherche-relais) | [online demo](https://cellu.blue/rlp2Ls): 38500, Voiron, FR<br>access: free |
-| **InPost GB** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-inpost.svg?raw=true" alt="" width="150" height="50"/>](https://www.inpost.co.uk/) | [online demo](https://cellu.blue/ZQym8w): KA1 2QA, Kilmarnock, GB<br>access: free |
-| **InPost PL** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-inpost.svg?raw=true" alt="" width="150" height="50"/>](https://inpost.pl/) | [online demo](https://cellu.blue/ZCWFMn): 22-100, Chełm, PL<br>access: free |
-| **Pocztex** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-pocztex.svg?raw=true" alt="" width="150" height="50"/>](https://www.pocztex.pl/) | [online demo](https://cellu.blue/dPLFLI): 50-307, Wrocław, PL<br>access: free |
-| **Packeta/Zásilkovna** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-packeta.svg?raw=true" alt="" width="150" height="50"/>](https://www.zasilkovna.cz/) | [online demo](https://cellu.blue/ub68fx): 547 01, Náchod, CZ<br>access: account required |
-| **Boxberry** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-boxberry.svg?raw=true" alt="" width="150" height="50"/>](https://boxberry.ru/) | [online demo](https://cellu.blue/bsIhKh): 664003, Иркутск, RU<br>access: free (demo token included with default configuration) |
-| **5post** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-fivepost.svg?raw=true" alt="" width="150" height="50"/>](https://fivepost.ru/) | [online demo](https://cellu.blue/6Y0hnT): 127299, Москва, RU<br>access: account required |
-| **PickPoint** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-pickpoint.svg?raw=true" alt="" width="150" height="50"/>](https://pickpoint.ru/) | [online demo](https://cellu.blue/OMXVxH): 140000, Люберцы, RU<br>access: account required |
-| **Shiptor** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-shiptor.svg?raw=true" alt="" width="150" height="50"/>](https://shiptor.ru/) | [online demo](https://cellu.blue/3RhP6s): 454000, Челябинск, RU<br>access: free |
+| **Chrono Relais** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-chronopost.svg?raw=true" alt="" width="150" height="50"/>](https://www.chronopost.fr/fr/livraison/nos-offres/chrono-relais) | [online demo](https://cellu.blue/ef1sOP): 42100, Saint-Étienne, FR<br>api: account required |
+| **Colis Privé** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-colisprive.svg?raw=true" alt="" width="150" height="50"/>](https://www.colisprive.fr/) | [online demo](https://cellu.blue/YSqL52): 42100, Saint-Étienne, FR<br>api: account required |
+| **Mondial Relay** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-mondialrelay.svg?raw=true" alt="" width="150" height="50"/>](https://www.mondialrelay.fr/) | [online demo](https://cellu.blue/oNmaIV): 42100, Saint-Étienne, FR<br>api: account required |
+| **DPD FR Relais** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-dpd.svg?raw=true" alt="" width="150" height="50"/>](https://www.dpd.fr/recherche-relais) | [online demo](https://cellu.blue/rlp2Ls): 38500, Voiron, FR<br>api: free |
+| **InPost IT** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-inpost.svg?raw=true" alt="" width="150" height="50"/>](https://inpost.it/) | [online demo](https://cellu.blue/4K64Oc): 00121, Roma, IT<br>api: free |
+| **InPost GB** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-inpost.svg?raw=true" alt="" width="150" height="50"/>](https://www.inpost.co.uk/) | [online demo](https://cellu.blue/ZQym8w): KA1 2QA, Kilmarnock, GB<br>api: free |
+| **InPost PL** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-inpost.svg?raw=true" alt="" width="150" height="50"/>](https://inpost.pl/) | [online demo](https://cellu.blue/ZCWFMn): 22-100, Chełm, PL<br>api: free |
+| **Pocztex** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-pocztex.svg?raw=true" alt="" width="150" height="50"/>](https://www.pocztex.pl/) | [online demo](https://cellu.blue/dPLFLI): 50-307, Wrocław, PL<br>api: free |
+| **Packeta/Zásilkovna** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-packeta.svg?raw=true" alt="" width="150" height="50"/>](https://www.zasilkovna.cz/) | [online demo](https://cellu.blue/ub68fx): 547 01, Náchod, CZ<br>api: account required |
+| **Boxberry** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-boxberry.svg?raw=true" alt="" width="150" height="50"/>](https://boxberry.ru/) | [online demo](https://cellu.blue/bsIhKh): 664003, Иркутск, RU<br>api: free (demo token included with default configuration) |
+| **5post** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-fivepost.svg?raw=true" alt="" width="150" height="50"/>](https://fivepost.ru/) | [online demo](https://cellu.blue/6Y0hnT): 127299, Москва, RU<br>api: account required |
+| **PickPoint** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-pickpoint.svg?raw=true" alt="" width="150" height="50"/>](https://pickpoint.ru/) | [online demo](https://cellu.blue/OMXVxH): 140000, Люберцы, RU<br>api: account required |
+| **Shiptor** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-shiptor.svg?raw=true" alt="" width="150" height="50"/>](https://shiptor.ru/) | [online demo](https://cellu.blue/3RhP6s): 454000, Челябинск, RU<br>api: free |
 | **Store delivery** | | [online demo](https://cellu.blue/OmRX8p): 07200, Aubenas, FR<br>source of data: a TSV file |
 | **Store locator** | | [online demo](https://cellu.blue/h9dhKJ)<br>source of data: a TSV file |
 
@@ -90,8 +91,8 @@ To display delivery times, you must edit your template with:
 
 ## Copyright and Credits
 
-- Current version: 2.1.0 (10/10/2021)
-- Compatibility: OpenMage 19.x / 20.x, PHP 7.2 / 7.3 / 7.4 / 8.0
+- Current version: 2.2.0 (01/01/2022)
+- Compatibility: OpenMage 19.x / 20.x / 21.x, PHP 7.2 / 7.3 / 7.4 / 8.0 / 8.1
 - Client compatibility: Firefox 36+, Chrome 32+, Opera 19+, Edge 16+, Safari 9+
 - Translations: English (en), French (fr-FR/fr-CA), German (de), Italian (it), Portuguese (pt-PT/pt-BR), Spanish (es) / Chinese (zh), Czech (cs), Dutch (nl), Greek (el), Hungarian (hu), Japanese (ja), Polish (pl), Romanian (ro), Russian (ru), Slovak (sk), Turkish (tr), Ukrainian (uk)
 - License: GNU GPL 2+

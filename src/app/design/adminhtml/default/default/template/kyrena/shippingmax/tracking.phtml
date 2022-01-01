@@ -1,10 +1,10 @@
 <?php
 /**
  * Created L/13/05/2019
- * Updated J/15/10/2020
+ * Updated J/04/11/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -66,7 +66,7 @@ $tracks = $this->getShipment()->getAllTracks();
 								<?php endif ?>
 							<?php endif ?>
 							<?php $date = $this->formatDate($track->getData('created_at')) ?>
-							<br /><?php echo empty($track->getData('weight')) ? $date : $this->__('%s - %s kg', $date, Zend_Locale_Format::toNumber($track->getData('weight'), ['precision' => 2])) ?>
+							<br /><?php echo empty($track->getData('weight')) ? $date : $this->__('%s - %s kg', $date, $help->getNumber($track->getData('weight'), ['precision' => 2])) ?>
 						</td>
 						<td class="last"><a href="#" onclick="deleteTrackingNumber('<?php echo $this->getRemoveUrl($track) ?>'); return false;"><?php echo $this->__('Delete') ?></a></td>
 					</tr>

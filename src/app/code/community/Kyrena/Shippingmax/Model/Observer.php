@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/30/09/2021
+ * Updated S/11/12/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -192,39 +192,28 @@ class Kyrena_Shippingmax_Model_Observer {
 		}
 	}
 
-
 	// EVENT admin_system_config_changed_section_shippingmax_times (adminhtml)
 	// EVENT admin_system_config_changed_section_carriers (adminhtml)
-	// EVENT admin_system_config_changed_section_payment (adminhtml)
 	public function clearConfig(Varien_Event_Observer $observer) {
 
 		$database = Mage::getSingleton('core/resource');
-		$write = $database->getConnection('core_write');
-		$table = $database->getTableName('core_config_data');
+		$writer   = $database->getConnection('core_write');
+		$table    = $database->getTableName('core_config_data');
 
 		$carriers = Mage::getModel('shipping/config')->getAllCarriers();
 		foreach ($carriers as $code => $carrier) {
 			if (Mage::getStoreConfigFlag('carriers/shippingmax/remove_'.$code)) {
-				$write->query('DELETE FROM '.$table.' WHERE path LIKE "carriers/'.$code.'/%"');
-				$write->query('INSERT INTO '.$table.' (`scope`, `scope_id`, `path`, `value`, `updated_at`)
+				$writer->query('DELETE FROM '.$table.' WHERE path LIKE "carriers/'.$code.'/%"');
+				$writer->query('INSERT INTO '.$table.' (`scope`, `scope_id`, `path`, `value`, `updated_at`)
 					VALUES ("default", 0, "carriers/'.$code.'/active", "0", now())');
 			}
 		}
 
-		$payments = Mage::getModel('payment/config')->getAllMethods();
-		foreach ($payments as $code => $payment) {
-			if (Mage::getStoreConfigFlag('payment/account/remove_'.$code)) {
-				$write->query('DELETE FROM '.$table.' WHERE path LIKE "payment/'.$code.'/%"');
-				$write->query('INSERT INTO '.$table.' (`scope`, `scope_id`, `path`, `value`, `updated_at`)
-					VALUES ("default", 0, "payment/'.$code.'/active", "0", now())');
-			}
-		}
-
 		if (Mage::getStoreConfigFlag('shippingmax_times/general/enabled')) {
-			$write->query('DELETE FROM '.$table.' WHERE path LIKE "shippingmax_times/general/remove"');
+			$writer->query('DELETE FROM '.$table.' WHERE path LIKE "shippingmax_times/general/remove"');
 		}
 		else if (Mage::getStoreConfigFlag('shippingmax_times/general/remove')) {
-			$write->query('DELETE FROM '.$table.' WHERE path LIKE "shippingmax_times/%" AND path NOT LIKE "shippingmax_times/general/%"');
+			$writer->query('DELETE FROM '.$table.' WHERE path LIKE "shippingmax_times/%" AND path NOT LIKE "shippingmax_times/general/%"');
 		}
 
 		Mage::getConfig()->reinit(); // très important
@@ -234,7 +223,6 @@ class Kyrena_Shippingmax_Model_Observer {
 	public function hideConfig(Varien_Event_Observer $observer) {
 
 		$section = Mage::app()->getRequest()->getParam('section');
-
 		if ($section == 'carriers') {
 			$nodes    = $observer->getData('config')->getNode('sections/carriers/groups')->children();
 			$carriers = Mage::getModel('shipping/config')->getAllCarriers();
@@ -246,21 +234,9 @@ class Kyrena_Shippingmax_Model_Observer {
 				}
 			}
 		}
-
-		if ($section == 'payment') {
-			$nodes    = $observer->getData('config')->getNode('sections/payment/groups')->children();
-			$payments = Mage::getModel('payment/config')->getAllMethods();
-			foreach ($payments as $code => $payment) {
-				if (!empty($nodes->{$code}) && Mage::getStoreConfigFlag('payment/account/remove_'.$code)) {
-					$nodes->{$code}->show_in_default = 0;
-					$nodes->{$code}->show_in_website = 0;
-					$nodes->{$code}->show_in_store = 0;
-				}
-			}
-		}
 	}
 
-	// CRON shippingmax
+	// CRON shippingmax_update_files
 	// toutes les heures, oui mais on s'assure aussi que le fichier a expiré
 	public function updateFullFiles($cron = null) {
 
@@ -285,55 +261,61 @@ class Kyrena_Shippingmax_Model_Observer {
 						else
 							$active = Mage::getStoreConfigFlag('carriers/'.$help->getEnabledCarrierCode($code, $storeId).'/active', $storeId);
 
-						if ($active) {
+						if (!$active)
+							continue;
 
-							$cache = $carrier->getCacheFile();
-							$life  = $carrier->getFullCacheLifetime() - 600; // 10 minutes en secondes
+						$cache = $carrier->getCacheFile();
+						$life  = $carrier->getFullCacheLifetime() - 600; // 10 minutes en secondes
 
-							if (!is_file($cache) || (filemtime($cache) < (time() - $life))) {
+						if (!is_file($cache) || (filemtime($cache) < (time() - $life))) {
 
-								$start = microtime(true);
-								$items = $carrier->loadItemsFromApi($address);
+							$dir = dirname($cache);
+							if (!is_dir($dir))
+								mkdir($dir, 0755);
 
-								// sauvegarde dans le cache fichier et dans le cache openmage
-								// voir aussi Kyrena_Shippingmax_Model_Carrier::loadItemsFromCache
-								if (!empty($items) && is_array($items)) {
+							$start = microtime(true);
+							$items = $carrier->loadItemsFromApi($address);
+							$time  = microtime(true) - $start;
 
-									// met à jour le fichier et le cache
-									file_put_contents($cache, serialize($items));
-									$msg[] = $code.': '.floor(microtime(true) - $start).' seconds, '.floor(filesize($cache) / 1024).' k downloaded at '.floor(filesize($cache) / 1024).' k/s, '.count($items).' items';
+							// sauvegarde dans le cache fichier et dans le cache openmage
+							// voir aussi Kyrena_Shippingmax_Model_Carrier::loadItemsFromCache
+							if (!empty($items) && is_array($items)) {
 
-									if ($app->useCache('shippingmax_places'))
-										$app->saveCache(serialize($items), $code, ['SHIPPINGMAX_PLACES'], $carrier->getFullCacheLifetime());
+								// met à jour le fichier et le cache
+								file_put_contents($cache, serialize($items));
+								$msg[] = '- '.$code.': '.floor($time).' seconds, '.floor(filesize($cache) / 1024).' k downloaded at '.floor(filesize($cache) / 1024 / $time).' k/s, '.count($items).' items';
 
-									// supprime les résultats en cache
-									$ids = $app->getCache()->getIds();
-									foreach ($ids as $id) {
-										if (mb_stripos($id, $code) === 0)
-											$app->removeCache($id);
-									}
-								}
-								else {
-									$msg[] = $code.': '.floor(microtime(true) - $start).' seconds, ERROR, read your '.Mage::getStoreConfig('dev/log/exception_file').' or check your API credentials';
+								if ($app->useCache('shippingmax_places'))
+									$app->saveCache(serialize($items), $code, ['SHIPPINGMAX_PLACES'], $carrier->getFullCacheLifetime());
+
+								// supprime les résultats en cache
+								$ids = $app->getCache()->getIds();
+								foreach ($ids as $id) {
+									if (mb_stripos($id, $code) === 0)
+										$app->removeCache($id);
 								}
 							}
 							else {
-								$msg[] = $code.': already up to date';
+								$msg[] = '- '.$code.': '.floor($time).' seconds, ERROR, read your '.Mage::getStoreConfig('dev/log/exception_file').' or check your API credentials';
 							}
-
-							if (is_object($cron))
-								$cron->setData('messages', implode("\n", $msg))->save();
-
-							continue 2;
 						}
+						else {
+							$msg[] = '- '.$code.': already up to date';
+						}
+
+						if (is_object($cron))
+							$cron->setData('messages', implode("\n", $msg))->save();
+
+						// global
+						continue 2;
 					}
 
-					$msg[] = $code.': disabled';
+					$msg[] = '- '.$code.': disabled';
 				}
 				catch (Throwable $t) {
 					$hasError = true;
 					Mage::logException($t);
-					$msg[] = $code.': '.$t->getMessage();
+					$msg[] = '- '.$code.': '.$t->getMessage();
 				}
 			}
 		}
@@ -341,7 +323,7 @@ class Kyrena_Shippingmax_Model_Observer {
 		if (is_object($cron)) {
 			$cron->setData('messages', implode("\n", $msg));
 			if ($hasError) // pour le statut du cron
-				Mage::throwException("\n\n".$cron->getData('messages')."\n\n");
+				Mage::throwException('At least one error occurred while downloading files.'."\n\n".$cron->getData('messages')."\n\n");
 		}
 
 		return $msg;

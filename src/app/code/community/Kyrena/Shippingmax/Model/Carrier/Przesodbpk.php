@@ -1,10 +1,10 @@
 <?php
 /**
  * Created M/02/02/2021
- * Updated L/04/10/2021
+ * Updated M/19/10/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -65,13 +65,13 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 
 		$html = [];
 		$days = [
-			'1 Monday'    => is_array($data['monday'])    ? [] : explode('–', str_replace([':', ', '], ['', '–'], $data['monday'])),
-			'2 Tuesday'   => is_array($data['tuesday'])   ? [] : explode('–', str_replace([':', ', '], ['', '–'], $data['tuesday'])),
-			'3 Wednesday' => is_array($data['wednesday']) ? [] : explode('–', str_replace([':', ', '], ['', '–'], $data['wednesday'])),
-			'4 Thursday'  => is_array($data['thursday'])  ? [] : explode('–', str_replace([':', ', '], ['', '–'], $data['thursday'])),
-			'5 Friday'    => is_array($data['friday'])    ? [] : explode('–', str_replace([':', ', '], ['', '–'], $data['friday'])),
-			'6 Saturday'  => is_array($data['saturday'])  ? [] : explode('–', str_replace([':', ', '], ['', '–'], $data['saturday'])),
-			'7 Sunday'    => is_array($data['sunday'])    ? [] : explode('–', str_replace([':', ', '], ['', '–'], $data['sunday']))
+			'1 Monday'    => is_array($data['monday'])    ? $data['monday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['monday'])),
+			'2 Tuesday'   => is_array($data['tuesday'])   ? $data['tuesday']   : explode('–', str_replace([':', ', '], ['', '–'], $data['tuesday'])),
+			'3 Wednesday' => is_array($data['wednesday']) ? $data['wednesday'] : explode('–', str_replace([':', ', '], ['', '–'], $data['wednesday'])),
+			'4 Thursday'  => is_array($data['thursday'])  ? $data['thursday']  : explode('–', str_replace([':', ', '], ['', '–'], $data['thursday'])),
+			'5 Friday'    => is_array($data['friday'])    ? $data['friday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['friday'])),
+			'6 Saturday'  => is_array($data['saturday'])  ? $data['saturday']  : explode('–', str_replace([':', ', '], ['', '–'], $data['saturday'])),
+			'7 Sunday'    => is_array($data['sunday'])    ? $data['sunday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['sunday']))
 		];
 
 		// Array ( [1 Monday] => Array ( [0] => 0830 [1] => 1830 ) )
@@ -81,6 +81,8 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 			return '24/7';
 
 		foreach ($days as $day => $str) {
+
+			$str = array_filter($str);
 
 			// fermé toute la journée
 			if (empty($str)) {

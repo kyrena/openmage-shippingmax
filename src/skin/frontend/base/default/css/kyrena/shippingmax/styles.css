@@ -1,9 +1,9 @@
 /**
  * Created V/12/04/2019
- * Updated V/07/05/2021
+ * Updated V/26/11/2021
  *
- * Copyright 2019-2021 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2021 | Jérôme Siau <jerome~cellublue~com>
+ * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -40,4 +40,10 @@
 
 @media screen and (max-width:991px) {
 	#shippingmaxBox { top:0; width:100vw; height:100%; }
+}
+
+/* &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& checkout &&& */
+.shippingmax .last {
+	display:inline-block; padding:0.2em 0.4em; width:auto;
+	font-size:0.85em; border-radius:5px; color:#666; background-color:#EEE;
 }
