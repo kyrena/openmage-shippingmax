@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/23/12/2021
+ * Updated M/25/01/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -45,8 +45,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		return str_replace($object->date($date)->toString(Zend_Date::TIMEZONE), '', $object->date($date)->toString($format));
 	}
 
-	public function getHumanEmailAddress(string $email) {
-		return $this->escapeEntities(str_replace(['<', '>', ',', '"'], ['(', ')', ', ', ''], $email));
+	public function getHumanEmailAddress($email) {
+		return empty($email) ? '' : $this->escapeEntities(str_replace(['<', '>', ',', '"'], ['(', ')', ', ', ''], $email));
 	}
 
 	public function getHumanDuration($start, $end = null) {
@@ -312,7 +312,11 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		$allCountries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
 		$selCountries = Mage::getStoreConfig('carriers/'.$code.'/specificcountry', $storeId);
 		$selCountries = empty($selCountries) ? [] : array_filter(explode(',', $selCountries));
-		$countries    = empty($selCountries) ? $allCountries : array_intersect($allCountries, $selCountries);
+
+		if ($code == 'shippingmax_storelocator')
+			$allCountries = Mage::getResourceModel('directory/country_collection')->getColumnValues('country_id');
+
+		$countries = empty($selCountries) ? $allCountries : array_intersect($allCountries, $selCountries);
 
 		$config = Mage::getStoreConfig('carriers/'.$code.((strpos($code, 'owebiashipping') === false) ? '/owebia_config' : '/config'), $storeId);
 		if (mb_stripos($config, '"shipto"') !== false) {

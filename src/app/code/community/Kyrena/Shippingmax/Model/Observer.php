@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/11/12/2021
+ * Updated D/26/12/2021
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -237,7 +237,6 @@ class Kyrena_Shippingmax_Model_Observer {
 	}
 
 	// CRON shippingmax_update_files
-	// toutes les heures, oui mais on s'assure aussi que le fichier a expiré
 	public function updateFullFiles($cron = null) {
 
 		$app = Mage::app();
@@ -321,7 +320,7 @@ class Kyrena_Shippingmax_Model_Observer {
 		}
 
 		if (is_object($cron)) {
-			$cron->setData('messages', implode("\n", $msg));
+			$cron->setData('messages', 'memory: '.((int) (memory_get_peak_usage(true) / 1024 / 1024)).' M'."\n".implode("\n", $msg));
 			if ($hasError) // pour le statut du cron
 				Mage::throwException('At least one error occurred while downloading files.'."\n\n".$cron->getData('messages')."\n\n");
 		}

@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated M/07/09/2021
+ * Updated M/25/01/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -47,6 +47,7 @@ var shippingmax = new (function () {
 		if (document.getElementById('shippingmaxDialog'))
 			return;
 
+		this.scroll = window.pageYOffset;
 		var data = document.createElement('div');
 		data.innerHTML =
 			'<div id="shippingmaxDialog" onclick="shippingmax.close(event);">' +
@@ -56,9 +57,18 @@ var shippingmax = new (function () {
 				'</div>' +
 			'</div>';
 
-		this.scroll = window.pageYOffset;
 		document.querySelector('body').appendChild(data.firstChild);
 		document.querySelector('body').classList.add('no-scroll');
+		document.addEventListener('keydown', shippingmax.keyClose);
+	};
+
+	this.keyClose = function (ev) {
+
+		if (ev.keyCode === 27) {
+			console.log('shippingmax.map - esc/keyClose');
+			ev.preventDefault();
+			shippingmax.close(true);
+		}
 	};
 
 	this.close = function (ev) {
@@ -73,6 +83,7 @@ var shippingmax = new (function () {
 		if (ev === true) {
 			document.getElementById('shippingmaxDialog').remove();
 			document.querySelector('body').classList.remove('no-scroll');
+			document.removeEventListener('keydown', shippingmax.keyClose);
 			window.scrollTo(0, shippingmax.scroll);
 		}
 	};

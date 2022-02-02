@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated V/24/12/2021
+ * Updated M/04/01/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Mickaël Vang <mickael~cellublue~com>
@@ -890,7 +890,6 @@ button {
 	height: 40px;
 	margin-left: 15px;
 
-	cursor: pointer;
 	user-select: none;
 	-ms-user-select: none;
 	-moz-user-select: none;
@@ -1030,11 +1029,18 @@ button {
 		flex-direction: column;
 		align-items: flex-start;
 		padding-right: 36px;
-		cursor: pointer;
 
 		.small {
 			display: inline;
 		}
+	}
+
+	&.multi + .toggle-list {
+		cursor: pointer;
+	}
+
+	&.single label {
+		cursor: default;
 	}
 
 	&.multi li:hover .country-item {
@@ -1067,10 +1073,6 @@ button {
 		& > li {
 			line-height: 0;
 		}
-	}
-
-	&.single label {
-		cursor: default;
 	}
 
 	label {

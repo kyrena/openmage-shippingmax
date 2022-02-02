@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated J/09/12/2021
+ * Updated J/27/01/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Kyrena_Shippingmax>
-			<version>2.2.0</version>
+			<version>2.2.1</version>
 		</Kyrena_Shippingmax>
 	</modules>
 	<global>

@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated M/07/12/2021
+ * Updated M/25/01/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -176,9 +176,7 @@ var shippingmax = new (function () {
 			self.map.setView([46.76, 2.42], 6); // @todo France
 		}
 		else {
-			self.map.fitBounds(self.grp.getBounds());
-			if (self.map.getZoom() > 15)
-				self.map.setZoom(15);
+			self.map.fitBounds(self.grp.getBounds(), { maxZoom: 15 });
 		}
 
 		if (!document.querySelector('.alone')) {
@@ -230,7 +228,7 @@ var shippingmax = new (function () {
 			this.goToDetailFromMarker({ target: mkr, move: false });
 		}
 
-		// si géoloc
+		// géoloc
 		elem = document.querySelector('.btn-geoloc');
 		if (elem && navigator.geolocation)
 			elem.classList.remove('hide');
@@ -239,6 +237,10 @@ var shippingmax = new (function () {
 		elem = self.parent.document.getElementById('shippingmaxBox');
 		if (elem)
 			elem.classList.add('hack');
+
+		// ferme avec échap
+		if ((self != self.parent) && (typeof self.parent.shippingmax.keyClose == 'function'))
+			document.addEventListener('keydown', self.parent.shippingmax.keyClose);
 	};
 
 	this.geoloc = function () {
