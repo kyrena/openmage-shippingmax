@@ -6,7 +6,7 @@
 
 class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Data_Abstract
 {
-    protected $_additionalAttributes = array('coupon_code', 'weight_unit', 'weight_for_charge', 'free_shipping');
+    protected $_additionalAttributes = ['coupon_code', 'weight_unit', 'weight_for_charge', 'free_shipping'];
     protected $_freeShipping;
     protected $_items;
     protected $_quote;
@@ -22,7 +22,7 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
         // Bad value of package_value_with_discount
         // when "Apply Customer Tax = After discount" and "Apply Discount On Prices = Including tax"
 
-        $this->_data = array(
+        $this->_data = [
             // Do not use quote to retrieve values, totals are not available
             // package_value and package_value_with_discount : Bad value in backoffice orders
             'price-tax+discount' => null,
@@ -32,9 +32,9 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
             'weight' => $request->getData('package_weight'),
             'qty' => $request->getData('package_qty'),
             'free_shipping' => $request->getData('free_shipping'),
-        );
+        ];
 
-        $cartItems = array();
+        $cartItems = [];
         $items = $request->getAllItems();
         $quoteTotalCollected = false;
         $bundleProcessChildren = isset($this->_options['bundle']['process_children'])
@@ -66,7 +66,7 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
         $totalExclTaxWithoutDiscount = 0;
         $totalInclTaxWithDiscount = 0;
         $totalExclTaxWithDiscount = 0;
-        $this->_items = array();
+        $this->_items = [];
         foreach ($cartItems as $item) {
             $type = $item->getProduct()->getTypeId();
             $parentItemId = $item->getData('parent_item_id');
@@ -83,7 +83,7 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
                 }
                 $this->_items[] = Mage::getModel(
                     'owebia_shipping2/Os2_Data_CartItem',
-                    array('item' => $item, 'parent_item' => $parentItem, 'options' => $this->_options)
+                    ['item' => $item, 'parent_item' => $parentItem, 'options' => $this->_options]
                 );
             }
 

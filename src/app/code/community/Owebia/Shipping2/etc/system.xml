@@ -13,7 +13,6 @@
             <groups>
                 <owebiashipping3>
                     <label>Owebia Shipping 3</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>-17</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -30,7 +29,6 @@
                         </active>
                         <title translate="label">
                             <label>Title</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -46,7 +44,6 @@
                         </config>
                         <tracking_view_url translate="label">
                             <label>Tracking URL</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>4</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -90,7 +87,6 @@
                         </stop_to_first_match>
                         <sort_order translate="label">
                             <label>Sort Order</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>100</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -100,7 +96,6 @@
                 </owebiashipping3>
                 <owebiashipping2>
                     <label>Owebia Shipping 2</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>-18</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -117,7 +112,6 @@
                         </active>
                         <title translate="label">
                             <label>Title</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -133,7 +127,6 @@
                         </config>
                         <tracking_view_url translate="label">
                             <label>Tracking URL</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>4</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -177,7 +170,6 @@
                         </stop_to_first_match>
                         <sort_order translate="label">
                             <label>Sort Order</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>100</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -187,7 +179,6 @@
                 </owebiashipping2>
                 <owebiashipping1>
                     <label>Owebia Shipping 1</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>-19</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -204,7 +195,6 @@
                         </active>
                         <title translate="label">
                             <label>Title</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -220,7 +210,6 @@
                         </config>
                         <tracking_view_url translate="label">
                             <label>Tracking URL</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>4</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -264,7 +253,6 @@
                         </stop_to_first_match>
                         <sort_order translate="label">
                             <label>Sort Order</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>100</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -279,7 +267,6 @@
         <owebia_shipping2>
             <label>Owebia Shipping</label>
             <tab>sales</tab>
-            <frontend_type>text</frontend_type>
             <sort_order>100</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
@@ -287,7 +274,6 @@
             <groups>
                 <general translate="label">
                     <label>General</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>2</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -295,7 +281,6 @@
                     <fields>
                         <weight_unit translate="label">
                             <label>Weight unit</label>
-                            <frontend_type>text</frontend_type>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -305,7 +290,6 @@
                 </general>
                 <bundle_product translate="label">
                     <label>Bundle Product Management</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
@@ -354,7 +338,6 @@
                 </bundle_product>
                 <configurable_product translate="label">
                     <label>Configurable Product Management</label>
-                    <frontend_type>text</frontend_type>
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>

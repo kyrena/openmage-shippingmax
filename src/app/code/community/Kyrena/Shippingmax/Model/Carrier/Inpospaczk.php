@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/09/12/2021
+ * Updated S/19/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -60,7 +60,7 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 					'city'        => $result['address']['city'],
 					'region'      => $result['address']['province'],
 					'country_id'  => $this->_country,
-					'description' => $result['operating_hours']
+					'description' => $result['operating_hours'],
 				];
 			}
 		}
@@ -87,7 +87,7 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 					'city'        => $result['address_details']['city'],
 					'region'      => $result['address_details']['province'],
 					'country_id'  => $this->_country,
-					'description' => $result['opening_hours']
+					'description' => $result['opening_hours'],
 				];
 			}
 		}

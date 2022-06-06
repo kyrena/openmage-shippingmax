@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/12/07/2021
- * Updated L/12/07/2021
+ * Updated S/19/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -34,7 +34,7 @@ class Kyrena_Shippingmax_Model_Source_Shiptor {
 			['value' => 'russian-post',     'label' => 'russian-post'],
 			['value' => 'iml',              'label' => 'iml'],
 			['value' => 'pec',              'label' => 'pec'],
-			['value' => 'sberlogistics',    'label' => 'sberlogistics']
+			['value' => 'sberlogistics',    'label' => 'sberlogistics'],
 		];
 	}
 }

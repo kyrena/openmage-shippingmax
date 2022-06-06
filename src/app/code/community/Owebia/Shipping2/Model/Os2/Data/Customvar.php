@@ -8,7 +8,7 @@ class Owebia_Shipping2_Model_Os2_Data_Customvar extends Owebia_Shipping2_Model_O
 {
     public function __sleep()
     {
-        return array('*');
+        return ['*'];
     }
 
     protected function _load($name)

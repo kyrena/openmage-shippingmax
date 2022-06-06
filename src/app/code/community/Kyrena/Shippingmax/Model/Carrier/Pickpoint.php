@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated L/04/10/2021
+ * Updated S/19/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -37,7 +37,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'Login'    => $this->getConfigData('api_username'),
-			'Password' => $this->getConfigData('api_password', true)
+			'Password' => $this->getConfigData('api_password', true),
 		]));
 		$results = $this->runCurl($ch, true);
 
@@ -53,7 +53,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'SessionId' => $results['SessionId'],
-			'IKN'       => $this->getConfigData('api_ikn', true)
+			'IKN'       => $this->getConfigData('api_ikn', true),
 		]));
 
 		$mapping = ['BY' => 'BY', 'RUS' => 'RU'];
@@ -134,7 +134,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 			'4 Thursday'  => $data[3],
 			'5 Friday'    => $data[4],
 			'6 Saturday'  => $data[5],
-			'7 Sunday'    => $data[6]
+			'7 Sunday'    => $data[6],
 		];
 
 		// Array ( [1 Monday] => 09:00-19:00 )

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/14/09/2021
+ * Updated L/21/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -36,6 +36,8 @@ try {
 		DROP TABLE IF EXISTS '.$this->getTable('shippingmax_coords').';
 		CREATE TABLE '.$this->getTable('shippingmax_coords').' (
 			coords_id  int(11) unsigned NOT NULL AUTO_INCREMENT,
+			created_at datetime         NULL DEFAULT NULL,
+			updated_at datetime         NULL DEFAULT NULL,
 			addrkey    varchar(32)      NULL DEFAULT NULL,
 			kladr      varchar(50)      NULL DEFAULT NULL,
 			postcode   varchar(20)      NULL DEFAULT NULL,

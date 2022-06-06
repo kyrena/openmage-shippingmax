@@ -6,14 +6,14 @@
 
 class Owebia_Shipping2_Model_Os2_Data_Customer extends Owebia_Shipping2_Model_Os2_Data_AbstractWithAttributes
 {
-    protected $_additionalAttributes = array('*');
+    protected $_additionalAttributes = ['*'];
 
     public function __construct($arguments)
     {
         parent::__construct(
-            array(
+            [
                 'id' => isset($arguments['quote']) ? $arguments['quote']->getData('customer_id') : null,
-            )
+            ]
         );
     }
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/02/02/2021
- * Updated M/19/10/2021
+ * Updated S/19/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -31,7 +31,7 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
 
 		$items   = [];
-		$results = $this->runCurl($ch, true, 99);
+		$results = $this->runCurl($ch, true, 199);
 
 		//echo '<pre>';print_r(array_slice($results['data'], 0, 20));exit;
 		if (!empty($results['data']) && is_array($results['data'])) {

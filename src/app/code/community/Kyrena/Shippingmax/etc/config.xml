@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated J/27/01/2022
+ * Updated L/21/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Kyrena_Shippingmax>
-			<version>2.2.1</version>
+			<version>2.3.0</version>
 		</Kyrena_Shippingmax>
 	</modules>
 	<global>
@@ -334,7 +334,7 @@
 				<sallowspecific>1</sallowspecific>
 				<can_show_all>1</can_show_all>
 				<owebia_config><![CDATA[{ "std": { "label": "All", "fees": 0 } }]]></owebia_config>
-				<dst_search>75</dst_search>
+				<dst_search>80</dst_search>
 			</shippingmax_storelocator>
 			<shippingmax_storepts>
 				<model>shippingmax/carrier_storepts</model>
@@ -352,7 +352,7 @@
         "fees": 0
     }
 }]]></owebia_config>
-				<dst_search>75</dst_search>
+				<dst_search>80</dst_search>
 			</shippingmax_storepts>
 			<shippingmax_chronorelais>
 				<model>shippingmax/carrier_chronorelais</model>

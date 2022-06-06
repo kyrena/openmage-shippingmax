@@ -25,14 +25,14 @@ class Owebia_Shipping2_Model_Os2_Data_Product extends Owebia_Shipping2_Model_Os2
                 return $category ? $category->getData('name') : null;
             case 'categories': // Compatibility
                 $categories = $this->getCategories();
-                $output = array();
+                $output = [];
                 foreach ($categories as $category) {
                     $output[] = $category->getData('name');
                 }
                 return $output;
             case 'categories.id': // Compatibility
                 $categories = $this->getCategories();
-                $output = array();
+                $output = [];
                 foreach ($categories as $category) {
                     $output[] = $category->getData('id');
                 }
@@ -67,7 +67,7 @@ class Owebia_Shipping2_Model_Os2_Data_Product extends Owebia_Shipping2_Model_Os2
         }
         return $this->_attributeSet = Mage::getModel(
             'owebia_shipping2/Os2_Data_AttributeSet',
-            array('id' => (int)$this->getData('attribute_set_id'))
+            ['id' => (int)$this->getData('attribute_set_id')]
         );
     }
 
@@ -78,7 +78,7 @@ class Owebia_Shipping2_Model_Os2_Data_Product extends Owebia_Shipping2_Model_Os2
         }
         return $this->_stockItem = Mage::getModel(
             'owebia_shipping2/Os2_Data_StockItem',
-            array('product_id' => (int)$this->getData('id'))
+            ['product_id' => (int)$this->getData('id')]
         );
     }
 
@@ -93,9 +93,9 @@ class Owebia_Shipping2_Model_Os2_Data_Product extends Owebia_Shipping2_Model_Os2
         if (isset($this->_categories)) return $this->_categories;
         $product = $this->_loadObject();
         $ids = $product->getCategoryIds();
-        $this->_categories = array();
+        $this->_categories = [];
         foreach ($ids as $id) {
-            $this->_categories[] = Mage::getModel('owebia_shipping2/Os2_Data_Category', array('id' => (int)$id));
+            $this->_categories[] = Mage::getModel('owebia_shipping2/Os2_Data_Category', ['id' => (int)$id]);
         }
         return $this->_categories;
     }

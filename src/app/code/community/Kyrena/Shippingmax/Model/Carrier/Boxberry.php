@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated L/04/10/2021
+ * Updated S/19/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -39,7 +39,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 
 		$items   = [];
 		$mapping = ['051' => 'AM', '112' => 'BY', '417' => 'KG', '398' => 'KZ', '643' => 'RU'];
-		$results = $this->runCurl($ch, true);
+		$results = $this->runCurl($ch, true, 99);
 
 		//echo '<pre>';print_r(array_slice($results, 0, 20));exit;
 		if (!empty($results) && is_array($results)) {

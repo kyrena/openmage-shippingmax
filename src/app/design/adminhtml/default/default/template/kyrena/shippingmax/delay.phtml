@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated V/08/10/2021
+ * Updated L/07/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -36,6 +36,7 @@ $model   = Mage::getModel('directory/country');
 	<tbody>
 		<?php $i = 0 ?>
 		<?php foreach ($methods as $method => $dests): ?>
+			<?php if ($method == 'franco') continue; ?>
 			<tr>
 				<td colspan="6" class="last" style="background-color:white !important; text-align:center;">
 					<em><?php echo $method ?></em>
@@ -96,6 +97,7 @@ $model   = Mage::getModel('directory/country');
 							<?php if (!empty($text = $help->getShippingDate($rate['code'], false, $country, $rate['postcode']))): ?>
 								<br /><i><?php echo $text ?></i>
 							<?php endif ?>
+							<br /><?php natsort($rate['price']); echo implode(' / ', $rate['price']) ?>
 						</td>
 					</tr>
 				<?php endforeach ?>

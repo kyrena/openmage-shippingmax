@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/25/01/2022
+ * Updated L/28/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -309,15 +309,24 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 	public function getCarrierCountries(string $code, $storeId = null) {
 
-		$allCountries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
-		$selCountries = Mage::getStoreConfig('carriers/'.$code.'/specificcountry', $storeId);
-		$selCountries = empty($selCountries) ? [] : array_filter(explode(',', $selCountries));
-
+		// tous les pays
 		if ($code == 'shippingmax_storelocator')
-			$allCountries = Mage::getResourceModel('directory/country_collection')->getColumnValues('country_id');
+			$countries = Mage::getResourceModel('directory/country_collection')->getColumnValues('country_id');
+		else
+			$countries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
 
-		$countries = empty($selCountries) ? $allCountries : array_intersect($allCountries, $selCountries);
+		// filtre sur la config des pays possibles sur le mode de livrais
+		$selCountries = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/allowedcountry'))); // config.xml
+		if (!empty($selCountries))
+			$countries = array_intersect($countries, $selCountries);
 
+		// filtre sur la config des pays autorisés sur le mode de livraison
+		if (Mage::getStoreConfigFlag('carriers/'.$code.'/sallowspecific', $storeId)) {
+			$selCountries = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/specificcountry', $storeId)));
+			$countries    = array_intersect($countries, $selCountries);
+		}
+
+		// filtre sur la config avancée d'owebia
 		$config = Mage::getStoreConfig('carriers/'.$code.((strpos($code, 'owebiashipping') === false) ? '/owebia_config' : '/config'), $storeId);
 		if (mb_stripos($config, '"shipto"') !== false) {
 			$config = Mage::getSingleton('shippingmax/addressfilter')->substitute($config);
@@ -403,29 +412,29 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 			Mage::app()->getStore()->getUrl('shippingmax/map/index', ['code' => $code]);
 	}
 
-	public function getCarrierCode(string $fullcode) {
+	public function getCarrierCode(string $code) {
 
 		// shippingmax_pocztk48Op_std devient shippingmax_pocztk48Op
 		// shippingmax_pocztk48Op reste shippingmax_pocztk48Op
-		if (substr_count($fullcode, '_') >= 2)
-			return mb_substr($fullcode, 0, mb_strpos($fullcode, '_', mb_strpos($fullcode, '_') + 1));
+		if (substr_count($code, '_') >= 2)
+			return mb_substr($code, 0, mb_strpos($code, '_', mb_strpos($code, '_') + 1));
 
-		return $fullcode;
+		return $code;
 	}
 
-	public function getEnabledCarrierCode(string $fullcode, int $storeId) {
+	public function getEnabledCarrierCode(string $code, int $storeId) {
 
-		$fullcode = $this->getCarrierCode($fullcode);
+		$code = $this->getCarrierCode($code);
 
 		// en cas de mix (par exemple si colisprivpts est désactivé et que mondialrelay est activé)
 		$mixmaps = Mage::getConfig()->getNode('global/shippingmax/mixmaps')->asArray();
-		foreach ($mixmaps as $code => $candidates) {
-			if (array_key_exists($fullcode, $candidates) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId) &&
-			    Mage::getStoreConfigFlag('carriers/'.$code.'/mix_'.str_replace('shippingmax_', '', $fullcode), $storeId))
-				return $code;
+		foreach ($mixmaps as $key => $candidates) {
+			if (array_key_exists($code, $candidates) && Mage::getStoreConfigFlag('carriers/'.$key.'/active', $storeId) &&
+			    Mage::getStoreConfigFlag('carriers/'.$key.'/mix_'.str_replace('shippingmax_', '', $code), $storeId))
+				return $key;
 		}
 
-		return $fullcode;
+		return $code;
 	}
 
 	public function formatDesc(string $data) {

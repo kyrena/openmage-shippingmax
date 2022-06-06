@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/26/11/2021
+ * Updated J/10/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -20,7 +20,7 @@
 
 abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_Carrier_Abstract implements Mage_Shipping_Model_Carrier_Interface {
 
-	protected $_dstSearch = 20;
+	protected $_dstSearch = 30;
 	protected $_maxPoints = 50;             // map.phtml self.maxpts
 	protected $_cacheLifetime = 3600;       // 1 heure en secondes
 	protected $_fullCacheLifetime = 432000; // 5 jours en secondes

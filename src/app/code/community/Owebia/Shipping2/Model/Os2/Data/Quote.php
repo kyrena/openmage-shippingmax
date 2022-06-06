@@ -6,10 +6,10 @@
 
 class Owebia_Shipping2_Model_Os2_Data_Quote extends Owebia_Shipping2_Model_Os2_Data_Abstract
 {
-    protected $_additionalAttributes = array(
+    protected $_additionalAttributes = [
         'subtotal', 'subtotal_with_discount', 'grand_total', 'base_subtotal',
         'base_subtotal_with_discount', 'base_grand_total', '*',
-    );
+    ];
 
     protected $request;
 

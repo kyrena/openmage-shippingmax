@@ -18,6 +18,19 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Model/Carrier
                  );
          }
          return $this->_parser;
+@@ -11,6 +11,12 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+     protected $_parser;
+     protected $_dataModels = array();
+ 
++    public function resetParser() {
++        // to allow calculation of shipping times, with or without free shipping
++        unset($this->_parser);
++        return $this;
++    }
++
+     /**
+      * Collect rates for this shipping method based on information in $request
+      *
 diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
 --- Src/Model/ConfigParser.php	2021-02-12 16:55:25.952934132 +0100
 +++ Shipping2/Model/ConfigParser.php	2021-02-12 16:36:54.662449945 +0100
@@ -134,24 +147,26 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' Src/Model/ConfigP
          );
          foreach ($this->_config as $code => $row) {
              $object = array();
-@@ -452,7 +431,10 @@
+@@ -452,7 +431,11 @@
  
      protected function processRowConditions($process, &$row, $isChecking)
      {
 -        $conditions = $this->getRowProperty($row, 'conditions');
-+        $currency = strtolower(Mage::app()->getStore()->getCurrentCurrencyCode());
++        $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
++        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
 +        $conditions = $this->getRowProperty($row, 'conditions_'.$currency);
 +        $conditions = empty($conditions) ? $this->getRowProperty($row, 'conditions') : $conditions;
 +
          if (isset($conditions)) {
              $result = $this->processFormula($process, $row, 'conditions', $conditions, $isChecking);
              if (!$isChecking) {
-@@ -532,7 +514,10 @@
+@@ -532,7 +514,11 @@
  
      protected function processRowFees($process, &$row, $isChecking)
      {
 -        $fees = $this->getRowProperty($row, 'fees');
-+        $currency = strtolower(Mage::app()->getStore()->getCurrentCurrencyCode());
++        $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
++        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
 +        $fees = $this->getRowProperty($row, 'fees_'.$currency);
 +        $fees = empty($fees) ? $this->getRowProperty($row, 'fees') : $fees;
 +

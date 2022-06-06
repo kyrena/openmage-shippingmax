@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/11/07/2019
- * Updated L/04/10/2021
+ * Updated J/10/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -47,8 +47,8 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 				'service'            => 'T',  // ?
 				'weight'             => 2000, // toujours à 2000, cf module chronopost 1.2.8 pour magento 2.2 (ligne 1424)
 				'shippingDate'       => date('d/m/Y'),
-				'maxPointChronopost' => (($nb = $this->getConfigData('max_points')) > 25) ? 25 : $nb,   // max = 25
-				'holidayTolerant'    => 1
+				'maxPointChronopost' => min($this->getConfigData('max_points'), 25), // max = 25
+				'holidayTolerant'    => 1,
 			];
 
 			if (empty($params['coordGeoLatitude']) || empty($params['coordGeoLongitude']))
@@ -87,7 +87,7 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 					'city'        => $result->localite,
 					'country_id'  => $result->codePays,
 					'description' => $this->createDesc($result),
-					//'max_weight'  => $result->poidsMaxi ?? null // kg
+					//'max_weight'  => $result->poidsMaxi ?? null, // kg
 				];
 			}
 		}
@@ -105,7 +105,7 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 			'4 Thursday'  => ['0000', '0000', '0000', '0000'],
 			'5 Friday'    => ['0000', '0000', '0000', '0000'],
 			'6 Saturday'  => ['0000', '0000', '0000', '0000'],
-			'7 Sunday'    => ['0000', '0000', '0000', '0000']
+			'7 Sunday'    => ['0000', '0000', '0000', '0000'],
 		];
 
 		foreach ($data->listeHoraireOuverture as $info) {

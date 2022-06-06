@@ -9,7 +9,13 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
 {
     protected $_config;
     protected $_parser;
-    protected $_dataModels = array();
+    protected $_dataModels = [];
+
+    public function resetParser() {
+        // to allow calculation of shipping times, with or without free shipping
+        unset($this->_parser);
+        return $this;
+    }
 
     /**
      * Collect rates for this shipping method based on information in $request
@@ -33,7 +39,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
     public function getAllowedMethods()
     {
         $config = $this->_getConfig();
-        $allowedMethods = array();
+        $allowedMethods = [];
         if (count($config)>0) {
             foreach ($config as $row) {
                 $allowedMethods[$row['*id']] = isset($row['label']) ? $row['label']['value'] : 'No label';
@@ -56,7 +62,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
         if (count($parts) >= 2) {
             $trackingNumber = $parts[1];
 
-            $process = array();
+            $process = [];
             $config = $this->_getConfig();
 
             if (isset($config[$parts[0]]['tracking_url'])) {
@@ -71,7 +77,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
             ->setCarrierTitle($this->__getConfigData('title'))
             ->setTracking($trackingNumber)
             ->addData(
-                array(
+                [
                     'status'=> $trackingUrl
                         ? '<a target="_blank" href="' . str_replace('{tracking_number}', $trackingNumber, $trackingUrl)
                             . '">' . $this->__('track the package') . '</a>'
@@ -80,7 +86,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
                             . " globalTrackingUrl='{$globalTrackingUrl}'"
                             . (isset($row) ? ", tmpTrackingUrl='{$tmpTrackingUrl}'" : '')
                             . ")"
-                )
+                ]
             );
         $trackingResult = Mage::getModel('shipping/tracking_result')
             ->append($trackingStatus);
@@ -144,17 +150,17 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
     protected function __getProcess($request)
     {
         $data = Mage::helper('owebia_shipping2')->getDataModelMap($this->getParser(), $this->_code, $request);
-        $process = array(
+        $process = [
             'data' => $data,
-            'cart.items' => array(),
+            'cart.items' => [],
             'config' => $this->_getConfig(),
             'result' => Mage::getModel('shipping/rate_result'),
-            'options' => (object)array(
+            'options' => (object)[
                 'auto_escaping' => (boolean)$this->__getConfigData('auto_escaping'),
                 'auto_correction' => (boolean)$this->__getConfigData('auto_correction'),
                 'stop_to_first_match' => (boolean)$this->__getConfigData('stop_to_first_match'),
-            ),
-        );
+            ],
+        ];
         return $process;
     }
 

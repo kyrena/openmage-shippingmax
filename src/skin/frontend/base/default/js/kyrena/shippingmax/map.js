@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated M/25/01/2022
+ * Updated L/21/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -66,21 +66,21 @@ var shippingmax = new (function () {
 				attribution: osmcopy,
 				name: 'Open Street Map',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 18,
 				detectRetina: true
 			}),
 			osmfr: L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map France',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 18,
 				detectRetina: true
 			}),
 			osmde: L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map Deutschland',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 18,
 				detectRetina: true
 			}),
 			osmbre: L.tileLayer('https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png', {
@@ -367,9 +367,7 @@ var shippingmax = new (function () {
 										self.map.setView([46.76, 2.42], 6); // @todo France
 									}
 									else {
-										self.map.fitBounds(self.grp.getBounds());
-										if (self.map.getZoom() > 15)
-											self.map.setZoom(15);
+										self.map.fitBounds(self.grp.getBounds(), { maxZoom: 15 });
 									}
 								}
 								else {

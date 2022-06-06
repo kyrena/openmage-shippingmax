@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/21/05/2021
- * Updated J/09/12/2021
+ * Updated L/28/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -64,8 +64,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 		$maxWeight  = Mage::getStoreConfig('carriers/'.$code.'/max_weight');
 
 		$defaultCountry = Mage::getStoreConfig('general/country/default', $storeId);
-		$allCountries   = Mage::getStoreConfig('carriers/'.$code.'/allowedcountry', $storeId);
-		$allCountries   = empty($allCountries) ? [] : array_filter(explode(',', $allCountries));
+		$allCountries   = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/allowedcountry'))); // config.xml
 		$selCountries   = $help->getCarrierCountries($code, $storeId);
 
 		// pays du mode de livraison
@@ -122,13 +121,15 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 			$html['sel'][] = '<a href="'.$this->getUrl('*/*/*', ['section' => 'general', 'store' => $this->getRequest()->getParam('store'), 'website' => $this->getRequest()->getParam('website')]).'">'.$this->__('None').'</a>';
 		}
 
+		//$html['sel'][] = '<em>('.(empty($this->getRequest()->getParam('store')) ? 'list of countries for default store view: '.$storeId.':'.Mage::app()->getStore($storeId)->getCode() : 'list of countries for current store view').')</em>';
+
 		// final
 		$this->_html = str_replace(': ,', ': ',
 			'<div class="comment shippingmax">'.
 				(array_key_exists($code, self::$svg) ? '<img src="'.$this->getSkinUrl('images/kyrena/shippingmax/'.self::$svg[$code]).'" alt="" class="shippingmax logo" />' : '').
 				((($code == 'shippingmax_storelocator') || (stripos($code, 'shippingmax_') === false)) ? '' : '<p>'.$this->__('Maximum weight: %d kg.', empty($maxWeight) ? 30 : $maxWeight).'</p>').
-				'<p>'.preg_replace('#[.,]00[[:>:]]#', '', implode(', ', $html['all'])).'.</p>'.
-				'<p>'.preg_replace('#[.,]00[[:>:]]#', '', implode(', ', $html['sel'])).'.</p>'.
+				'<p>'.implode(', ', $html['all']).'.</p>'.
+				'<p>'.implode(', ', $html['sel']).'.</p>'.
 			'</div>');
 
 		// marquage

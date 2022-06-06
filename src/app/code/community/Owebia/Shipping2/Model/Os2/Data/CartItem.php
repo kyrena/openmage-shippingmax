@@ -28,7 +28,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
     {
         if (!isset($this->_product)) {
             $productId = $this->_getItem('load_product_data_on_parent')->getData('product_id');
-            $this->_product = Mage::getModel('owebia_shipping2/Os2_Data_Product', array('id' => $productId));
+            $this->_product = Mage::getModel('owebia_shipping2/Os2_Data_Product', ['id' => $productId]);
         }
         return $this->_product;
     }
@@ -91,7 +91,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
     {
         if (isset($this->_options)) return $this->_options;
         $item = $this->_getItem('load_item_option_on_parent');
-        $options = array();
+        $options = [];
         if ($optionIds = $item->getOptionByCode('option_ids')) {
             foreach (explode(',', $optionIds->getValue()) as $optionId) {
                 if ($option = $item->getProduct()->getOptionById($optionId)) {
@@ -102,7 +102,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
                         ->setQuoteItemOption($quoteItemOption);
 
                     $label = $option->getTitle();
-                    $options[$label] = array(
+                    $options[$label] = [
                         'label' => $label,
                         'value' => $group->getFormattedOptionValue($quoteItemOption->getValue()),
                         'print_value' => $group->getPrintableOptionValue($quoteItemOption->getValue()),
@@ -110,7 +110,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
                         'option_id' => $option->getId(),
                         'option_type' => $option->getType(),
                         'custom_view' => $group->isCustomizedView()
-                    );
+                    ];
                 }
             }
         }

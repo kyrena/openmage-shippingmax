@@ -52,20 +52,20 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
             $row,
             $property,
             str_replace(
-                array(
+                [
                     '{cart.weight}',
                     '{cart.price-tax+discount}',
                     '{cart.price-tax-discount}',
                     '{cart.price+tax+discount}',
                     '{cart.price+tax-discount}',
-                ),
-                array(
+                ],
+                [
                     $cart->getData('weight') . $cart->getData('weight_unit'),
                     $this->currency($cart->getData('price-tax+discount')),
                     $this->currency($cart->getData('price-tax-discount')),
                     $this->currency($cart->getData('price+tax+discount')),
                     $this->currency($cart->getData('price+tax-discount')),
-                ),
+                ],
                 $helper->getRowProperty($row, $property)
             )
         );
@@ -79,60 +79,60 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
     public function getDataModelMap($helper, $carrierCode, $request)
     {
         $mageConfig = Mage::getConfig();
-        $cartOptions = array(
-            'bundle' => array(
+        $cartOptions = [
+            'bundle' => [
                 'process_children' => $this->getBoolean('bundle_product/process_children'),
                 'load_item_options_on_parent' => $this->getBoolean('bundle_product/load_item_options_on_parent'),
                 'load_item_data_on_parent' => $this->getBoolean('bundle_product/load_item_data_on_parent'),
                 'load_product_data_on_parent' => $this->getBoolean('bundle_product/load_product_data_on_parent'),
-            ),
-            'configurable' => array(
+            ],
+            'configurable' => [
                 'load_item_options_on_parent' => $this->getBoolean('configurable_product/load_item_options_on_parent'),
                 'load_item_data_on_parent' => $this->getBoolean('configurable_product/load_item_data_on_parent'),
                 'load_product_data_on_parent' => $this->getBoolean('configurable_product/load_product_data_on_parent'),
-            ),
-        );
+            ],
+        ];
         $quoteWrapper = Mage::getModel(
             'owebia_shipping2/Os2_Data_Quote',
-            array(
+            [
                 'request' => $request,
-            )
+            ]
         );
-        return array(
+        return [
             'info' => Mage::getModel(
                 'owebia_shipping2/Os2_Data_Info',
                 array_merge(
                     $helper->getInfos(),
-                    array(
+                    [
                         'magento_version' => Mage::getVersion(),
                         'openmage_version' => Mage::getOpenMageVersion(),
                         'module_version' => (string)$mageConfig->getNode('modules/Owebia_Shipping2/version'),
                         'carrier_code' => $carrierCode,
-                    )
+                    ]
                 )
             ),
             'cart' => Mage::getModel(
                 'owebia_shipping2/Os2_Data_Cart',
-                array(
+                [
                     'request' => $request,
                     'quote' => $quoteWrapper,
                     'options' => $cartOptions,
-                )
+                ]
             ),
             'config' => Mage::getModel('owebia_shipping2/Os2_Data_Config'),
             'quote' => $quoteWrapper,
             'selection' => Mage::getModel('owebia_shipping2/Os2_Data_Selection'),
             'customer' => Mage::getModel(
                 'owebia_shipping2/Os2_Data_Customer',
-                array(
+                [
                     'quote' => $quoteWrapper,
-                )
+                ]
             ),
             'customer_group' => Mage::getModel(
                 'owebia_shipping2/Os2_Data_CustomerGroup',
-                array(
+                [
                     'quote' => $quoteWrapper,
-                )
+                ]
             ),
             'customvar' => Mage::getModel('owebia_shipping2/Os2_Data_Customvar'),
             'date' => Mage::getModel('owebia_shipping2/Os2_Data_Date'),
@@ -141,37 +141,37 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
                 'owebia_shipping2/Os2_Data_Address',
                 $this->_extract(
                     $request->getData(),
-                    array(
+                    [
                         'country_id' => 'country_id',
                         'region_id' => 'region_id',
                         'postcode' => 'postcode',
                         'city' => 'city',
-                    )
+                    ]
                 )
             ),
             'shipto' => Mage::getModel(
                 'owebia_shipping2/Os2_Data_Address',
                 $this->_extract(
                     $request->getData(),
-                    array(
+                    [
                         'country_id' => 'dest_country_id',
                         'region_id' => 'dest_region_id',
                         'region_code' => 'dest_region_code',
                         'street' => 'dest_street',
                         'city' => 'dest_city',
                         'postcode' => 'dest_postcode',
-                    )
+                    ]
                 )
             ),
             'billto' => Mage::getModel('owebia_shipping2/Os2_Data_Billto'),
-            'store' => Mage::getModel('owebia_shipping2/Os2_Data_Store', array('id' => $request->getData('store_id'))),
+            'store' => Mage::getModel('owebia_shipping2/Os2_Data_Store', ['id' => $request->getData('store_id')]),
             'request' => Mage::getModel('owebia_shipping2/Os2_Data_Abstract', $request->getData()),
-        );
+        ];
     }
 
     protected function _extract($data, $attributes)
     {
-        $extract = array();
+        $extract = [];
         foreach ($attributes as $to => $from) {
             $extract[$to] = isset($data[$from]) ? $data[$from] : null;
         }

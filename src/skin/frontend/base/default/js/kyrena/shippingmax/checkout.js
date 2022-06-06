@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated M/25/01/2022
+ * Updated M/22/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -47,7 +47,7 @@ var shippingmax = new (function () {
 		if (document.getElementById('shippingmaxDialog'))
 			return;
 
-		this.scroll = window.pageYOffset;
+		this.scroll = window.scrollY;
 		var data = document.createElement('div');
 		data.innerHTML =
 			'<div id="shippingmaxDialog" onclick="shippingmax.close(event);">' +

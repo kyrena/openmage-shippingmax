@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/22/10/2021
+ * Updated V/20/05/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -32,11 +32,11 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 		$version = $this->helper('shippingmax')->getOwebiaVersion();
 		if (stripos($element->getHtmlId(), 'owebia') !== false) {
 			if (empty(Mage::getConfig()->getNode('modules/Owebia_Shipping2/lite')))
-				return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="f-right"><a href="%s">github.com/owebia</a></span></p>',
+				return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="right"><a href="%s">github.com/owebia</a></span></p>',
 					'Owebia/Shipping', $version, $legend,
 					'https://github.com/owebia/magento1-module-advanced-shipping');
 			else
-				return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="f-right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',
+				return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',
 					'Owebia/Shipping', $version.'-lite', $legend,
 					'https://github.com/kyrena/openmage-shippingmax',
 					'https://github.com/owebia/magento1-module-advanced-shipping');
@@ -45,7 +45,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 		// entête modes de livraison de kyrena
 		$version = $this->helper('shippingmax')->getVersion();
 		if (!empty($legend))
-			return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="f-right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',
+			return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="right"><a href="%s">github.com/kyrena</a> + <a href="%s">github.com/owebia</a></span></p>',
 				'Kyrena/Shippingmax', $version, $legend,
 				'https://github.com/kyrena/openmage-shippingmax',
 				'https://github.com/owebia/magento1-module-advanced-shipping');
@@ -53,14 +53,14 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 		// entête modes de livraison et délais de livraison
 		$msg = $this->checkRewrites();
 		if ($msg !== true)
-			return sprintf('<p class="box">%s %s <span class="f-right"><a href="%s">github.com/kyrena</a></span></p><p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
+			return sprintf('<p class="box">%s %s <span class="right"><a href="%s">github.com/kyrena</a></span></p><p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
 				'Kyrena/Shippingmax', $version,
 				'https://github.com/kyrena/openmage-shippingmax',
 				$this->__('INCOMPLETE MODULE INSTALLATION'),
 				$this->__('There is conflict (<em>%s</em>).', $msg));
 
 		$var = (int) ini_get('max_input_vars');
-		return sprintf('<p class="box">%s %s <span class="no-display" id="inptvars"></span> <span class="f-right"><a href="%s">github.com/kyrena</a></span></p>%s',
+		return sprintf('<p class="box">%s %s <span class="no-display" id="inptvars"></span> <span class="right">Stop russian war. <b>🇺🇦 Free Ukraine!</b> | <a href="%s">github.com/kyrena</a></span></p>%s',
 			'Kyrena/Shippingmax', $version,
 			'https://github.com/kyrena/openmage-shippingmax',
 			'<script type="text/javascript">self.addEventListener("load", function () {'.
@@ -83,7 +83,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 			['model' => 'owebia_shipping2/Os2_Data_address'],
 			['model' => 'owebia_shipping2/Os2_Data_Address'],
 			['model' => 'sales/order_shipment_track'],
-			['model' => 'sales_resource/quote_address_rate_collection']
+			['model' => 'sales_resource/quote_address_rate_collection'],
 		];
 
 		foreach ($rewrites as $rewrite) {

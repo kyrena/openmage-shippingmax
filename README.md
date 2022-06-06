@@ -1,3 +1,5 @@
+Stop russian war. **🇺🇦 Free Ukraine!**
+
 # shippingmax
 
 A module to add new pick up shipping methods for [OpenMage](https://github.com/OpenMage/magento-lts).
@@ -9,7 +11,7 @@ Composer dependencies:
 
 Included dependencies:
 * [owebia/shipping](https://github.com/owebia/magento1-module-advanced-shipping) (2.6.10-lite)
-* [leaflet](https://leafletjs.com/) (1.7.1)
+* [leaflet](https://leafletjs.com/) (1.8.0)
 
 External services:
 * [Nominatim](https://nominatim.org/): addresses geocoding (results are stored in database)
@@ -50,10 +52,10 @@ Demo links may not work, don't panic, it's not a bug.
 | **InPost PL** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-inpost.svg?raw=true" alt="" width="150" height="50"/>](https://inpost.pl/) | [online demo](https://cellu.blue/ZCWFMn): 22-100, Chełm, PL<br>api: free |
 | **Pocztex** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-pocztex.svg?raw=true" alt="" width="150" height="50"/>](https://www.pocztex.pl/) | [online demo](https://cellu.blue/dPLFLI): 50-307, Wrocław, PL<br>api: free |
 | **Packeta/Zásilkovna** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-packeta.svg?raw=true" alt="" width="150" height="50"/>](https://www.zasilkovna.cz/) | [online demo](https://cellu.blue/ub68fx): 547 01, Náchod, CZ<br>api: account required |
-| **Boxberry** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-boxberry.svg?raw=true" alt="" width="150" height="50"/>](https://boxberry.ru/) | [online demo](https://cellu.blue/bsIhKh): 664003, Иркутск, RU<br>api: free (demo token included with default configuration) |
-| **5post** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-fivepost.svg?raw=true" alt="" width="150" height="50"/>](https://fivepost.ru/) | [online demo](https://cellu.blue/6Y0hnT): 127299, Москва, RU<br>api: account required |
-| **PickPoint** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-pickpoint.svg?raw=true" alt="" width="150" height="50"/>](https://pickpoint.ru/) | [online demo](https://cellu.blue/OMXVxH): 140000, Люберцы, RU<br>api: account required |
-| **Shiptor** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-shiptor.svg?raw=true" alt="" width="150" height="50"/>](https://shiptor.ru/) | [online demo](https://cellu.blue/3RhP6s): 454000, Челябинск, RU<br>api: free |
+| **Boxberry** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-boxberry.svg?raw=true" alt="" width="150" height="50"/>](https://boxberry.ru/) | don't work with this country, it's an enemy of your freedom<br>[online demo](https://cellu.blue/bsIhKh): 664003, Иркутск, RU<br>api: free (demo token included with default configuration) |
+| **5post** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-fivepost.svg?raw=true" alt="" width="150" height="50"/>](https://fivepost.ru/) | don't work with this country, it's an enemy of your freedom<br>[online demo](https://cellu.blue/6Y0hnT): 127299, Москва, RU<br>api: account required |
+| **PickPoint** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-pickpoint.svg?raw=true" alt="" width="150" height="50"/>](https://pickpoint.ru/) | don't work with this country, it's an enemy of your freedom<br>[online demo](https://cellu.blue/OMXVxH): 140000, Люберцы, RU<br>api: account required |
+| **Shiptor** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-shiptor.svg?raw=true" alt="" width="150" height="50"/>](https://shiptor.ru/) | don't work with this country, it's an enemy of your freedom<br>[online demo](https://cellu.blue/3RhP6s): 454000, Челябинск, RU<br>api: free |
 | **Store delivery** | | [online demo](https://cellu.blue/OmRX8p): 07200, Aubenas, FR<br>source of data: a TSV file |
 | **Store locator** | | [online demo](https://cellu.blue/h9dhKJ)<br>source of data: a TSV file |
 
@@ -91,7 +93,7 @@ To display delivery times, you must edit your template with:
 
 ## Copyright and Credits
 
-- Current version: 2.2.1 (02/02/2022)
+- Current version: 2.3.0 (06/06/2022)
 - Compatibility: OpenMage 19.x / 20.x / 21.x, PHP 7.2 / 7.3 / 7.4 / 8.0 / 8.1
 - Client compatibility: Firefox 36+, Chrome 32+, Opera 19+, Edge 16+, Safari 9+
 - Translations: English (en), French (fr-FR/fr-CA), German (de), Italian (it), Portuguese (pt-PT/pt-BR), Spanish (es) / Chinese (zh), Czech (cs), Dutch (nl), Greek (el), Hungarian (hu), Japanese (ja), Polish (pl), Romanian (ro), Russian (ru), Slovak (sk), Turkish (tr), Ukrainian (uk)
@@ -107,7 +109,7 @@ Warning: there are two packages, one that contains a lite and modified version (
 
 With composer:
 - `composer remove owebia/magento1-module-advanced-shipping`
-- `composer require kyrena/openmage-shippingmax --ignore-platform-reqs`
+- `composer require kyrena/openmage-shippingmax [--ignore-platform-reqs]`
 - clear cache
 
 Without composer:
@@ -119,7 +121,7 @@ Without composer:
 #### For kyrena/openmage-shippingmax-alone
 
 With composer:
-- `composer require kyrena/openmage-shippingmax-alone --ignore-platform-reqs`
+- `composer require kyrena/openmage-shippingmax-alone [--ignore-platform-reqs]`
 - clear cache
 
 Without composer:

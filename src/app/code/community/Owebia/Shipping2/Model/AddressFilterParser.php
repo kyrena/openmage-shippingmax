@@ -19,7 +19,7 @@ class Owebia_Shipping2_Model_AddressFilterParser
     protected $_regexp = false;
     protected $_litteral = false;
     protected $_litteralQuote = null;
-    protected $_callbackMap = array(
+    protected $_callbackMap = [
         '(' => 'openingParenthesisCallback',
         ')' => 'closingParenthesisCallback',
         '"' => 'quoteCallback',
@@ -28,7 +28,7 @@ class Owebia_Shipping2_Model_AddressFilterParser
         '-' => 'hyphenCallback',
         ',' => 'commaCallback',
         '/' => 'slashCallback',
-    );
+    ];
 
     public function __construct($configParser)
     {
@@ -37,7 +37,7 @@ class Owebia_Shipping2_Model_AddressFilterParser
 
     public function parse($input)
     {
-        $this->current = array();
+        $this->current = [];
 
         $this->_input = $input;
         $this->length = strlen($this->_input);
@@ -154,8 +154,8 @@ class Owebia_Shipping2_Model_AddressFilterParser
                 } else if (strpos($buffer, '*') !== false) {
                     $buffer = "preg_match('/^"
                         . str_replace(
-                            array("'", '*'),
-                            array("\\'", '(?:.*)'),
+                            ["'", '*'],
+                            ["\\'", '(?:.*)'],
                             $buffer
                         )
                         . "$/', (string)({{p}}))";

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/26/07/2021
- * Updated M/19/10/2021
+ * Updated S/19/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -45,7 +45,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 				'requestID'           => '1234', // toujours à 1234, cf module dpdfrance 5.2.0 pour magento 1.9 (ligne 79)
 				'request_id'          => '1234', // toujours à 1234, cf module dpdfrance 5.2.0 pour magento 1.9 (ligne 80)
 				//'weight'            => '',
-				//'holiday_tolerant'  => ''
+				//'holiday_tolerant'  => '',
 			];
 
 			// https://mypudo.pickup-services.com/mypudo/mypudo.asmx?op=GetPudoList
@@ -83,7 +83,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 					'description' => implode("\n", array_filter([
 						(string) $result->LOCAL_HINT,
 						$this->createDesc($result)
-					]))
+					])),
 				];
 			}
 		}
@@ -104,7 +104,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 			'4 Thursday'  => ['0000', '0000', '0000', '0000'],
 			'5 Friday'    => ['0000', '0000', '0000', '0000'],
 			'6 Saturday'  => ['0000', '0000', '0000', '0000'],
-			'7 Sunday'    => ['0000', '0000', '0000', '0000']
+			'7 Sunday'    => ['0000', '0000', '0000', '0000'],
 		];
 
 		foreach ($data->OPENING_HOURS_ITEMS->OPENING_HOURS_ITEM as $info) {

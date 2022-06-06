@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/23/04/2020
- * Updated M/14/09/2021
+ * Updated S/19/02/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -60,7 +60,7 @@ class Kyrena_Shippingmax_Model_Carrier_Storelocator extends Kyrena_Shippingmax_M
 						'street'     => implode("\n", array_filter([$data['ADRESSE']])),
 						'postcode'   => $data['CODE POSTAL'],
 						'city'       => $data['VILLE'],
-						'country_id' => $data['PAYS']
+						'country_id' => $data['PAYS'],
 					];
 				}
 			}

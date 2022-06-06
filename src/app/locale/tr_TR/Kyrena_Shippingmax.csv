@@ -1,5 +1,6 @@
 "User Name / Company Name","Kullanıcı / <span lang=""en"">Company name</span>"
 "Password / Web service key","Şifre / <span lang=""en"">Web service key</span>"
 "%d days","%d gün"
+"%d/%d days","%d/%d gün"
 "%s: %s:%s - %s:%s","%s : %s:%s - %s:%s"
 "%s: %s:%s - %s:%s / %s:%s - %s:%s","%s : %s:%s - %s:%s / %s:%s - %s:%s"

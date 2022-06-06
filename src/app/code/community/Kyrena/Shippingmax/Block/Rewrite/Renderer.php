@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/04/06/2020
- * Updated L/25/10/2021
+ * Updated V/20/05/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -115,7 +115,7 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 				}
 			}
 			catch (Throwable $t) {
-				Mage::logException($t);
+				$telephone = $address->getData('telephone');
 			}
 		}
 

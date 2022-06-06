@@ -33,19 +33,19 @@ class Owebia_Shipping2_Model_ConfigParser
 
     public static function getInfos()
     {
-        $properties = array(
+        $properties = [
             'server_os' => PHP_OS,
             'server_software' => getenv('SERVER_SOFTWARE'),
             'php_version' => PHP_VERSION,
             //'memory_limit' => self::formatSize(self::parseSize(ini_get('memory_limit'))),
             //'memory_usage' => self::formatSize(memory_get_usage(true)),
-        );
+        ];
         return $properties;
     }
 
     public static function getDefaultProcessData()
     {
-        return array(
+        return [
             'info'              => Mage::getModel('owebia_shipping2/Os2_Data')->setData(self::getInfos()),
             'cart'              => Mage::getModel('owebia_shipping2/Os2_Data'),
             'config'            => Mage::getModel('owebia_shipping2/Os2_Data'),
@@ -61,7 +61,7 @@ class Owebia_Shipping2_Model_ConfigParser
             'store'             => Mage::getModel('owebia_shipping2/Os2_Data'),
             'request'           => Mage::getModel('owebia_shipping2/Os2_Data'),
             'address_filter'    => Mage::getModel('owebia_shipping2/Os2_Data'),
-        );
+        ];
     }
 
     protected static function jsonEncodeArray($data, $beautify, $html, $level, $currentIndent)
@@ -70,7 +70,7 @@ class Owebia_Shipping2_Model_ConfigParser
         $newIndent = $currentIndent . $indent;
         $lineBreak = $html ? '<br/>' : "\n";
         $outputIndexCount = 0;
-        $output = array();
+        $output = [];
         foreach ($data as $key => $value) {
             if ($outputIndexCount !== null && $outputIndexCount++ !== $key) {
                 $outputIndexCount = null;
@@ -79,13 +79,13 @@ class Owebia_Shipping2_Model_ConfigParser
         $isAssociative = $outputIndexCount === null;
         foreach ($data as $key => $value) {
             if ($isAssociative) {
-                $classes = array();
+                $classes = [];
                 if ($key == 'about') {
                     $classes[] = 'json-about';
                 } elseif ($key == 'conditions' || $key == 'fees' || strpos($key, 'conditions_') === 0 || strpos($key, 'fees_') === 0) {
                     $classes[] = 'json-formula';
                 }
-                $propertyClasses = array('json-property');
+                $propertyClasses = ['json-property'];
                 if ($level == 0) {
                     $propertyClasses[] = 'json-id';
                 }
@@ -101,7 +101,7 @@ class Owebia_Shipping2_Model_ConfigParser
             }
         }
         if ($isAssociative) {
-            $classes = array();
+            $classes = [];
             if (isset($data['type']) && $data['type']=='meta') $classes[] = 'json-meta';
             $output = ($html && $classes ? '<span class="' . implode(' ', $classes) . '">' : '')
                 .'{'
@@ -133,8 +133,8 @@ class Owebia_Shipping2_Model_ConfigParser
                 return ($html ? '<span class=json-string>' : '')
                     . '"'
                     . str_replace(
-                        array("\\", '"', "\n", "\r"),
-                        array("\\\\", '\"', "\\n", "\\r"),
+                        ["\\", '"', "\n", "\r"],
+                        ["\\\\", '\"', "\\n", "\\r"],
                         $html ? htmlspecialchars($data, ENT_COMPAT, 'UTF-8') : $data
                     )
                     . '"'
@@ -199,10 +199,10 @@ class Owebia_Shipping2_Model_ConfigParser
 
     public function init($input, $autoCorrection, $title = null)
     {
-        $this->_config = array();
-        $this->_messages = array();
-        $this->_formulaCache = array();
-        $this->_expressionCache = array();
+        $this->_config = [];
+        $this->_messages = [];
+        $this->_formulaCache = [];
+        $this->_expressionCache = [];
         $this->_debugPrefix = '';
         $this->_input = $input;
         $this->_parseInput($autoCorrection);
@@ -262,7 +262,7 @@ class Owebia_Shipping2_Model_ConfigParser
             $header .= '      <span class=osh-key>'
                 . self::esc(str_replace('.', '</span>.<span class=osh-key>', $objectName))
                 . '</span> &gt;&gt;<br/>';
-            $children = array();
+            $children = [];
             if (is_object($data)) {
                 $children = $data->__sleep();
             } elseif (is_array($data)) {
@@ -293,7 +293,7 @@ class Owebia_Shipping2_Model_ConfigParser
     {
         $header = 'DEBUG ConfigParser.php<br/>';
         foreach ($process as $index => $processOption) {
-            if (in_array($index, array('data', 'options'))) {
+            if (in_array($index, ['data', 'options'])) {
                 $header .= '   <span class=osh-key>'
                     . self::esc(str_replace('.', '</span>.<span class=osh-key>', $index))
                     . '</span> &gt;&gt;<br/>';
@@ -326,7 +326,7 @@ class Owebia_Shipping2_Model_ConfigParser
     public function getMessages()
     {
         $messages = $this->_messages;
-        $this->_messages = array();
+        $this->_messages = [];
         return $messages;
     }
 
@@ -338,11 +338,11 @@ class Owebia_Shipping2_Model_ConfigParser
             ? strcmp($firstKey, $secondKey) : $firstKeyPosition - $secondKeyPosition;
     }
 
-    public function formatConfig($compress, $keysToRemove = array(), $html = false)
+    public function formatConfig($compress, $keysToRemove = [], $html = false)
     {
-        $objectArray = array();
+        $objectArray = [];
         $this->propertiesSort = array_flip(
-            $this->addCurrencyCodesForFeesAndConditions(array(
+            $this->addCurrencyCodesForFeesAndConditions([
                 'type',
                 'about',
                 'enabled',
@@ -354,16 +354,16 @@ class Owebia_Shipping2_Model_ConfigParser
                 'conditions',
                 'fees',
                 'tracking_url',
-            ))
+            ])
         );
         foreach ($this->_config as $code => $row) {
-            $object = array();
+            $object = [];
             foreach ($row as $key => $property) {
                 if (substr($key, 0, 1) != '*' && !in_array($key, $keysToRemove)) {
                     $object[$key] = $property['value'];
                 }
             }
-            uksort($object, array($this, 'sortProperties'));
+            uksort($object, [$this, 'sortProperties']);
             $objectArray[$code] = $object;
         }
         return self::jsonEncode($objectArray, $beautify = !$compress, $html);
@@ -372,11 +372,11 @@ class Owebia_Shipping2_Model_ConfigParser
     public function checkConfig()
     {
         $timestamp = (int)Mage::getModel('core/date')->timestamp();
-        $process = array(
+        $process = [
             'config' => $this->_config,
             'data' => self::getDefaultProcessData(),
             'result' => null,
-        );
+        ];
         foreach ($this->_config as $code => &$row) {
             $this->processRow($process, $row, $checkAllConditions = true);
             foreach ($row as $propertyName => $propertyValue) {
@@ -399,7 +399,7 @@ class Owebia_Shipping2_Model_ConfigParser
         $type = $this->getRowProperty($row, 'type');
         if ($type == 'data') {
             foreach ($row as $key => $data) {
-                if (in_array($key, array('*id', 'code', 'type'))) continue;
+                if (in_array($key, ['*id', 'code', 'type'])) continue;
                 $value = isset($data['value']) ? $data['value'] : $data;
                 $this->debug(
                     '         .<span class=osh-key>' . self::esc($key) . '</span>'
@@ -432,7 +432,8 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function processRowConditions($process, &$row, $isChecking)
     {
-        $currency = strtolower(Mage::app()->getStore()->getCurrentCurrencyCode());
+        $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
+        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
         $conditions = $this->getRowProperty($row, 'conditions_'.$currency);
         $conditions = empty($conditions) ? $this->getRowProperty($row, 'conditions') : $conditions;
 
@@ -488,11 +489,11 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function processRowAddresses($process, &$row, $isChecking)
     {
-        $addressProperties = array(
+        $addressProperties = [
             'shipto' => "Shipping zone not allowed",
             'billto' => "Billing zone not allowed",
             'origin' => "Shipping origin not allowed",
-        );
+        ];
         foreach ($addressProperties as $propertyName => $failureMessage) {
             $propertyValue = $this->getRowProperty($row, $propertyName);
             if (isset($propertyValue)) {
@@ -515,7 +516,8 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function processRowFees($process, &$row, $isChecking)
     {
-        $currency = strtolower(Mage::app()->getStore()->getCurrentCurrencyCode());
+        $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
+        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
         $fees = $this->getRowProperty($row, 'fees_'.$currency);
         $fees = empty($fees) ? $this->getRowProperty($row, 'fees') : $fees;
 
@@ -595,7 +597,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 'Infinite loop %s',
                 "<span class=\"code\">{{$row['*id']}.{$key}}</span>"
             );
-            return array('error' => 'Infinite loop');
+            return ['error' => 'Infinite loop'];
         }
         if (isset($row[$key]['value'])) {
             $property = $row[$key]['value'];
@@ -829,7 +831,7 @@ class Owebia_Shipping2_Model_ConfigParser
             } else {
                 $replacement = 0;
                 $loopVar = $result[1];
-                $selections = array();
+                $selections = [];
                 $this->debug('      foreach <span class=osh-key>' . self::esc($loopVar) . '</span>');
                 $this->addDebugIndent();
                 $items = $process['data']['cart']->items;
@@ -1002,7 +1004,7 @@ class Owebia_Shipping2_Model_ConfigParser
                             $maxValue[strlen($maxValue) - 1]
                         );
 
-                        $maxValue = str_replace(array('[', ']'), '', $maxValue);
+                        $maxValue = str_replace(['[', ']'], '', $maxValue);
 
                         if ($maxValue == '*'
                             || $includingMaxValue && $referenceValue <= $maxValue
@@ -1051,11 +1053,11 @@ class Owebia_Shipping2_Model_ConfigParser
         }
 
         // data
-        $aliases = array(
+        $aliases = [
             'p' => 'product',
             'c' => 'cart',
             's' => 'selection',
-        );
+        ];
         $formula = $this->_replaceData($process, $formula, 'item|product|p|c|s', $aliases);
 
         // count, sum, min, max
@@ -1106,7 +1108,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 $formula
             )
         ) {
-            $errors = array(
+            $errors = [
                 PREG_NO_ERROR => 'PREG_NO_ERROR',
                 PREG_INTERNAL_ERROR => 'PREG_INTERNAL_ERROR',
                 PREG_BACKTRACK_LIMIT_ERROR => 'PREG_BACKTRACK_LIMIT_ERROR',
@@ -1114,7 +1116,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 PREG_BAD_UTF8_ERROR => 'PREG_BAD_UTF8_ERROR',
                 defined('PREG_BAD_UTF8_OFFSET_ERROR') ? PREG_BAD_UTF8_OFFSET_ERROR : 'PREG_BAD_UTF8_OFFSET_ERROR'
                     => 'PREG_BAD_UTF8_OFFSET_ERROR',
-            );
+            ];
             $error = preg_last_error();
             if (isset($errors[$error])) $error = $errors[$error];
             if ($isChecking) {
@@ -1190,10 +1192,10 @@ class Owebia_Shipping2_Model_ConfigParser
                 $key = 'meta' . $n;
                 $n++;
             } while (isset($json[$key]));
-            $json[$key] = array(
+            $json[$key] = [
                 'type' => 'meta',
                 'ignored' => $toIgnoreItem,
-            );
+            ];
         }
     }
 
@@ -1207,8 +1209,8 @@ class Owebia_Shipping2_Model_ConfigParser
         $openingQuote = $this->getChar(147);
         $closingQuote = $this->getChar(148);
         $input = str_replace(
-            array('&gt;', '&lt;', '“', '”', $openingQuote, $closingQuote, '&laquo;', '&raquo;', "\r\n", "\t"),
-            array('>', '<', '"', '"', '"', '"', '"', '"', "\n", ' '),
+            ['&gt;', '&lt;', '“', '”', $openingQuote, $closingQuote, '&laquo;', '&raquo;', "\r\n", "\t"],
+            ['>', '<', '"', '"', '"', '"', '"', '"', "\n", ' '],
             $input
         );
         return $input;
@@ -1216,7 +1218,7 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function _parseInputParseJsonObject($object, &$autoCorrectionWarnings, &$missingEnquoteOfPropertyName)
     {
-        $jsonObject = array();
+        $jsonObject = [];
         $propertyRegexp = $this->getPropertyRegexp();
         preg_match_all('/' . $propertyRegexp . '/i', $object[0], $propertySet, PREG_SET_ORDER);
         $propertiesCount = count($propertySet);
@@ -1261,7 +1263,7 @@ class Owebia_Shipping2_Model_ConfigParser
     {
         $objectRegexp = $this->getObjectRegexp();
         preg_match_all('/(' . $objectRegexp . ')/is', $configString, $objectSet, PREG_SET_ORDER);
-        $json = array();
+        $json = [];
         $objectsCount = count($objectSet);
         $toIgnoreCounter = -1;
         foreach ($objectSet as $i => $object) {
@@ -1338,8 +1340,8 @@ class Owebia_Shipping2_Model_ConfigParser
         if (!$this->_parseInputIsValidConfig($config)) {
             $config = null;
         }
-        $autoCorrectionWarnings = array();
-        $missingEnquoteOfPropertyName = array();
+        $autoCorrectionWarnings = [];
+        $missingEnquoteOfPropertyName = [];
         if ($autoCorrection && !$config && $configString != '[]') {
             $this->_parseInputParseComments($configString, $autoCorrectionWarnings);
             $json = $this->_parseInputParseJsonObjectSet(
@@ -1356,7 +1358,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 $this->_parseInputIgnore((array)$toIgnore, $json, $autoCorrectionWarnings);
             }
             $configString = $this->jsonEncode($json);
-            $configString = str_replace(array("\n"), array("\\n"), $configString);
+            $configString = str_replace(["\n"], ["\\n"], $configString);
 
             $lastJsonError = null;
             try {
@@ -1414,19 +1416,19 @@ class Owebia_Shipping2_Model_ConfigParser
     {
         $this->_parseInputAddRowsDetectDeprecatedProperties($autoCorrection, $object, $deprecatedProperties);
 
-        $reservedKeys  = array('*id');
-        $availableKeys = $this->addCurrencyCodesForFeesAndConditions(array(
+        $reservedKeys  = ['*id'];
+        $availableKeys = $this->addCurrencyCodesForFeesAndConditions([
             'type', 'about', 'label', 'enabled', 'description', 'fees', 'conditions',
             'shipto', 'billto', 'origin', 'customer_groups', 'tracking_url',
-        ));
+        ]);
         if ($autoCorrection) {
             $availableKeys = array_merge(
                 $availableKeys,
-                array('destination', 'code')
+                ['destination', 'code']
             );
         }
 
-        $row = array();
+        $row = [];
         $i = 1;
         foreach ($object as $propertyName => $propertyValue) {
             if (in_array($propertyName, $reservedKeys)) {
@@ -1434,10 +1436,10 @@ class Owebia_Shipping2_Model_ConfigParser
             }
             if (in_array($propertyName, $availableKeys)
                 || substr($propertyName, 0, 1) == '_'
-                || in_array($object['type'], array('data', 'meta'))
+                || in_array($object['type'], ['data', 'meta'])
             ) {
                 if (isset($propertyValue)) {
-                    $row[$propertyName] = array('value' => $propertyValue, 'original_value' => $propertyValue);
+                    $row[$propertyName] = ['value' => $propertyValue, 'original_value' => $propertyValue];
                     if ($autoCorrection) $this->cleanProperty($row, $propertyName);
                 }
             } else {
@@ -1450,10 +1452,10 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function _parseInputAddRows($config, $autoCorrection)
     {
-        $this->_config = array();
+        $this->_config = [];
 
-        $deprecatedProperties = array();
-        $unknownProperties = array();
+        $deprecatedProperties = [];
+        $unknownProperties = [];
 
         foreach ($config as $code => $object) {
             $row = $this->_parseInputAddRowsPrepareRow(
@@ -1536,7 +1538,7 @@ class Owebia_Shipping2_Model_ConfigParser
         return $input;
     }
 
-    protected function _replaceData(&$process, $input, $keys = '', $aliases = array())
+    protected function _replaceData(&$process, $input, $keys = '', $aliases = [])
     {
         $keys = ($keys ? $keys . '|' : '') . implode('|', array_keys($process['data']));
         $keys = preg_replace('/[^a-z_\|]/', '_', $keys);
@@ -1557,11 +1559,11 @@ class Owebia_Shipping2_Model_ConfigParser
         $addressFilter = $addressFilterParser->parse($addressFilter);
 
         $this->debug('      address filter = <span class=osh-formula>' . self::esc($addressFilter) . '</span>');
-        $data = array(
+        $data = [
             '{c}' => $address->getData('country_id'),
             '{p}' => $address->getData('postcode'),
             '{r}' => $address->getData('region_code'),
-        );
+        ];
         foreach ($data as $original => $replacement) {
             $addressFilter = $this->_replaceVariable($process, $addressFilter, $original, $replacement);
         }
@@ -1584,7 +1586,7 @@ class Owebia_Shipping2_Model_ConfigParser
     protected function _autoEscapeStrings($input)
     {
         if (is_array($input)) {
-            $items = array();
+            $items = [];
             foreach ($input as $v) {
                 $items[] = isset($v) && (is_string($v) || empty($v)) ? self::escapeString($v) : self::toString($v);
             }
@@ -1679,7 +1681,7 @@ class Owebia_Shipping2_Model_ConfigParser
         );
         $this->addDebugIndent();
 
-        $properties = array();
+        $properties = [];
         $this->_preg_match_all('#(?:item|product|p)\.([a-z0-9_\+\-\.]+)#i', $conditions, $propertiesRegexpResult);
         foreach ($propertiesRegexpResult as $propertyRegexpResult) {
             if (!isset($properties[$propertyRegexpResult[0]])) {
@@ -1689,7 +1691,7 @@ class Owebia_Shipping2_Model_ConfigParser
         krsort($properties); // To avoid shorter replace
 
         if ($items) {
-            $distinctValues = array();
+            $distinctValues = [];
             foreach ($items as $item) {
                 $this->debug(
                     '     <span class=osh-loop>&bull; item</span>'
@@ -1918,7 +1920,7 @@ class Owebia_Shipping2_Model_ConfigParser
             $this->cleanPropertyReplaceDeprecatedProductSyntax($context);
             $this->cleanPropertyReplaceDeprecatedTableSyntax($context);
 
-            $aliases = array(
+            $aliases = [
                 '{destination.country.code}' => '{shipto.country_id}',
                 '{destination.country.name}' => '{shipto.country_name}',
                 '{destination.region.code}' => '{shipto.region_code}',
@@ -1956,7 +1958,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 'product.attribute.price+tax-discount' => 'item.price+tax-discount',
                 'product.attribute.price-tax+discount' => 'item.price-tax+discount',
                 'product.attribute.price-tax-discount' => 'item.price-tax-discount',
-            );
+            ];
             foreach ($aliases as $from => $to) {
                 if (mb_strpos($input, $from) !== false) {
                     $input = $this->replace($from, $to, $input, 'warning', 'replace deprecated');

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/28/10/2021
+ * Updated J/21/04/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -26,8 +26,65 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 
 	public function getApiUrl($city, $postcode, $country) {
 
-		if (($country == 'FR') && (stripos($city, 'cedex') !== false))
-			$city = preg_replace('#\s+cedex\s*[\d]*\s*#i', '', $city);
+		if ($country == 'FR') {
+
+			$arrondissement = [
+				13000 => 'Saint-Charles,Marseille',
+				13001 => 'Marseille 1er Arrondissement,Marseille',
+				13002 => 'Marseille 2e Arrondissement,Marseille',
+				13003 => 'Marseille 3e Arrondissement,Marseille',
+				13004 => 'Marseille 4e Arrondissement,Marseille',
+				13005 => 'Marseille 5e Arrondissement,Marseille',
+				13006 => 'Marseille 6e Arrondissement,Marseille',
+				13007 => 'Marseille 7e Arrondissement,Marseille',
+				13008 => 'Marseille 8e Arrondissement,Marseille',
+				13009 => 'Marseille 9e Arrondissement,Marseille',
+				13010 => 'Marseille 10e Arrondissement,Marseille',
+				13011 => 'Marseille 11e Arrondissement,Marseille',
+				13012 => 'Marseille 12e Arrondissement,Marseille',
+				13013 => 'Marseille 13e Arrondissement,Marseille',
+				13014 => 'Marseille 14e Arrondissement,Marseille',
+				13015 => 'Marseille 15e Arrondissement,Marseille',
+				13016 => '16e Arrondissement,Marseille',
+				69000 => 'Bellecour,Lyon',
+				69001 => 'Lyon 1er Arrondissement,Lyon',
+				69002 => 'Lyon 2e Arrondissement,Lyon',
+				69003 => 'Lyon 3e Arrondissement,Lyon',
+				69004 => 'Lyon 4e Arrondissement,Lyon',
+				69005 => 'Lyon 5e Arrondissement,Lyon',
+				69006 => 'Lyon 6e Arrondissement,Lyon',
+				69007 => 'Lyon 7e Arrondissement,Lyon',
+				69008 => 'Lyon 8e Arrondissement,Lyon',
+				69009 => 'Lyon 9e Arrondissement,Lyon',
+				75000 => 'Paris',
+				75001 => 'Mairie du 1er Arrondissement,Paris',
+				75002 => 'Mairie du 2e Arrondissement,Paris',
+				75003 => 'Mairie du 3e Arrondissement,Paris',
+				75004 => 'Mairie du 4e Arrondissement,Paris',
+				75005 => 'Mairie du 5e Arrondissement,Paris',
+				75006 => 'Mairie du 6e Arrondissement,Paris',
+				75007 => 'Mairie du 7e Arrondissement,Paris',
+				75008 => 'Mairie du 8e Arrondissement,Paris',
+				75009 => 'Mairie du 9e Arrondissement,Paris',
+				75010 => 'Mairie du 10e Arrondissement,Paris',
+				75011 => 'Mairie du 11e Arrondissement,Paris',
+				75012 => 'Mairie du 12e Arrondissement,Paris',
+				75013 => 'Mairie du 13e Arrondissement,Paris',
+				75014 => 'Mairie du 14e Arrondissement,Paris',
+				75015 => 'Mairie du 15e Arrondissement,Paris',
+				75016 => 'Mairie du 16e Arrondissement,Paris',
+				75017 => 'Mairie du 17e Arrondissement,Paris',
+				75018 => 'Mairie du 18e Arrondissement,Paris',
+				75019 => 'Mairie du 19e Arrondissement,Paris',
+				75020 => 'Mairie du 20e Arrondissement,Paris',
+				75116 => 'Mairie du 16e Arrondissement,Paris',
+			];
+
+			if (array_key_exists((int) $postcode, $arrondissement))
+				$city = $arrondissement[(int) $postcode];
+			else if (mb_stripos($city, 'cedex') !== false)
+				$city = preg_replace('#\s+cedex\s*\d*\s*#i', '', $city);
+		}
 
 		// Nominatim assumes we are looking for a place called xyz near the postcode xyz
 		return 'https://nominatim.openstreetmap.org/search'.
@@ -51,6 +108,14 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 			$url = 'https://cleaner.dadata.ru/api/v1/clean/address';
 		}
 		else if ($withCity) {
+			if ($country == 'FR') {
+				if (in_array($postcode, [75000, 75001, 75002, 75003, 75004, 75005, 75006, 75007, 75008, 75009, 75010, 75011, 75012, 75013, 75014, 75015, 75016, 75116, 75017, 75018, 75019, 75020]))
+					$address->setData('city', $city = 'Paris');
+				else if (in_array($postcode, [13000, 13001, 13002, 13003, 13004, 13005, 13006, 13007, 13008, 13009, 13010, 13011, 13012, 13013, 13014, 13015, 13016]))
+					$address->setData('city', $city = 'Marseille');
+				else if (in_array($postcode, [69000, 69001, 69002, 69003, 69004, 69005, 69006, 69007, 69008, 69009]))
+					$address->setData('city', $city = 'Lyon');
+			}
 			$str = mb_strtolower(trim($postcode.' '.$city).', '.$country);
 			$url = $this->getApiUrl($city, $postcode, $country);
 		}
@@ -69,6 +134,9 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 		$this->load($key = md5($str), 'addrkey');
 
 		if (empty($this->getId())) {
+
+			$this->setData('created_at', date('Y-m-d H:i:s'));
+			$this->setData('updated_at', $this->getData('created_at'));
 
 			if (in_array($country, ['KZ', 'RU']) && !empty($subkey = Mage::getStoreConfig('carriers/shippingmax/dadataru_api_key'))) {
 
@@ -222,6 +290,9 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 		$this->load($key = md5($str), 'addrkey');
 
 		if (empty($this->getId())) {
+
+			$this->setData('created_at', date('Y-m-d H:i:s'));
+			$this->setData('updated_at', $this->getData('created_at'));
 
 			if ($dadata && !empty($subkey = Mage::getStoreConfig('carriers/shippingmax/dadataru_api_key'))) {
 

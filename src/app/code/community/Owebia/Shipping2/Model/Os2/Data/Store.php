@@ -17,7 +17,7 @@ class Owebia_Shipping2_Model_Os2_Data_Store extends Owebia_Shipping2_Model_Os2_D
 
     public function __sleep()
     {
-        return array('id', 'code', 'name', 'address', 'phone');
+        return ['id', 'code', 'name', 'address', 'phone'];
     }
 
     protected function _load($name)

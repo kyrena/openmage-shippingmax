@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated D/26/12/2021
+ * Updated M/24/05/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -202,19 +202,20 @@ class Kyrena_Shippingmax_Model_Observer {
 
 		$carriers = Mage::getModel('shipping/config')->getAllCarriers();
 		foreach ($carriers as $code => $carrier) {
+
 			if (Mage::getStoreConfigFlag('carriers/shippingmax/remove_'.$code)) {
-				$writer->query('DELETE FROM '.$table.' WHERE path LIKE "carriers/'.$code.'/%"');
-				$writer->query('INSERT INTO '.$table.' (`scope`, `scope_id`, `path`, `value`, `updated_at`)
-					VALUES ("default", 0, "carriers/'.$code.'/active", "0", now())');
+
+				$writer->query('DELETE FROM '.$table.' WHERE path LIKE "carriers/'.$code.'/%" AND path NOT LIKE "carriers/'.$code.'/active"');
+				$writer->query('DELETE FROM '.$table.' WHERE path LIKE "carriers/'.$code.'/active" AND scope_id != 0');
+
+				Mage::getModel('core/config')->saveConfig('carriers/'.$code.'/active', '0');
 			}
 		}
 
-		if (Mage::getStoreConfigFlag('shippingmax_times/general/enabled')) {
+		if (Mage::getStoreConfigFlag('shippingmax_times/general/enabled'))
 			$writer->query('DELETE FROM '.$table.' WHERE path LIKE "shippingmax_times/general/remove"');
-		}
-		else if (Mage::getStoreConfigFlag('shippingmax_times/general/remove')) {
+		else if (Mage::getStoreConfigFlag('shippingmax_times/general/remove'))
 			$writer->query('DELETE FROM '.$table.' WHERE path LIKE "shippingmax_times/%" AND path NOT LIKE "shippingmax_times/general/%"');
-		}
 
 		Mage::getConfig()->reinit(); // très important
 	}
@@ -320,7 +321,7 @@ class Kyrena_Shippingmax_Model_Observer {
 		}
 
 		if (is_object($cron)) {
-			$cron->setData('messages', 'memory: '.((int) (memory_get_peak_usage(true) / 1024 / 1024)).' M'."\n".implode("\n", $msg));
+			$cron->setData('messages', 'memory: '.((int) (memory_get_peak_usage(true) / 1024 / 1024)).'M (max: '.ini_get('memory_limit').')'."\n".implode("\n", $msg));
 			if ($hasError) // pour le statut du cron
 				Mage::throwException('At least one error occurred while downloading files.'."\n\n".$cron->getData('messages')."\n\n");
 		}

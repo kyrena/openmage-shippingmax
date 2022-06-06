@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated V/08/10/2021
+ * Updated M/08/03/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -44,7 +44,10 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		if (($code != 'FR') && in_array($code, Mage::helper('shippingmax')->getFranceDromCom(true)))
 			$text = 'FR - '.$text;
 
-		$element->setLegend($text);
+		if (!empty(self::$_config[$code]['franco']))
+			$text .= ' <span style="float:right; padding-right:40px;">franco</span>';
+
+		$element->setLegend('<span class="iticnf"><span class="iti__flag iti__'.strtolower($code).'">&nbsp;</span></span> '.$text);
 
 		return preg_replace('#<table.*#', '<div class="grid">', $this->_getHeaderHtml($element)).$html.str_replace('</tbody></table>', '</div>', $this->_getFooterHtml($element));
 	}
@@ -56,13 +59,14 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		$items   = [];
 
 		$postcodes = [
-			['FR', '20600', '20'],   // Corse (FR 20)
-			['FR', '98000', '9800'], // Monaco (FR/MC 98)
-			['ES', '07199', '07'],   // Baleares (07)
-			['ES', '35572', '35'],   // Las Palmas (35)
-			['ES', '38296', '38'],   // Santa Cruz de Tenerife (38)
-			['ES', '51005', '51'],   // Ceuta (51)
-			['ES', '52006', '52'],   // Melilla (52)
+			[null, null, null],
+			['FR', '20600', '_20'],   // Corse (FR 20)
+			['FR', '98000', '_9800'], // Monaco (FR/MC 98)
+			['ES', '07199', '_07'],   // Baleares (07)
+			['ES', '35572', '_35'],   // Las Palmas (35)
+			['ES', '38296', '_38'],   // Santa Cruz de Tenerife (38)
+			['ES', '51005', '_51'],   // Ceuta (51)
+			['ES', '52006', '_52'],   // Melilla (52)
 		];
 
 		foreach ($ids as $storeId) {
@@ -71,44 +75,60 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 
 			$carriers  = Mage::getModel('shipping/config')->getActiveCarriers($storeId);
 			$countries = explode(',', Mage::getStoreConfig('general/country/allow', $storeId));
+			$franco    = 50000;
 
 			foreach ($carriers as $code => $carrier) {
 
-				foreach ($countries as $country) {
+				foreach ($postcodes as [$postCountry, $postcode, $key]) {
 
-					$sort    = in_array($country, $dromcom) ? 'FR-'.$country : $country;
-					$request = Mage::getModel('shipping/rate_request')
-						->setOrigCountryId(Mage::getStoreConfig('shipping/origin/country_id', $storeId))
-						->setDestCountryId($country)
-						->setAllItems([]);
+					foreach ($countries as $country) {
 
-					$result = $carrier->checkAvailableShipCountries($request);
-					if (is_object($result)) {
-						if ($result instanceof Owebia_Shipping2_Model_Carrier_Abstract) {
-							$rates = $result->collectRates($request)->getAllRates();
-							foreach ($rates as $rate)
-								$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method')] = $this->getArrayData($rate, $storeId, $country);
+						if (!empty($postCountry) && ($postCountry != $country))
+							continue;
+
+						// 1/ STANDARD
+						$sort    = in_array($country, $dromcom) ? 'FR-'.$country : $country;
+						$request = Mage::getModel('shipping/rate_request')
+							->setOrigCountryId(Mage::getStoreConfig('shipping/origin/country_id', $storeId))
+							->setDestCountryId($country)
+							->setDestPostcode($postcode)
+							->setBaseCurrency(Mage::getStoreConfig('currency/options/base', $storeId))
+							->setPackageCurrency(Mage::getStoreConfig('currency/options/default', $storeId))
+							->setAllItems([]);
+
+						$result = $carrier->checkAvailableShipCountries($request);
+						if (is_object($result)) {
+							if ($result instanceof Owebia_Shipping2_Model_Carrier_Abstract) {
+								$rates = $result->collectRates($request)->getAllRates();
+								foreach ($rates as $rate) {
+									if (empty($items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key])) {
+										$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+									}
+									else {
+										$price = $this->getCarrierPrice($rate, $storeId);
+										$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key]['price'][$price] = $price;
+									}
+								}
+							}
+							else if (!($result instanceof Mage_Shipping_Model_Rate_Result_Error)) {
+								$rates = $carrier->collectRates($request)->getAllRates();
+								foreach ($rates as $rate) {
+									if (empty($items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key])) {
+										$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+									}
+									else {
+										$price = $this->getCarrierPrice($rate, $storeId);
+										$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key]['price'][$price] = $price;
+									}
+								}
+							}
 						}
-						else if (!($result instanceof Mage_Shipping_Model_Rate_Result_Error)) {
-							$rates = $carrier->collectRates($request)->getAllRates();
-							foreach ($rates as $rate)
-								$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method')] = $this->getArrayData($rate, $storeId, $country);
-						}
-					}
 
-					// réessaye avec des codes postaux trouvés dans la config du mode de livraison
-					if ($code == 'shippingmax_colisprivdom') {
-						$cps = ($country == 'FR') ? ['all' => [75001, 75002, 69001, 69002, 38000]] : [];
-					}
-					else if (in_array($code, ['shippingmax_boxberryhome', 'shippingmax_boxberryhomecash'])) {
-						$cps = ($country == 'RU') ? ['all' => [181270, 192212, 307200, 350009, 350010, 350011, 350012, 460014, 460015]] : [];
-					}
-					else {
+						// 2/ réessaye avec des codes postaux trouvés dans la config du mode de livraison
+						// car certains modes de livraisons sont limités à certains codes postaux
 						$cps = Mage::getStoreConfig('carriers/'.$code.((strpos($code, 'owebiashipping') === false) ? '/owebia_config' : '/config'), $storeId);
 						$cps = Mage::getModel('shippingmax/configparser')->init($cps, true)->extractAllPostcodes($country);
-					}
 
-					if (!empty($cps)) {
 						foreach ($cps as $grp) {
 							foreach ($grp as $cp) {
 								if (strpos($cp, '*') !== false)
@@ -117,45 +137,132 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 								if (is_object($result)) {
 									if ($result instanceof Owebia_Shipping2_Model_Carrier_Abstract) {
 										$rates = $result->collectRates($request)->getAllRates();
-										foreach ($rates as $rate)
-											$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method')] = $this->getArrayData($rate, $storeId, $country);
-										break;
+										foreach ($rates as $rate) {
+											if (empty($items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key])) {
+												$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+											}
+											else {
+												$price = $this->getCarrierPrice($rate, $storeId);
+												$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key]['price'][$price] = $price;
+											}
+										}
+										break; // un seul code postal suffira
 									}
 									if (!($result instanceof Mage_Shipping_Model_Rate_Result_Error)) {
 										$rates = $carrier->collectRates($request)->getAllRates();
-										foreach ($rates as $rate)
-											$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method')] = $this->getArrayData($rate, $storeId, $country);
-										break;
+										foreach ($rates as $rate) {
+											if (empty($items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key])) {
+												$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+											}
+											else {
+												$price = $this->getCarrierPrice($rate, $storeId);
+												$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key]['price'][$price] = $price;
+											}
+										}
+										break; // un seul code postal suffira
 									}
 								}
 							}
 						}
-					}
-				}
 
-				foreach ($postcodes as [$country, $postcode, $key]) {
+						// 3/ FRANCO
+						// réessaye pour le franco à partir de
+						$request = Mage::getModel('shipping/rate_request')
+							->setOrigCountryId(Mage::getStoreConfig('shipping/origin/country_id', $storeId))
+							->setDestCountryId($country)
+							->setDestPostcode($postcode)
+							->setAllItems([
+								Mage::getModel('sales/quote_item')->addData([
+									'product' => Mage::getModel('catalog/product')->setData('price', $franco),
+									'free_shipping' => true,
+									'base_row_total' => $franco,
+									'base_row_total_incl_tax' => $franco,
+									'base_original_price' => $franco,
+									'price_incl_tax' => $franco,
+								])
+							])
+							->setPackageValue($franco)
+							->setPackageValueWithDiscount($franco)
+							->setPackagePhysicalValue($franco)
+							->setBaseSubtotalInclTax($franco)
+							->setBaseCurrency(Mage::getStoreConfig('currency/options/base', $storeId))
+							->setPackageCurrency(Mage::getStoreConfig('currency/options/default', $storeId))
+							->setFreeShipping(true);
 
-					if (!in_array($country, $countries))
-						continue;
-
-					$sort    = in_array($country, $dromcom) ? 'FR-'.$country : $country;
-					$request = Mage::getModel('shipping/rate_request')
-						->setOrigCountryId(Mage::getStoreConfig('shipping/origin/country_id', $storeId))
-						->setDestCountryId($country)
-						->setDestPostcode($postcode)
-						->setAllItems([]);
-
-					$result = $carrier->checkAvailableShipCountries($request);
-					if (is_object($result)) {
-						if ($result instanceof Owebia_Shipping2_Model_Carrier_Abstract) {
-							$rates = $result->collectRates($request)->getAllRates();
-							foreach ($rates as $rate)
-								$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').'_'.$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+						$result = $carrier->checkAvailableShipCountries($request);
+						if (is_object($result)) {
+							if (($result instanceof Owebia_Shipping2_Model_Carrier_Abstract) && (count($rates = $result->resetParser()->collectRates($request)->getAllRates()) > 0)) {
+								foreach ($rates as $rate) {
+									if ($rate->getPrice() == 0) {
+										$items[$country]['franco'][$code] = $code;
+										$short = substr($rate->getData('method'), 0, strrpos($rate->getData('method'), '_')).$key;
+										if (empty($items[$country][$rate->getData('carrier')][$sort][$short])) {
+											$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+										}
+										else {
+											$price = $this->getCarrierPrice($rate, $storeId);
+											$items[$country][$rate->getData('carrier')][$sort][$short]['price'][$price] = $price;
+										}
+									}
+								}
+							}
+							else if (!($result instanceof Mage_Shipping_Model_Rate_Result_Error) && (count($rates = $carrier->collectRates($request)->getAllRates()) > 0)) {
+								foreach ($rates as $rate) {
+									if ($rate->getPrice() == 0) {
+										$items[$country]['franco'][$code] = $code;
+										$short = substr($rate->getData('method'), 0, strrpos($rate->getData('method'), '_')).$key;
+										if (empty($items[$country][$rate->getData('carrier')][$sort][$short])) {
+											$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+										}
+										else {
+											$price = $this->getCarrierPrice($rate, $storeId);
+											$items[$country][$rate->getData('carrier')][$sort][$short]['price'][$price] = $price;
+										}
+									}
+								}
+							}
 						}
-						else if (get_class($result) != get_class(Mage::getModel('shipping/rate_result_error'))) {
-							$rates = $carrier->collectRates($request)->getAllRates();
-							foreach ($rates as $rate)
-								$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').'_'.$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+
+						// 4/ réessaye avec des codes postaux trouvés dans la config du mode de livraison
+						// car certains modes de livraisons sont limités à certains codes postaux
+						foreach ($cps as $grp) {
+							foreach ($grp as $cp) {
+								if (strpos($cp, '*') !== false)
+									continue;
+								$result = $carrier->checkAvailableShipCountries($request->setDestPostcode($cp));
+								if (is_object($result)) {
+									if ($result instanceof Owebia_Shipping2_Model_Carrier_Abstract) {
+										$rates = $result->collectRates($request)->getAllRates();
+										foreach ($rates as $rate) {
+											$items[$country]['franco'][$code] = $code;
+											$short = substr($rate->getData('method'), 0, strrpos($rate->getData('method'), '_')).$key;
+											if (empty($items[$country][$rate->getData('carrier')][$sort][$short])) {
+												$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+											}
+											else {
+												$price = $this->getCarrierPrice($rate, $storeId);
+												$items[$country][$rate->getData('carrier')][$sort][$short]['price'][$price] = $price;
+											}
+										}
+										break; // un seul code postal suffira
+									}
+									if (!($result instanceof Mage_Shipping_Model_Rate_Result_Error)) {
+										$rates = $carrier->collectRates($request)->getAllRates();
+										foreach ($rates as $rate) {
+											$items[$country]['franco'][$code] = $code;
+											$short = substr($rate->getData('method'), 0, strrpos($rate->getData('method'), '_')).$key;
+											if (empty($items[$country][$rate->getData('carrier')][$sort][$short])) {
+												$items[$country][$rate->getData('carrier')][$sort][$rate->getData('method').$key] = $this->getArrayData($rate, $storeId, $country, $postcode, $key);
+											}
+											else {
+												$price = $this->getCarrierPrice($rate, $storeId);
+												$items[$country][$rate->getData('carrier')][$sort][$short]['price'][$price] = $price;
+											}
+										}
+										break; // un seul code postal suffira
+									}
+								}
+							}
 						}
 					}
 				}
@@ -165,10 +272,11 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		return $items;
 	}
 
-	protected function getArrayData(object $rate, int $storeId, string $country, $postcode = null, $ckey = null) {
+	protected function getArrayData(object $rate, int $storeId, string $country, $postcode = null, $key = null) {
 
-		$code = $rate->getData('carrier').'_'.$rate->getData('method');
-		$ckey = empty($ckey) ? $code : $code.'_'.$ckey;
+		$code  = $rate->getData('carrier').'_'.$rate->getData('method');
+		$key   = empty($key) ? $code : $code.$key;
+		$price = $this->getCarrierPrice($rate, $storeId);
 
 		return [
 			'code'     => $code,
@@ -176,16 +284,21 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 				$rate->getData('carrier_title').' / '.$rate->getData('method_title') : $rate->getData('carrier_title'),
 			'country'  => $country,
 			'postcode' => $postcode,
-			'name1min' => 'groups['.$country.'][fields][cnf1min_'.$ckey.'][value]',
-			'name1max' => 'groups['.$country.'][fields][cnf1max_'.$ckey.'][value]',
-			'name2min' => 'groups['.$country.'][fields][cnf2min_'.$ckey.'][value]',
-			'name2max' => 'groups['.$country.'][fields][cnf2max_'.$ckey.'][value]',
-			'name3'    => 'groups['.$country.'][fields][cnf3_'.$ckey.'][value]',
-			'cnf1min'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1min_'.$ckey, $storeId),
-			'cnf1max'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1max_'.$ckey, $storeId),
-			'cnf2min'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2min_'.$ckey, $storeId),
-			'cnf2max'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2max_'.$ckey, $storeId),
-			'cnf3'     => Mage::getStoreConfigFlag('shippingmax_times/'.$country.'/cnf3_'.$ckey, $storeId)
+			'name1min' => 'groups['.$country.'][fields][cnf1min_'.$key.'][value]',
+			'name1max' => 'groups['.$country.'][fields][cnf1max_'.$key.'][value]',
+			'name2min' => 'groups['.$country.'][fields][cnf2min_'.$key.'][value]',
+			'name2max' => 'groups['.$country.'][fields][cnf2max_'.$key.'][value]',
+			'name3'    => 'groups['.$country.'][fields][cnf3_'.$key.'][value]',
+			'cnf1min'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1min_'.$key, $storeId),
+			'cnf1max'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1max_'.$key, $storeId),
+			'cnf2min'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2min_'.$key, $storeId),
+			'cnf2max'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2max_'.$key, $storeId),
+			'cnf3'     => Mage::getStoreConfigFlag('shippingmax_times/'.$country.'/cnf3_'.$key, $storeId),
+			'price'    => [$price => $price],
 		];
+	}
+
+	protected function getCarrierPrice(object $rate, int $storeId) {
+		return Mage::getSingleton('core/locale')->currency(Mage::getStoreConfig('currency/options/default', $storeId))->toCurrency($rate->getPrice());
 	}
 }

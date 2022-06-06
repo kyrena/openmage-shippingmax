@@ -16,7 +16,7 @@ class Owebia_Shipping2_Model_Os2_Data_Date extends Owebia_Shipping2_Model_Os2_Da
 
     public function __sleep()
     {
-        return array('timestamp', 'year', 'month', 'day', 'hour', 'minute', 'second', 'weekday');
+        return ['timestamp', 'year', 'month', 'day', 'hour', 'minute', 'second', 'weekday'];
     }
 
     protected function getDate($format)

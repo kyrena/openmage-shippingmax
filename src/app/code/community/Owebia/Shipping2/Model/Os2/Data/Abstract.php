@@ -6,7 +6,7 @@
 
 class Owebia_Shipping2_Model_Os2_Data_Abstract
 {
-    protected $_additionalAttributes = array();
+    protected $_additionalAttributes = [];
     protected $_attributes;
     protected $_loadedObject = false;
     protected $_data;
@@ -43,7 +43,7 @@ class Owebia_Shipping2_Model_Os2_Data_Abstract
 
     public function getData($name)
     {
-        if (!is_array($this->_data)) $this->_data = array();
+        if (!is_array($this->_data)) $this->_data = [];
         if (array_key_exists($name, $this->_data)) return $this->_data[$name];
         $this->_data[$name] = $this->_load($name);
         return $this->_data[$name];
