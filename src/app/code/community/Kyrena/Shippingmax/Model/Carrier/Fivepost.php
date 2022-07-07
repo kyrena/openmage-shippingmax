@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated L/04/10/2021
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -78,7 +78,7 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 						continue;
 					}
 
-					$result['id'] = (string) substr(md5($result['id']), 0, 10); // (yes)
+					$result['id'] = substr(md5($result['id']), 0, 10);
 					$items[$result['id']] = [
 						'id'          => $result['id'],
 						'lat'         => trim(str_replace(',', '.', $result['address']['lat']), '0'),

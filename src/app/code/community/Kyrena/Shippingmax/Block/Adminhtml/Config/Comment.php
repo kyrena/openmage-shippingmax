@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/21/05/2021
- * Updated L/28/02/2022
+ * Updated M/05/07/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -20,39 +20,6 @@
 
 class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_Block_System_Config_Form_Fieldset {
 
-	protected static $svg = [
-		'shippingmax_boxberry'       => 'ic-logo-boxberry.svg',
-		'shippingmax_boxberrycash'   => 'ic-logo-boxberry.svg',
-		'shippingmax_boxberryhome'   => 'ic-logo-boxberry.svg',
-		'shippingmax_chronorelais'   => 'ic-logo-chronopost.svg',
-		'shippingmax_colisprivdom'   => 'ic-logo-colisprive.svg',
-		'shippingmax_colisprivpts'   => 'ic-logo-colisprive.svg',
-		'shippingmax_dhldestand'     => 'ic-logo-dhl.svg',
-		'shippingmax_dpdfrrelais'    => 'ic-logo-dpd.svg',
-		'shippingmax_fivepost'       => 'ic-logo-fivepost.svg',
-		'shippingmax_fivepostcash'   => 'ic-logo-fivepost.svg',
-		'shippingmax_glsdeeurob'     => 'ic-logo-gls.svg',
-		'shippingmax_glsplstand'     => 'ic-logo-gls.svg',
-		'shippingmax_glsplstandcash' => 'ic-logo-gls.svg',
-		'shippingmax_inpospacit'     => 'ic-logo-inpost.svg',
-		'shippingmax_inpospacuk'     => 'ic-logo-inpost.svg',
-		'shippingmax_inpospaczk'     => 'ic-logo-inpost.svg',
-		'shippingmax_mondialrelay'   => 'ic-logo-mondialrelay.svg',
-		'shippingmax_pickpoint'      => 'ic-logo-pickpoint.svg',
-		'shippingmax_pickpointcash'  => 'ic-logo-pickpoint.svg',
-		'shippingmax_pocztk48Op'     => 'ic-logo-pocztex.svg',
-		'shippingmax_pocztk48st'     => 'ic-logo-pocztex.svg',
-		'shippingmax_pocztpecom'     => 'ic-logo-pocztex.svg',
-		'shippingmax_przesodbpk'     => 'ic-logo-packeta.svg',
-		'shippingmax_przesodbpkcash' => 'ic-logo-packeta.svg',
-		'shippingmax_przesstand'     => 'ic-logo-packeta.svg',
-		'shippingmax_przesstandcash' => 'ic-logo-packeta.svg',
-		'shippingmax_shiptor'        => 'ic-logo-shiptor.svg',
-		'shippingmax_shiptorcash'    => 'ic-logo-shiptor.svg',
-		'shippingmax_shiptorhome'    => 'ic-logo-shiptor.svg',
-		//'shippingmax_' => 'ic-logo-colissimo.svg',
-	];
-
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
 		$html = [];
@@ -69,29 +36,32 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 
 		// pays du mode de livraison
 		// fait la liste, si elle est vide, c'est que tous les pays sont autorisés
-		$html['all'][] = $this->__('Allowed countries for this method:').' ';
-		foreach ($allCountries as $country) {
+		if ($selCountries != $allCountries) {
 
-			$name = Mage::getModel('directory/country')->loadByCode($country)->getName();
-			$key  = strtolower($country);
+			$html['all'][] = $this->__('Allowed countries for this method:').' ';
+			foreach ($allCountries as $country) {
 
-			if (!empty($maxAmounts[$key]['amount'])) {
-				$max = $help->getNumber($maxAmounts[$key]['amount'], ['precision' => 2]);
-				if ($country == $defaultCountry)
-					$html['all'][] = '<u><span title="'.addslashes($this->__('Default Country')).' - '.$name.', max '.$max.' '.$maxAmounts[$key]['currency'].'">'.$country.'</span></u>';
-				else
-					$html['all'][] = '<span title="'.$name.', max '.$max.' '.$maxAmounts[$key]['currency'].'">'.$country.'</span>';
-			}
-			else if ($country == $defaultCountry) {
-				$html['all'][] = '<u><span title="'.addslashes($this->__('Default Country')).' - '.$name.'">'.$country.'</span></u>';
-			}
-			else {
-				$html['all'][] = '<span title="'.$name.'">'.$country.'</span>';
-			}
-		}
+				$name = Mage::getModel('directory/country')->loadByCode($country)->getName();
+				$key  = strtolower($country);
 
-		if (empty($allCountries)) {
-			$html['all'][] = '<a href="'.$this->getUrl('*/*/*', ['section' => 'general', 'store' => $this->getRequest()->getParam('store'), 'website' => $this->getRequest()->getParam('website')]).'">'.$this->__('All Allowed Countries').'</a>';
+				if (!empty($maxAmounts[$key]['amount'])) {
+					$max = $help->getNumber($maxAmounts[$key]['amount'], ['precision' => 2]);
+					if ($country == $defaultCountry)
+						$html['all'][] = '<u><span title="'.addslashes($this->__('Default Country')).' - '.$name.', max '.$max.' '.$maxAmounts[$key]['currency'].'">'.$country.'</span></u>';
+					else
+						$html['all'][] = '<span title="'.$name.', max '.$max.' '.$maxAmounts[$key]['currency'].'">'.$country.'</span>';
+				}
+				else if ($country == $defaultCountry) {
+					$html['all'][] = '<u><span title="'.addslashes($this->__('Default Country')).' - '.$name.'">'.$country.'</span></u>';
+				}
+				else {
+					$html['all'][] = '<span title="'.$name.'">'.$country.'</span>';
+				}
+			}
+
+			if (empty($allCountries)) {
+				$html['all'][] = '<a href="'.$this->getUrl('*/*/*', ['section' => 'general', 'store' => $this->getRequest()->getParam('store'), 'website' => $this->getRequest()->getParam('website')]).'">'.$this->__('All Allowed Countries').'</a>';
+			}
 		}
 
 		// pays possibles pour les clients
@@ -121,25 +91,32 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 			$html['sel'][] = '<a href="'.$this->getUrl('*/*/*', ['section' => 'general', 'store' => $this->getRequest()->getParam('store'), 'website' => $this->getRequest()->getParam('website')]).'">'.$this->__('None').'</a>';
 		}
 
-		//$html['sel'][] = '<em>('.(empty($this->getRequest()->getParam('store')) ? 'list of countries for default store view: '.$storeId.':'.Mage::app()->getStore($storeId)->getCode() : 'list of countries for current store view').')</em>';
-
 		// final
 		$this->_html = str_replace(': ,', ': ',
 			'<div class="comment shippingmax">'.
-				(array_key_exists($code, self::$svg) ? '<img src="'.$this->getSkinUrl('images/kyrena/shippingmax/'.self::$svg[$code]).'" alt="" class="shippingmax logo" />' : '').
+				(empty($svg = Mage::getStoreConfig('carriers/'.$code.'/img_backend')) ? '' : '<img src="'.$this->getSkinUrl('images/kyrena/shippingmax/'.$svg).'" alt="" class="shippingmax logo" />').
 				((($code == 'shippingmax_storelocator') || (stripos($code, 'shippingmax_') === false)) ? '' : '<p>'.$this->__('Maximum weight: %d kg.', empty($maxWeight) ? 30 : $maxWeight).'</p>').
-				'<p>'.implode(', ', $html['all']).'.</p>'.
-				'<p>'.implode(', ', $html['sel']).'.</p>'.
+				(empty($html['all']) ? '' : '<p>'.implode(', ', $html['all']).'.</p>').
+				(empty($html['sel']) ? '' : '<p>'.implode(', ', $html['sel']).'.</p>').
 			'</div>');
 
+		// drapeau utf8
+		$flag = '';
+		if (preg_match('#^[A-Z]{2} - #', $element->getData('legend')) === 1) {
+			$flag = substr($element->getData('legend'), 0, 2);
+			$flag = mb_convert_encoding('&#'.(127397 + ord($flag[0])).';', 'UTF-8', 'HTML-ENTITIES').
+				mb_convert_encoding('&#'.(127397 + ord($flag[1])).';', 'UTF-8', 'HTML-ENTITIES').
+				' &nbsp;';
+		}
+
 		// marquage
-		$element->setLegend($element->getData('legend').((in_array($defaultCountry, $selCountries) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId)) ? ' *' : ''));
+		$element->setLegend($flag.$element->getData('legend').((in_array($defaultCountry, $selCountries) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId)) ? ' *' : ''));
 
 		return parent::render($element);
 	}
 
 	protected function _getHeaderCommentHtml($element) {
-		return $this->_html;
+		return $this->_html ?? parent::_getHeaderCommentHtml($element);
 	}
 
 	protected function getStoreId() {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated M/08/03/2022
+ * Updated J/30/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -28,7 +28,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		if (!Mage::getStoreConfigFlag('shippingmax_times/general/enabled'))
 			return '';
 
-		$code = (string) substr($element->getHtmlId(), -2); // (yes)
+		$code = substr($element->getHtmlId(), -2);
 		if (empty(self::$_config))
 			self::$_config = $this->getArrayConfig();
 
@@ -40,14 +40,16 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		$this->setElement($element);
 
 		$html = $this->toHtml();
-		$text = $code.' - '.Mage::getSingleton('core/locale')->getCountryTranslation($code).((strpos($html, 'todo"') === false) ? '' : ' *');
+		$text = $code.' - '.Mage::getSingleton('core/locale')->getCountryTranslation($code).(str_contains($html, 'todo"') ? ' *' : '');
 		if (($code != 'FR') && in_array($code, Mage::helper('shippingmax')->getFranceDromCom(true)))
 			$text = 'FR - '.$text;
 
 		if (!empty(self::$_config[$code]['franco']))
 			$text .= ' <span style="float:right; padding-right:40px;">franco</span>';
 
-		$element->setLegend('<span class="iticnf"><span class="iti__flag iti__'.strtolower($code).'">&nbsp;</span></span> '.$text);
+		$element->setLegend(mb_convert_encoding('&#'.(127397 + ord($code[0])).';', 'UTF-8', 'HTML-ENTITIES').
+			mb_convert_encoding('&#'.(127397 + ord($code[1])).';', 'UTF-8', 'HTML-ENTITIES').
+			' &nbsp; '.$text);
 
 		return preg_replace('#<table.*#', '<div class="grid">', $this->_getHeaderHtml($element)).$html.str_replace('</tbody></table>', '</div>', $this->_getFooterHtml($element));
 	}
@@ -126,12 +128,12 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 
 						// 2/ réessaye avec des codes postaux trouvés dans la config du mode de livraison
 						// car certains modes de livraisons sont limités à certains codes postaux
-						$cps = Mage::getStoreConfig('carriers/'.$code.((strpos($code, 'owebiashipping') === false) ? '/owebia_config' : '/config'), $storeId);
+						$cps = Mage::getStoreConfig('carriers/'.$code.(str_contains($code, 'owebiashipping') ? '/config' : '/owebia_config'), $storeId);
 						$cps = Mage::getModel('shippingmax/configparser')->init($cps, true)->extractAllPostcodes($country);
 
 						foreach ($cps as $grp) {
 							foreach ($grp as $cp) {
-								if (strpos($cp, '*') !== false)
+								if (str_contains($cp, '*'))
 									continue;
 								$result = $carrier->checkAvailableShipCountries($request->setDestPostcode($cp));
 								if (is_object($result)) {
@@ -227,7 +229,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 						// car certains modes de livraisons sont limités à certains codes postaux
 						foreach ($cps as $grp) {
 							foreach ($grp as $cp) {
-								if (strpos($cp, '*') !== false)
+								if (str_contains($cp, '*'))
 									continue;
 								$result = $carrier->checkAvailableShipCountries($request->setDestPostcode($cp));
 								if (is_object($result)) {

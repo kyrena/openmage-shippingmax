@@ -24,7 +24,7 @@
 "Allowed countries for this method:","Страны, в которых возможен этот метод:"
 "Allowed countries for customers:","Доступные страны для клиентов:"
 "Maximum weight: %d kg.","Максимальный вес: %d кг."
-"No cron jobs sucessfully finished for the pick up stations file update.","Ни одна задача cron не завершена с успехов для обновления данных пунктов выдачи."
+"No cron jobs successfully finished for the pick up stations file update.","Ни одна задача cron не завершена с успехов для обновления данных пунктов выдачи."
 "Show map","Показать карту"
 "Go to the pick up station","Зайти на пункт выдачи товаров"
 "%s kB","%s Кб"

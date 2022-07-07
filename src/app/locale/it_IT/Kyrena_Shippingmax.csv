@@ -14,7 +14,7 @@
 "Other shipping methods","Gli altri modi di consegna"
 "Cut-off time for same day shipment","Orario limite per la spedizione in giornata"
 "Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).","Ultimo aggiornamento della lista dei punti di ritiro il<em>%s</em> (compito cron n°<a %s>%d</a>)."
-"No cron jobs sucessfully finished for the pick up stations file update.","Nessun compito cron completato con successo per l'aggiornamento della listedei punti di ritiro."
+"No cron jobs successfully finished for the pick up stations file update.","Nessun compito cron completato con successo per l'aggiornamento della listedei punti di ritiro."
 "INCOMPLETE MODULE INSTALLATION","INSTALLAZIONE INCOMPLETA DEL MODULO"
 "Show map","Mostra mappa"
 "Go to the pick up station","Come arrivare al punto di ritiro"

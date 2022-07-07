@@ -19,7 +19,7 @@
 "Allowed countries for customers:","Dostępne kraje:"
 "Maximum weight: %d kg.","Waga maksymalna: %d kg"
 "Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).","Ostatnia aktualizacja aktywnych punktów odbioru <em>% s</em> (zadanie cron nr <a %s>%d</a>)."
-"No cron jobs sucessfully finished for the pick up stations file update.","Żadne zadanie cron nie zostało ukończone pomyślnie w celu zaktualizowania listy punktów odbioru paczek."
+"No cron jobs successfully finished for the pick up stations file update.","Żadne zadanie cron nie zostało ukończone pomyślnie w celu zaktualizowania listy punktów odbioru paczek."
 "INCOMPLETE MODULE INSTALLATION","NIEKOMPLETNA INSTALACJA MODUŁU"
 "There is conflict (<em>%s</em>).","Pojawił się błąd (<em lang=""en"">%s</em>)."
 "Show map","Pokaż mapę"

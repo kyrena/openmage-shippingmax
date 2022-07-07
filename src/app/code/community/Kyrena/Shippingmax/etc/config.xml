@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated L/21/03/2022
+ * Updated M/05/07/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Kyrena_Shippingmax>
-			<version>2.3.0</version>
+			<version>2.4.0</version>
 		</Kyrena_Shippingmax>
 	</modules>
 	<global>
@@ -356,8 +356,9 @@
 			</shippingmax_storepts>
 			<shippingmax_chronorelais>
 				<model>shippingmax/carrier_chronorelais</model>
-				<img_title>Chronopost</img_title>
 				<active>0</active>
+				<img_title>Chronopost</img_title>
+				<img_backend>ic-logo-chronopost.svg</img_backend>
 				<api_url><![CDATA[https://www.chronopost.fr/recherchebt-ws-cxf/PointRelaisServiceWS?wsdl]]></api_url>
 				<tracking><![CDATA[https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -378,8 +379,9 @@
 			</shippingmax_chronorelais>
 			<shippingmax_colisprivpts>
 				<model>shippingmax/carrier_colisprivpts</model>
-				<img_title>Colis Privé</img_title>
 				<active>0</active>
+				<img_title>Colis Privé</img_title>
+				<img_backend>ic-logo-colisprive.svg</img_backend>
 				<api_url><![CDATA[https://www.colisprive.com/cpls/ws/v1/search.svc/relais]]></api_url>
 				<api_username>DEMO</api_username>
 				<tracking><![CDATA[https://www.colisprive.com/moncolis/pages/detailColis.aspx?numColis={{num}}]]></tracking>
@@ -401,8 +403,9 @@
 			</shippingmax_colisprivpts>
 			<shippingmax_mondialrelay>
 				<model>shippingmax/carrier_mondialrelay</model>
-				<img_title>Mondial Relay</img_title>
 				<active>0</active>
+				<img_title>Mondial Relay</img_title>
+				<img_backend>ic-logo-mondialrelay.svg</img_backend>
 				<api_url><![CDATA[https://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL]]></api_url>
 				<tracking><![CDATA[https://www.mondialrelay.fr/suivi-de-colis?numeroExpedition={{num}}&codePostal={{postcode}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -423,8 +426,9 @@
 			</shippingmax_mondialrelay>
 			<shippingmax_dpdfrrelais>
 				<model>shippingmax/carrier_dpdfrrelais</model>
-				<img_title>DPD Relais</img_title>
 				<active>0</active>
+				<img_title>DPD Relais</img_title>
+				<img_backend>ic-logo-dpd.svg</img_backend>
 				<api_url><![CDATA[https://mypudo.pickup-services.com/mypudo/mypudo.asmx?WSDL]]></api_url>
 				<tracking><![CDATA[https://www.dpd.fr/tracex_{num}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -446,8 +450,9 @@
 			</shippingmax_dpdfrrelais>
 			<shippingmax_inpospacit>
 				<model>shippingmax/carrier_inpospacit</model>
-				<img_title>InPost</img_title>
 				<active>0</active>
+				<img_title>InPost</img_title>
+				<img_backend>ic-logo-inpost.svg</img_backend>
 				<api_url><![CDATA[https://api-it.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://inpost.it/trova-il-tuo-pacco?number={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -470,8 +475,9 @@
 			</shippingmax_inpospacit>
 			<shippingmax_inpospacuk>
 				<model>shippingmax/carrier_inpospacuk</model>
-				<img_title>InPost</img_title>
 				<active>0</active>
+				<img_title>InPost</img_title>
+				<img_backend>ic-logo-inpost.svg</img_backend>
 				<api_url><![CDATA[https://api-uk.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://tracking.inpost.co.uk/?number={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -494,8 +500,9 @@
 			</shippingmax_inpospacuk>
 			<shippingmax_inpospaczk>
 				<model>shippingmax/carrier_inpospaczk</model>
-				<img_title>InPost</img_title>
 				<active>0</active>
+				<img_title>InPost</img_title>
+				<img_backend>ic-logo-inpost.svg</img_backend>
 				<api_url><![CDATA[https://api-pl.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://inpost.pl/sledzenie-przesylek?number={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -518,8 +525,9 @@
 			</shippingmax_inpospaczk>
 			<shippingmax_pocztk48Op>
 				<model>shippingmax/carrier_pocztk48Op</model>
-				<img_title>Pocztex</img_title>
 				<active>0</active>
+				<img_title>Pocztex</img_title>
+				<img_backend>ic-logo-pocztex.svg</img_backend>
 				<api_url><![CDATA[https://mapa.ecommerce.poczta-polska.pl/widget/pickuppoints/json/getByLatLng/]]></api_url>
 				<tracking><![CDATA[https://emonitoring.poczta-polska.pl/?numer={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -542,8 +550,9 @@
 			</shippingmax_pocztk48Op>
 			<shippingmax_przesodbpk>
 				<model>shippingmax/carrier_przesodbpk</model>
-				<img_title>Zásilkovna</img_title>
 				<active>0</active>
+				<img_title>Zásilkovna</img_title>
+				<img_backend>ic-logo-packeta.svg</img_backend>
 				<api_url><![CDATA[https://www.zasilkovna.cz/api/v4/__API_KEY__/branch.json]]></api_url>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BE,BG,CZ,DE,DK,EE,ES,FI,FR,GR,HR,HU,LT,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA</allowedcountry>
@@ -564,8 +573,9 @@
 			</shippingmax_przesodbpk>
 			<shippingmax_przesodbpkcash>
 				<model>shippingmax/carrier_przesodbpkcash</model>
-				<img_title>Zásilkovna</img_title>
 				<active>0</active>
+				<img_title>Zásilkovna</img_title>
+				<img_backend>ic-logo-packeta.svg</img_backend>
 				<api_url><![CDATA[https://www.zasilkovna.cz/api/v4/__API_KEY__/branch.json]]></api_url>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BG,CZ,DE,EE,ES,GR,HR,HU,LT,LV,PL,PT,RO,RU,SI,SK,UA</allowedcountry>
@@ -656,8 +666,9 @@
 			</shippingmax_przesodbpkcash>
 			<shippingmax_boxberry>
 				<model>shippingmax/carrier_boxberry</model>
-				<img_title>Boxberry</img_title>
 				<active>0</active>
+				<img_title>Boxberry</img_title>
+				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListPoints]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -678,8 +689,9 @@
 			</shippingmax_boxberry>
 			<shippingmax_boxberrycash>
 				<model>shippingmax/carrier_boxberrycash</model>
-				<img_title>Boxberry</img_title>
 				<active>0</active>
+				<img_title>Boxberry</img_title>
+				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListPoints]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -722,8 +734,9 @@
 			</shippingmax_boxberrycash>
 			<shippingmax_fivepost>
 				<model>shippingmax/carrier_fivepost</model>
-				<img_title>5post</img_title>
 				<active>0</active>
+				<img_title>5post</img_title>
+				<img_backend>ic-logo-fivepost.svg</img_backend>
 				<api_url><![CDATA[https://api-preprod-omni.x5.ru/]]></api_url>
 				<tracking><![CDATA[https://fivepost.ru/tracking?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -745,8 +758,9 @@
 			</shippingmax_fivepost>
 			<shippingmax_fivepostcash>
 				<model>shippingmax/carrier_fivepostcash</model>
-				<img_title>5post</img_title>
 				<active>0</active>
+				<img_title>5post</img_title>
+				<img_backend>ic-logo-fivepost.svg</img_backend>
 				<api_url><![CDATA[https://api-preprod-omni.x5.ru/]]></api_url>
 				<tracking><![CDATA[https://fivepost.ru/tracking?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -774,8 +788,9 @@
 			</shippingmax_fivepostcash>
 			<shippingmax_pickpoint>
 				<model>shippingmax/carrier_pickpoint</model>
-				<img_title>PickPoint</img_title>
 				<active>0</active>
+				<img_title>PickPoint</img_title>
+				<img_backend>ic-logo-pickpoint.svg</img_backend>
 				<api_url><![CDATA[https://e-solution.pickpoint.ru/apitest/]]></api_url>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,RU</allowedcountry>
@@ -796,8 +811,9 @@
 			</shippingmax_pickpoint>
 			<shippingmax_pickpointcash>
 				<model>shippingmax/carrier_pickpointcash</model>
-				<img_title>PickPoint</img_title>
 				<active>0</active>
+				<img_title>PickPoint</img_title>
+				<img_backend>ic-logo-pickpoint.svg</img_backend>
 				<api_url><![CDATA[https://e-solution.pickpoint.ru/apitest/]]></api_url>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>RU</allowedcountry>
@@ -824,8 +840,9 @@
 			</shippingmax_pickpointcash>
 			<shippingmax_shiptor>
 				<model>shippingmax/carrier_shiptor</model>
-				<img_title>Shiptor</img_title>
 				<active>0</active>
+				<img_title>Shiptor</img_title>
+				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<api_url><![CDATA[https://api.shiptor.ru/public/v1]]></api_url>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -848,8 +865,9 @@
 			</shippingmax_shiptor>
 			<shippingmax_shiptorcash>
 				<model>shippingmax/carrier_shiptorcash</model>
-				<img_title>Shiptor</img_title>
 				<active>0</active>
+				<img_title>Shiptor</img_title>
+				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<api_url><![CDATA[https://api.shiptor.ru/public/v1]]></api_url>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -888,6 +906,7 @@
 			<shippingmax_colisprivdom>
 				<model>shippingmax/carrier_colisprivdom</model>
 				<active>0</active>
+				<img_backend>ic-logo-colisprive.svg</img_backend>
 				<tracking><![CDATA[https://www.colisprive.com/moncolis/pages/detailColis.aspx?numColis={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>FR</allowedcountry>
@@ -908,6 +927,7 @@
 			<shippingmax_dhldestand>
 				<model>shippingmax/carrier_dhldestand</model>
 				<active>0</active>
+				<img_backend>ic-logo-dhl.svg</img_backend>
 				<tracking><![CDATA[https://gls-group.eu/PL/pl/sledzenie-paczek?match={{num}}]]></tracking>
 				<owebia_config><![CDATA[{
     "std": {
@@ -925,6 +945,7 @@
 			<shippingmax_glsdeeurob>
 				<model>shippingmax/carrier_glsdeeurob</model>
 				<active>0</active>
+				<img_backend>ic-logo-gls.svg</img_backend>
 				<tracking><![CDATA[https://gls-group.eu/DE/de/paketverfolgung?match={{num}}]]></tracking>
 				<owebia_config><![CDATA[{
     "std": {
@@ -942,6 +963,7 @@
 			<shippingmax_glsplstand>
 				<model>shippingmax/carrier_glsplstand</model>
 				<active>0</active>
+				<img_backend>ic-logo-gls.svg</img_backend>
 				<tracking><![CDATA[https://gls-group.eu/PL/pl/sledzenie-paczek?match={{num}}]]></tracking>
 				<owebia_config><![CDATA[{
     "std": {
@@ -959,6 +981,7 @@
 			<shippingmax_glsplstandcash>
 				<model>shippingmax/carrier_glsplstandcash</model>
 				<active>0</active>
+				<img_backend>ic-logo-gls.svg</img_backend>
 				<tracking><![CDATA[https://gls-group.eu/PL/pl/sledzenie-paczek?match={{num}}]]></tracking>
 				<owebia_config><![CDATA[{
     "std": {
@@ -976,6 +999,7 @@
 			<shippingmax_pocztk48st>
 				<model>shippingmax/carrier_pocztk48st</model>
 				<active>0</active>
+				<img_backend>ic-logo-pocztex.svg</img_backend>
 				<tracking><![CDATA[https://emonitoring.poczta-polska.pl/?numer={{num}}]]></tracking>
 				<owebia_config><![CDATA[{
     "std": {
@@ -993,6 +1017,7 @@
 			<shippingmax_pocztpecom>
 				<model>shippingmax/carrier_pocztpecom</model>
 				<active>0</active>
+				<img_backend>ic-logo-pocztex.svg</img_backend>
 				<tracking><![CDATA[https://emonitoring.poczta-polska.pl/?numer={{num}}]]></tracking>
 				<owebia_config><![CDATA[{
     "std": {
@@ -1010,6 +1035,7 @@
 			<shippingmax_przesstand>
 				<model>shippingmax/carrier_przesstand</model>
 				<active>0</active>
+				<img_backend>ic-logo-packeta.svg</img_backend>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AE,AT,BE,BG,CH,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,HU,IE,IT,LT,LU,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA,US</allowedcountry>
 				<specificcountry>AE,AT,BE,BG,CH,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,HU,IE,IT,LT,LU,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA,US</specificcountry>
@@ -1029,6 +1055,7 @@
 			<shippingmax_przesstandcash>
 				<model>shippingmax/carrier_przesstandcash</model>
 				<active>0</active>
+				<img_backend>ic-logo-packeta.svg</img_backend>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AT,BG,CZ,DE,EE,ES,GR,HR,HU,IT,LT,LV,PL,PT,RO,RU,SI,SK,UA</allowedcountry>
 				<specificcountry>AT,BG,CZ,DE,EE,ES,GR,HR,HU,IT,LT,LV,PL,PT,RO,RU,SI,SK,UA</specificcountry>
@@ -1126,6 +1153,7 @@
 			<shippingmax_boxberryhome>
 				<model>shippingmax/carrier_boxberryhome</model>
 				<active>0</active>
+				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListZips]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -1147,6 +1175,7 @@
 			<shippingmax_boxberryhomecash>
 				<model>shippingmax/carrier_boxberryhomecash</model>
 				<active>0</active>
+				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListZips]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
@@ -1190,6 +1219,7 @@
 			<shippingmax_shiptorhome>
 				<model>shippingmax/carrier_shiptorhome</model>
 				<active>0</active>
+				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,KZ,RU</allowedcountry>
@@ -1210,6 +1240,7 @@
 			<shippingmax_shiptorhomecash>
 				<model>shippingmax/carrier_shiptorhomecash</model>
 				<active>0</active>
+				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
 				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,KZ,RU</allowedcountry>

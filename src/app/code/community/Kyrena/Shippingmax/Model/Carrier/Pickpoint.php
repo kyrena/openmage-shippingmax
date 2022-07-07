@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated S/19/02/2022
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -122,7 +122,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 
 	protected function createDesc($data) {
 
-		$data = (array) explode(',', $data); // (yes)
+		$data = explode(',', $data);
 		if (count($data) != 7)
 			return '';
 
@@ -151,7 +151,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 			}
 			// ouvert non stop
 			// 09:00-19:00
-			else if (strpos($str, '/') === false) {
+			else if (!str_contains($str, '/')) {
 				$html[] = $day.'#'.
 					substr($str, 0, 2).'#'.substr($str, 3, 2).'#'.
 					substr($str, 6, 2).'#'.substr($str, 9, 2);

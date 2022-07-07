@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated V/20/05/2022
+ * Updated M/05/07/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -348,6 +348,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -502,6 +512,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -656,6 +676,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -819,6 +849,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_colisprivpts>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -981,6 +1021,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_colisprivpts>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -1118,6 +1168,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -1255,6 +1315,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -1392,6 +1462,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -1537,6 +1617,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -1674,6 +1764,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -1810,6 +1910,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -1974,6 +2084,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_shiptor>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -2137,6 +2257,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_shiptorcash>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -2310,6 +2440,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_shiptor>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -2483,6 +2623,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_shiptorcash>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -2682,6 +2832,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_shiptor>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -2881,6 +3041,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_shiptorcash>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -3053,6 +3223,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_pickpoint>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -3225,6 +3405,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</mix_pickpointcash>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -3380,6 +3570,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -3516,6 +3716,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -3651,6 +3861,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -3787,6 +4007,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -3922,6 +4152,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4057,6 +4297,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4192,6 +4442,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4305,6 +4565,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4417,6 +4687,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4545,6 +4825,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4672,6 +4962,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4784,6 +5084,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4896,6 +5206,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>96</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4950,6 +5270,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -4995,6 +5325,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5040,6 +5380,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5082,6 +5432,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5115,6 +5475,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5148,6 +5518,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5181,6 +5561,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5214,6 +5604,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5247,6 +5647,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5280,6 +5690,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>
@@ -5313,6 +5733,16 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 						</extra>
+						<show_for_customer_group translate="label">
+							<label>Offer this shipping method only for the following customer groups</label>
+							<frontend_type>multiselect</frontend_type>
+							<can_be_empty>1</can_be_empty>
+							<sort_order>9996</sort_order>
+							<source_model>adminhtml/system_config_source_customer_group_multiselect</source_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</show_for_customer_group>
 						<hide_when translate="label">
 							<label>Do not offer this shipping method if one of the following shipping methods is available</label>
 							<frontend_type>multiselect</frontend_type>

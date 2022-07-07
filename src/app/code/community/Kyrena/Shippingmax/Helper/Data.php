@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/28/02/2022
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -327,7 +327,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 
 		// filtre sur la config avancée d'owebia
-		$config = Mage::getStoreConfig('carriers/'.$code.((strpos($code, 'owebiashipping') === false) ? '/owebia_config' : '/config'), $storeId);
+		$config = Mage::getStoreConfig('carriers/'.$code.(str_contains($code, 'owebiashipping') ? '/config' : '/owebia_config'), $storeId);
 		if (mb_stripos($config, '"shipto"') !== false) {
 			$config = Mage::getSingleton('shippingmax/addressfilter')->substitute($config);
 			return Mage::getModel('shippingmax/configparser')->init($config, true)->filterCountries($countries);
@@ -441,15 +441,15 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 		if (substr_count($data, '#') > 5) {
 
-			$lines = (array) explode("\n", $data); // (yes)
+			$lines = explode("\n", $data);
 			$since = '';
 			$desc  = [];
 
 			foreach ($lines as $idx => $line) {
 
-				if ((strpos($line, '#') !== false) && is_numeric($line[0])) {
+				if (str_contains($line, '#') && is_numeric($line[0])) {
 
-					$line = (array) explode('#', $line); // (yes)
+					$line = explode('#', $line);
 					$day  = isset($line[0][0]) ? (int) $line[0][0] : 0;
 
 					if ($day > 0) {

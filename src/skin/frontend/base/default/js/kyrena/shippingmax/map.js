@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated L/21/03/2022
+ * Updated J/09/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -525,3 +525,8 @@ var shippingmax = new (function () {
 
 if (typeof self.addEventListener == 'function')
 	self.addEventListener('load', shippingmax.init.bind(shippingmax));
+
+// instarelou
+function _AutofillCallbackHandler() { }
+function _pcmBridgeCallbackHandler() { }
+var PaymentAutofillConfig = {};

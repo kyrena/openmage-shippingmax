@@ -22,7 +22,7 @@
 "Allowed countries for customers:","Țări permise pentru clienți:"
 "Maximum weight: %d kg.","Greutate maximă: %d kg"
 "Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).","Ultima actualizare a fișierelor cu punctele de colectare pe <em>%s</em> (sarcină cron nr.<a %s>%d</a>)."
-"No cron jobs sucessfully finished for the pick up stations file update.","Nicio sarcină cron terminată cu succes pentru actualizarea fișierelor cu puncte de colectare."
+"No cron jobs successfully finished for the pick up stations file update.","Nicio sarcină cron terminată cu succes pentru actualizarea fișierelor cu puncte de colectare."
 "INCOMPLETE MODULE INSTALLATION","INSTALARE INCOMPLETĂ"
 "There is conflict (<em>%s</em>).","Există un conflict (<em>%s</em>)."
 "Show map","Afișează harta"

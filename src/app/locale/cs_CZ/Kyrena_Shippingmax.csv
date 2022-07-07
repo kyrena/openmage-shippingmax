@@ -23,7 +23,7 @@
 "Allowed countries for customers:","Povolené země pro zákazníky:"
 "Maximum weight: %d kg.","Maximální hmotnost: %d kg"
 "Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).","Poslední aktualizace souboru s výdejními místy <em>%s</em> (cron job #<a %s>%d</a>)."
-"No cron jobs sucessfully finished for the pick up stations file update.","Pro aktualizaci souborů zásilkoven nebyly úspěšně dokončeny žádné úlohy cron."
+"No cron jobs successfully finished for the pick up stations file update.","Pro aktualizaci souborů zásilkoven nebyly úspěšně dokončeny žádné úlohy cron."
 "Show map","Zobrazit mapu"
 "Go to the pick up station","Přejít na zásilkovnu"
 "%d days","%d dní"

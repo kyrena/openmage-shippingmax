@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated S/19/02/2022
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -32,7 +32,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 		if (stripos($url, 'prepaid') !== false)
 			$url = preg_replace('#prepaid=\d?#i', 'prepaid=1', $url);
 		else
-			$url = (strpos($url, '?') === false) ? $url.'?prepaid=1' : $url.'&prepaid=1';
+			$url = str_contains($url, '?') ? $url.'&prepaid=1': $url.'?prepaid=1';
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -56,7 +56,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 					continue;
 				}
 
-				$gps  = (array) explode(',', $result['GPS']); // (yes)
+				$gps = explode(',', $result['GPS']);
 				if (count($gps) != 2)
 					continue;
 
@@ -117,10 +117,10 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 		foreach ($data as $stringParts) {
 			$explodedStringParts = explode(',', $stringParts);
 			foreach ($explodedStringParts as $explodedStringPart) {
-				$explodedSchedule = (array) explode(':', $explodedStringPart); // (yes)
+				$explodedSchedule = explode(':', $explodedStringPart);
 				$schedule[trim($explodedSchedule[0])] = $explodedSchedule[1];
 				foreach ($schedule as $period => $hours) {
-					$interval = (array) explode('-', $period); // (yes)
+					$interval = explode('-', $period);
 					$from = $interval[0];
 					$startPosition = array_search($from, $abbrs, true);
 					if (!is_numeric($startPosition)) {
@@ -162,7 +162,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 			}
 			// ouvert non stop
 			// 09.00-19.00
-			else if (strpos($str, '/') === false) {
+			else if (!str_contains($str, '/')) {
 				$html[] = $day.'#'.
 					substr($str, 0, 2).'#'.substr($str, 3, 2).'#'.
 					substr($str, 6, 2).'#'.substr($str, 9, 2);

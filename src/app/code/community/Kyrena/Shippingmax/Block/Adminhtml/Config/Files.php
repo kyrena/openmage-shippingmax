@@ -43,7 +43,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Blo
 			$summary = [$this->helper('core')->isModuleEnabled('Luigifab_Cronlog') ? $txt : strip_tags($txt)];
 		}
 		else {
-			$summary = [$this->__('No cron jobs sucessfully finished for the pick up stations file update.')];
+			$summary = [$this->__('No cron jobs successfully finished for the pick up stations file update.')];
 		}
 
 		// fichiers

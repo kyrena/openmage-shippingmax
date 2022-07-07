@@ -33,7 +33,7 @@ Shipping methods are available for a selection of countries, depending on order 
 
 You will love debugging URLs for pick up shipping methods. You opened a link and you see the map while the shipping method is disabled but have a title? It's not a bug, it's a feature.
 
-The lists of pick up points are retrieved regularly from internet (via a cron job) and saved in `var/shippingmax_*.dat`. When cron jobs are disabled, lists are retrieved on demand (when a customer open the map, if the cache file doesn't exist or if the cache file has expired).
+The lists of pick up points are retrieved regularly from internet (via a cron job) and saved in `var/shippingmax/*.dat`. When cron jobs are disabled, lists are retrieved on demand (when a customer open the map, if the cache file doesn't exist or if the cache file has expired).
 
 The country of the customer shipping address is used on the map, and can't be changed on the map.
 
@@ -58,6 +58,8 @@ Demo links may not work, don't panic, it's not a bug.
 | **Shiptor** | [<img src="src/skin/frontend/base/default/images/kyrena/shippingmax/ic-logo-shiptor.svg?raw=true" alt="" width="150" height="50"/>](https://shiptor.ru/) | don't work with this country, it's an enemy of your freedom<br>[online demo](https://cellu.blue/3RhP6s): 454000, Челябинск, RU<br>api: free |
 | **Store delivery** | | [online demo](https://cellu.blue/OmRX8p): 07200, Aubenas, FR<br>source of data: a TSV file |
 | **Store locator** | | [online demo](https://cellu.blue/h9dhKJ)<br>source of data: a TSV file |
+
+Do you want more? Contact us, perhaps we can work together to add new methods!
 
 ## Customization
 
@@ -93,7 +95,7 @@ To display delivery times, you must edit your template with:
 
 ## Copyright and Credits
 
-- Current version: 2.3.0 (06/06/2022)
+- Current version: 2.4.0 (07/07/2022)
 - Compatibility: OpenMage 19.x / 20.x / 21.x, PHP 7.2 / 7.3 / 7.4 / 8.0 / 8.1
 - Client compatibility: Firefox 36+, Chrome 32+, Opera 19+, Edge 16+, Safari 9+
 - Translations: English (en), French (fr-FR/fr-CA), German (de), Italian (it), Portuguese (pt-PT/pt-BR), Spanish (es) / Chinese (zh), Czech (cs), Dutch (nl), Greek (el), Hungarian (hu), Japanese (ja), Polish (pl), Romanian (ro), Russian (ru), Slovak (sk), Turkish (tr), Ukrainian (uk)
@@ -105,27 +107,16 @@ If you like, take some of your time to improve the translations, go to https://b
 
 Warning: there are two packages, one that contains a lite and modified version (without jquery/editor/phpparser/doc) of owebia/shipping ([kyrena/openmage-shippingmax](https://github.com/kyrena/openmage-shippingmax)), and another one without owebia/shipping ([kyrena/openmage-shippingmax-alone](https://github.com/kyrena/openmage-shippingmax-alone)).
 
-#### For kyrena/openmage-shippingmax (you are here)
+#### For kyrena/openmage-shippingmax)
 
 With composer:
 - `composer remove owebia/magento1-module-advanced-shipping`
+- search and remove all owebia/shipping files and directories
 - `composer require kyrena/openmage-shippingmax [--ignore-platform-reqs]`
 - clear cache
 
 Without composer:
 - search and remove all owebia/shipping files and directories
 - download latest [release](https://github.com/kyrena/openmage-shippingmax/releases) and extract _src/*_ directories
-- here _adamlc/address-format_, _giggsey/libphonenumber-for-php_ and _azuyalabs/yasumi_ are not required and not used, so I suggest you remove `<customer>...</customer>` block in our _system.xml_
-- clear cache
-
-#### For kyrena/openmage-shippingmax-alone
-
-With composer:
-- `composer require kyrena/openmage-shippingmax-alone [--ignore-platform-reqs]`
-- clear cache
-
-Without composer:
-- download latest [release of owebia/shipping (2.6.0+)](https://github.com/owebia/magento1-module-advanced-shipping) and extract _app_, _js_ and _lib_ directories
-- download latest [release](https://github.com/kyrena/openmage-shippingmax-alone/releases) and extract _src/*_ directories
 - here _adamlc/address-format_, _giggsey/libphonenumber-for-php_ and _azuyalabs/yasumi_ are not required and not used, so I suggest you remove `<customer>...</customer>` block in our _system.xml_
 - clear cache

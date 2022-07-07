@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/06/10/2020
- * Updated J/05/08/2021
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -27,7 +27,7 @@ class Kyrena_Shippingmax_Model_Configparser extends Owebia_Shipping2_Model_Confi
 
 		foreach ($rows as $code => $row) {
 			$shipto = $this->getRowProperty($row, 'shipto');
-			if (strpos($shipto, $country.'(') !== false) {
+			if (str_contains($shipto, $country.'(')) {
 				$search = [];
 				preg_match('#'.$country.'\(([^)]+)\)#', $shipto, $search);
 				if (!empty($search[1]))

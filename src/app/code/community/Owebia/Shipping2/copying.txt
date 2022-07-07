@@ -1,5 +1,6 @@
 
 Copyright © 2008-2020 Owebia. All rights reserved.
+https://github.com/owebia/magento1-module-advanced-shipping
 
 Each Owebia source file included in this directory is licensed under MIT license.
 

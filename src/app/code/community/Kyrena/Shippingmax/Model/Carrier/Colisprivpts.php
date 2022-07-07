@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated L/04/10/2021
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -187,7 +187,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 
 		foreach ($days as $day => $str) {
 
-			$str = (array) explode(';', $str); // (yes)
+			$str = explode(';', $str);
 
 			// fermé
 			if (empty($values[$str[1]]) || empty($values[$str[2]])) {

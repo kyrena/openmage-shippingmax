@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated S/19/02/2022
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -115,7 +115,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 		}
 
 		if (empty($days) && !empty($data['work_schedule'])) {
-			$data = (array) explode(';', $data['work_schedule']); // (yes)
+			$data = explode(';', $data['work_schedule']);
 			if (count($data) == 7) {
 				$days = [
 					'1 Monday'    => $data[0],
@@ -137,14 +137,14 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 		foreach ($days as $day => $str) {
 
 			if (is_string($str)) {
-				$str = (array) explode(' ', $str); // (yes)
+				$str = explode(' ', $str);
 				// fermé toute la journée
 				if (($str[1] == '-') || (strlen($str[1]) < 11)) {
 					$html[] = $day.'#closed';
 				}
 				// ouvert non stop
 				// 09:00-19:00
-				else if (strpos($str[1], '-') !== false) {
+				else if (str_contains($str[1], '-')) {
 					$html[] = $day.'#'.
 						substr($str[1], 0, 2).'#'.substr($str[1], 3, 2).'#'.
 						substr($str[1], 6, 2).'#'.substr($str[1], 9, 2);

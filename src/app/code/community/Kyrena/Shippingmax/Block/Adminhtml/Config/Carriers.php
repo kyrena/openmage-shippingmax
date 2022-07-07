@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/31/03/2020
- * Updated J/02/12/2021
+ * Updated M/28/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -38,7 +38,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Carriers extends Mage_Adminhtml_
 				'id'          => str_replace('dynamic_fields', 'remove_'.$code, $hid),
 				'code'        => $code,
 				'value'       => Mage::getStoreConfig('carriers/shippingmax/remove_'.$code),
-				'scope_label' => $scope
+				'scope_label' => $scope,
 			];
 		}
 

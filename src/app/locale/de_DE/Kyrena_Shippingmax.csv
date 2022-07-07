@@ -10,7 +10,7 @@
 "Home delivery","Hauslieferung"
 "Other shipping methods","Andere Versandmethoden"
 "Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).","Letzte Aktualisierung der Verteilerpunkt-Dateien am <em>%s</em> (Kron-Task Nummer <a %s>%d</a>)."
-"No cron jobs sucessfully finished for the pick up stations file update.","Keine Cron-Aufgaben zum Aktualisieren von Verteilerpunkt-Dateien erfolgreich abgeschlossen."
+"No cron jobs successfully finished for the pick up stations file update.","Keine Cron-Aufgaben zum Aktualisieren von Verteilerpunkt-Dateien erfolgreich abgeschlossen."
 "Show map","Karte anzeigen"
 "Go to the pick up station","Zum Verteilerpunkt gehen"
 "%d days","%d Tage"

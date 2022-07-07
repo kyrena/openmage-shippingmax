@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/10/03/2022
+ * Updated V/24/06/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -27,7 +27,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 	protected $_postcodesOnly = false;
 
 	// openmage
-	public function getTrackingInfo($tracking, $order = null) {
+	public function getTrackingInfo($trackingNumber, $order = null) {
 
 		// Kyrena_Shippingmax_Model_Rewrite_Track
 		$storeId  = is_object($order) ? $order->getStoreId() : null;
@@ -36,9 +36,9 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		$status = Mage::getModel('shipping/tracking_result_status');
 		$status->setCarrier($this->_code);
 		$status->setCarrierTitle($this->getConfigData('title'));
-		$status->setTracking($tracking);
+		$status->setTracking($trackingNumber);
 		$status->setData('popup', true);
-		$status->setData('url', str_replace(['{{num}}', '{{postcode}}'], [$tracking, $postcode],
+		$status->setData('url', str_replace(['{{num}}', '{{postcode}}'], [$trackingNumber, $postcode],
 			Mage::getStoreConfig('carriers/'.$this->_code.'/tracking', $storeId)));
 
 		return $status;
@@ -194,7 +194,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 			foreach (array_keys($mixmaps[$this->_code]) as $mixmap) {
 
-				$split = (array) explode('_', $mixmap); // (yes)
+				$split = explode('_', $mixmap);
 				if ($this->getConfigFlag('mix_'.$split[1])) {
 
 					try {
