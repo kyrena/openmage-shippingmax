@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated J/09/06/2022
+ * Updated V/22/07/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -66,70 +66,70 @@ var shippingmax = new (function () {
 				attribution: osmcopy,
 				name: 'Open Street Map',
 				minZoom: 4,
-				maxZoom: 18,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			osmfr: L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map France',
 				minZoom: 4,
-				maxZoom: 18,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			osmde: L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map Deutschland',
 				minZoom: 4,
-				maxZoom: 18,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			osmbre: L.tileLayer('https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map Brezhoneg',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			osmoci: L.tileLayer('https://tile.openstreetmap.bzh/oc/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map Occitan',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			osmeus: L.tileLayer('https://tile.openstreetmap.bzh/eu/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map Euskara',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			osmbot: L.tileLayer('https://{s}.tile.openstreetmap.fr/openriverboatmap/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Street Map Boat',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			ocm: L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
 				attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style" target="_blank">CyclOSM<\/a>',
 				name: 'Open Cyclo Map',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			otm: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 				attribution: osmcopy,
 				name: 'Open Topo Map',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			chm: L.tileLayer('https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
 				attribution: '<a href="https://www.swisstopo.admin.ch/" target="_blank">Swisstopo<\/a>',
 				name: 'Swiss Topo Map',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			ggm: L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -137,7 +137,7 @@ var shippingmax = new (function () {
 				attribution: ggmcopy,
 				name: 'Google Map',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			}),
 			ggmst: L.tileLayer('httpS://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
@@ -145,7 +145,7 @@ var shippingmax = new (function () {
 				attribution: ggmcopy,
 				name: 'Google Map Sat',
 				minZoom: 4,
-				maxZoom: 17,
+				maxZoom: 19,
 				detectRetina: true
 			})
 		};

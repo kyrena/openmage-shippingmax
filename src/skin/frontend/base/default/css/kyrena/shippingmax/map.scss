@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated V/20/05/2022
+ * Updated V/22/07/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Mickaël Vang <mickael~cellublue~com>
@@ -17,9 +17,7 @@
  * GNU General Public License (GPL) for more details.
  */
 
-/*
- * Local common variables
- */
+// Local common variables
 
 $font-text: sans-serif;
 $color-text-default: #0a2346;
@@ -31,9 +29,7 @@ $color-blue-main: #6480ff;
 $color-blue-transparent: rgba(48, 127, 226, 0.7);
 $color-blue-shadow: rgba(200, 216, 237, 0.6);
 
-/*
- * Responsive configuration
- */
+// Responsive configuration
 
 $large-breakpoint: 1440px;
 $medium-breakpoint: 992px;
@@ -51,9 +47,7 @@ $small-down: "only screen and (max-width: #{$medium-breakpoint - 1px})";
 $extra-small-only: "only screen and (max-width: #{$small-breakpoint - 1px})";
 $xs-small-only: "only screen and (max-width: #{$xs-breakpoint})";
 
-/*
- * Placeholders
- */
+// Placeholders
 
 @mixin placeholder($color: #767676) {
 	&:-moz-placeholder {
@@ -74,9 +68,7 @@ $xs-small-only: "only screen and (max-width: #{$xs-breakpoint})";
 	} // Safari and Chrome
 }
 
-/*
- * Style for map
- */
+// Style for map
 
 * {
 	padding: 0;
@@ -605,18 +597,20 @@ button {
 		padding-bottom: 10px;
 	}
 
-	&:hover {
-		.item-container {
-			box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
-				0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.075);
+	@media (hover: hover) and (pointer: fine) {
+		&:hover {
+			.item-container {
+				box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.04),
+					0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.075);
 
-			.name {
-				color: $color-blue-main;
-			}
+				.name {
+					color: $color-blue-main;
+				}
 
-			button {
-				background-color: $color-blue-main;
-				color: $color-white;
+				button {
+					background-color: $color-blue-main;
+					color: $color-white;
+				}
 			}
 		}
 	}
@@ -1057,8 +1051,10 @@ div.leaflet-container {
 		cursor: default;
 	}
 
-	&.multi li:hover .country-item {
-		background-color: #eaedfd !important;
+	@media (hover: hover) and (pointer: fine) {
+		&.multi li:hover .country-item {
+			background-color: #eaedfd !important;
+		}
 	}
 
 	& > li {
@@ -1157,10 +1153,8 @@ div.leaflet-container {
 	}
 }
 
-/**
- * pseudo fullscreen button
- * sur une idée de https://github.com/Leaflet/Leaflet.fullscreen
- */
+// pseudo fullscreen button
+// sur une idée de https://github.com/Leaflet/Leaflet.fullscreen
 .leaflet-bar .leaflet-control-fullscreen-button {
 	background:#fff url("../../../images/kyrena/shippingmax/fullscreen.svg") no-repeat 2px 2px;
 	background-size: 26px 52px;

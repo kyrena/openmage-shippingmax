@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/07/12/2021
+ * Updated J/28/07/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -31,7 +31,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 
 		try {
 			// https://www.mondialrelay.fr/solutionspro/documentation-technique/cahier-des-charges-informatiques/
-			// https://www.mondialrelay.fr/media/108937/Solution-Web-Service-V5.6.pdf
+			// https://www.mondialrelay.fr/media/123560/solution-web-service-v58.pdf
 			$client = new SoapClient($this->getConfigData('api_url'), ['trace' => 1]);
 			$params = [
 				'Enseigne'  => $this->getConfigData('api_username'),
@@ -39,7 +39,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 				'CP'        => trim(is_numeric($address->getData('city')) ? $address->getData('city') : $address->getData('postcode')),
 				'Latitude'  => number_format(round($address->getData('lat'), 11), 6),
 				'Longitude' => number_format(round($address->getData('lng'), 11), 6),
-				'RayonRecherche' => $this->getConfigData('dst_search')
+				'RayonRecherche' => $this->getConfigData('dst_search'),
 			];
 
 			// géolocalisation navigateur ou coordonnées nominatim
@@ -87,7 +87,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 					'city'        => $result->Ville,
 					'country_id'  => $result->Pays,
 					'description' => $this->createDesc($result),
-					'dst'         => round($result->Distance / 1000, 1)
+					'dst'         => round($result->Distance / 1000, 1),
 				];
 			}
 		}

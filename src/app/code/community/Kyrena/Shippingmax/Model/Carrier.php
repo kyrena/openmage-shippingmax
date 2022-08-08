@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/24/06/2022
+ * Updated L/08/08/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -235,7 +235,8 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		// filtre les points relais
 		if (!empty($items) && !$this->_postcodesOnly) {
 			foreach ($items as $key => &$item) {
-				if (empty($item['id']) || !$this->checkItem($address, $item))
+				// conserve uniquement les relais du même pays que l'adresse
+				if (empty($item['id']) || (($this->_code != 'shippingmax_storelocator') && ($item['country_id'] != $address->getData('country_id'))) || !$this->checkItem($address, $item))
 					unset($items[$key]);
 			}
 			unset($item);

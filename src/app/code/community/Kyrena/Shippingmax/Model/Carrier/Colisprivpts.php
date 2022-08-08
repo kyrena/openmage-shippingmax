@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated V/24/06/2022
+ * Updated J/28/07/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -89,7 +89,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 							'postcode'    => $data['CODE_POSTAL'],
 							'city'        => $data['VILLE'],
 							'country_id'  => $data['PAYS'],
-							'description' => $this->createDescCurl($data)
+							'description' => $this->createDescCurl($data),
 						];
 					}
 				}
