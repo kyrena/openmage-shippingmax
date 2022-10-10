@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated M/05/07/2022
+ * Updated J/29/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -60,13 +60,13 @@ textarea.shippingmax { margin-left:-206px; width:480px !important; }
 
 .grid table.shippingmax { margin:5px; width:calc(100% - 10px); }
 .grid table.shippingmax td { vertical-align:middle; line-height:15px; }
-.grid table.shippingmax tr.even.todo td { background:lime !important; }
-.grid table.shippingmax tr.odd.todo td  { background:yellow !important; }
+.grid table.shippingmax tr.even.todo td { background:rgba(0, 255, 135, 0.5) !important; }
+.grid table.shippingmax tr.odd.todo td  { background:rgba(255, 255, 0, 0.5) !important; }
 .grid table.shippingmax tr.even:hover td { background:#DDD !important; }
 .grid table.shippingmax tr.odd:hover td  { background:#DDD !important; }
 
-.grid table.shippingmax input, .grid table.shippingmax select { width:45px; height:2em; text-align:center; border:0; background:transparent; }
-.grid table.shippingmax input:hover, .grid table.shippingmax select:hover { background:white !important; }
+.grid table.shippingmax input, .grid table.shippingmax select { width:45px; height:2em; text-align:center; border:0; background:white !important; }
+.grid table.shippingmax input:hover, .grid table.shippingmax select:hover { outline:1px solid #AAA; background:white !important; }
 
 /* &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& order new &&& */
 body.adminhtml-sales-order-create-index .shipment-methods dd + dt { margin-top:8px; padding-top:8px; border-top:1px solid #CCC; }

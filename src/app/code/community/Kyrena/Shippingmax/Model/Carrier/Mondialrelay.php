@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/28/07/2022
+ * Updated D/11/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -99,9 +99,10 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 
 		// France (avec la Corse et Monaco - sans les DROM/COM)
 		// 05/2019 https://www.mondialrelay.fr/faq/envoyer-un-colis/faites-vous-des-livraisons-dans-les-dom-tom-/
-		if (in_array($request->getData('dest_country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
+		$postcode = $request->getData('dest_postcode');
+		if (!empty($postcode) && in_array($request->getData('dest_country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
 
-			$postcode = trim($request->getData('dest_postcode'));
+			$postcode = trim($postcode);
 			// FR France
 			// FR 20XXX Corse
 			// MC 980XX Monaco
@@ -127,9 +128,9 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 		}
 		// Espagne (avec les Îles Baléares - sans les Îles Canaries, Ceuta et Melilla)
 		// 05/2019 https://www.puntopack.es/preguntas-frecuentes/enviar-un-paquete/entregas-en-las-islas-o-enclaves/
-		else if ($request->getData('dest_country_id') == 'ES') {
+		else if (!empty($postcode) && ($request->getData('dest_country_id') == 'ES')) {
 
-			$postcode = trim($request->getData('dest_postcode'));
+			$postcode = trim($postcode);
 			// ES 07XXX Baleares (AUTORISÉ)
 			// ES 35XXX Las Palmas (Canaries)
 			// ES 38XXX Santa Cruz de Tenerife (Canaries)
@@ -152,21 +153,22 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 
 		$html = [];
 		$days = [
-			'1 Monday'    => $data->Horaires_Lundi->string,
-			'2 Tuesday'   => $data->Horaires_Mardi->string,
-			'3 Wednesday' => $data->Horaires_Mercredi->string,
-			'4 Thursday'  => $data->Horaires_Jeudi->string,
-			'5 Friday'    => $data->Horaires_Vendredi->string,
-			'6 Saturday'  => $data->Horaires_Samedi->string,
-			'7 Sunday'    => $data->Horaires_Dimanche->string
+			1 => $data->Horaires_Lundi->string,
+			2 => $data->Horaires_Mardi->string,
+			3 => $data->Horaires_Mercredi->string,
+			4 => $data->Horaires_Jeudi->string,
+			5 => $data->Horaires_Vendredi->string,
+			6 => $data->Horaires_Samedi->string,
+			7 => $data->Horaires_Dimanche->string,
 		];
 
-		foreach ($days as $day => $str) {
+		// Array ( [0] => 0000 [1] => 2359 )
+		// Array ( [0] => 0001 [1] => 2359 [2] => 0000 [3] => 0000 )
+		$always = array_unique(array_values(array_map('implode', $days)));
+		if ((count($always) == 1) && in_array($always[0], ['00002359', '00012359', '0000235900000000', '0001235900000000']))
+			return '24/7';
 
-			// if (($str[0] == '0000') && ($str[2] == '0000'))
-			// else if (($str[0] == '0000') && ($str[2] != '0000'))
-			// else if (($str[0] != '0000') && ($str[2] == '0000'))
-			// else
+		foreach ($days as $day => $str) {
 
 			if ($str[0] == '0000') {
 				// fermé toute la journée
@@ -196,6 +198,12 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 			}
 		}
 
-		return implode("\n", $html);
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
+
+		ksort($html);
+		return implode('~', $html);
 	}
 }

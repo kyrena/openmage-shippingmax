@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/21/04/2022
+ * Updated D/11/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -96,9 +96,9 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 
 	public function setAddressCoords(object $address, bool $withCity = true) {
 
-		$city     = trim($address->getData('city'));
-		$postcode = trim($address->getData('postcode'));
-		$country  = trim($address->getData('country_id'));
+		$city     = trim((string) $address->getData('city'));
+		$postcode = trim((string) $address->getData('postcode'));
+		$country  = trim((string) $address->getData('country_id'));
 
 		if (empty($city) || empty($postcode) || empty($country))
 			return $this;

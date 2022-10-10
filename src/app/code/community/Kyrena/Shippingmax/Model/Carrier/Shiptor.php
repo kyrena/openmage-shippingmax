@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/24/06/2022
+ * Updated S/24/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -36,7 +36,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
 			'Accept: application/json',
 			'Content-Type: application/json; charset="utf-8"',
-			'X-Authorization-Token: ваш_API_ключ'
+			'X-Authorization-Token: ваш_API_ключ',
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'id'      => 'JsonRpcClient.js',
@@ -101,13 +101,13 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 			foreach ($data['work_shedule_obj']['schedule'] as $str) {
 				if (!empty($str['workTime'])) {
 					$days = [
-						'1 Monday'    => $data['work_shedule_obj']['schedule'][1],
-						'2 Tuesday'   => $data['work_shedule_obj']['schedule'][2],
-						'3 Wednesday' => $data['work_shedule_obj']['schedule'][3],
-						'4 Thursday'  => $data['work_shedule_obj']['schedule'][4],
-						'5 Friday'    => $data['work_shedule_obj']['schedule'][5],
-						'6 Saturday'  => $data['work_shedule_obj']['schedule'][6],
-						'7 Sunday'    => $data['work_shedule_obj']['schedule'][0],
+						1 => $data['work_shedule_obj']['schedule'][1],
+						2 => $data['work_shedule_obj']['schedule'][2],
+						3 => $data['work_shedule_obj']['schedule'][3],
+						4 => $data['work_shedule_obj']['schedule'][4],
+						5 => $data['work_shedule_obj']['schedule'][5],
+						6 => $data['work_shedule_obj']['schedule'][6],
+						7 => $data['work_shedule_obj']['schedule'][0],
 					];
 					break;
 				}
@@ -118,19 +118,24 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 			$data = explode(';', $data['work_schedule']);
 			if (count($data) == 7) {
 				$days = [
-					'1 Monday'    => $data[0],
-					'2 Tuesday'   => $data[1],
-					'3 Wednesday' => $data[2],
-					'4 Thursday'  => $data[3],
-					'5 Friday'    => $data[4],
-					'6 Saturday'  => $data[5],
-					'7 Sunday'    => $data[6],
+					1 => $data[0],
+					2 => $data[1],
+					3 => $data[2],
+					4 => $data[3],
+					5 => $data[4],
+					6 => $data[5],
+					7 => $data[6],
 				];
 			}
 		}
 
 		if (empty($days))
 			return '';
+
+		// Array ( [0] => 1#09#00#22#00 )
+		$always = array_unique(array_map(static function ($v) { return substr($v, strpos($v, '#')); }, $html));
+		if ((count($always) == 1) && in_array($always[0], ['#00#00#23#59', '#00#01#23#59']))
+			return '24/7';
 
 		$html = [];
 
@@ -177,11 +182,12 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 			}
 		}
 
-		// Array ( [0] => 1 Monday#09#00#22#00 )
-		$always = array_unique(array_map(static function ($v) { return substr($v, strpos($v, '#')); }, $html));
-		if ((count($always) == 1) && in_array($always[0], ['#00#00#23#59', '#00#01#23#59']))
-			return '24/7';
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
 
-		return implode("\n", $html);
+		ksort($html);
+		return implode('~', $html);
 	}
 }

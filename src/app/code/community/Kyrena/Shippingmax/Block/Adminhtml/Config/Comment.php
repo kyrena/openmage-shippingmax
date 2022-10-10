@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/21/05/2021
- * Updated M/05/07/2022
+ * Updated D/11/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -31,7 +31,8 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 		$maxWeight  = Mage::getStoreConfig('carriers/'.$code.'/max_weight');
 
 		$defaultCountry = Mage::getStoreConfig('general/country/default', $storeId);
-		$allCountries   = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/allowedcountry'))); // config.xml
+		$allCountries   = Mage::getStoreConfig('carriers/'.$code.'/allowedcountry');
+		$allCountries   = empty($allCountries) ? [] : array_filter(explode(',', $allCountries)); // config.xml
 		$selCountries   = $help->getCarrierCountries($code, $storeId);
 
 		// pays du mode de livraison

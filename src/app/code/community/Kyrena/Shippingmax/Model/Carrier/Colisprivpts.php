@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated J/28/07/2022
+ * Updated D/11/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -140,9 +140,10 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 	protected function checkIfAvailable(object $request) {
 
 		// France (sans la Corse, sans Monaco, sans les DROM/COM)
-		if (in_array($request->getData('dest_country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
+		$postcode = $request->getData('dest_postcode');
+		if (!empty($postcode) && in_array($request->getData('dest_country_id'), Mage::helper('shippingmax')->getFranceDromCom())) {
 
-			$postcode = trim($request->getData('dest_postcode'));
+			$postcode = trim($postcode);
 			// FR France
 			// FR 20XXX Corse
 			// MC 980XX Monaco
@@ -176,13 +177,13 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 
 		$html = [];
 		$days = [
-			'1 Monday'    => 'LUNDI;DEBUT_LU;FIN_LU',
-			'2 Tuesday'   => 'MARDI;DEBUT_MA;FIN_MA',
-			'3 Wednesday' => 'MERCREDI;DEBUT_ME;FIN_ME',
-			'4 Thursday'  => 'JEUDI;DEBUT_JE;FIN_JE',
-			'5 Friday'    => 'VENDREDI;DEBUT_VE;FIN_VE',
-			'6 Saturday'  => 'SAMEDI;DEBUT_SA;FIN_SA',
-			'7 Sunday'    => 'DIMANCHE;DEBUT_DI;FIN_DI'
+			1 => 'LUNDI;DEBUT_LU;FIN_LU',
+			2 => 'MARDI;DEBUT_MA;FIN_MA',
+			3 => 'MERCREDI;DEBUT_ME;FIN_ME',
+			4 => 'JEUDI;DEBUT_JE;FIN_JE',
+			5 => 'VENDREDI;DEBUT_VE;FIN_VE',
+			6 => 'SAMEDI;DEBUT_SA;FIN_SA',
+			7 => 'DIMANCHE;DEBUT_DI;FIN_DI',
 		];
 
 		foreach ($days as $day => $str) {
@@ -208,13 +209,13 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 
 		$html = [];
 		$days = [
-			'1 Monday'    => 'MON',
-			'2 Tuesday'   => 'TUE',
-			'3 Wednesday' => 'WED',
-			'4 Thursday'  => 'THU',
-			'5 Friday'    => 'FRI',
-			'6 Saturday'  => 'SAT',
-			'7 Sunday'    => 'SUN'
+			1 => 'MON',
+			2 => 'TUE',
+			3 => 'WED',
+			4 => 'THU',
+			5 => 'FRI',
+			6 => 'SAT',
+			7 => 'SUN',
 		];
 
 		foreach ($days as $day => $str) {

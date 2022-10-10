@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/02/02/2021
- * Updated S/19/02/2022
+ * Updated J/01/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -65,19 +65,19 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 
 		$html = [];
 		$days = [
-			'1 Monday'    => is_array($data['monday'])    ? $data['monday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['monday'])),
-			'2 Tuesday'   => is_array($data['tuesday'])   ? $data['tuesday']   : explode('–', str_replace([':', ', '], ['', '–'], $data['tuesday'])),
-			'3 Wednesday' => is_array($data['wednesday']) ? $data['wednesday'] : explode('–', str_replace([':', ', '], ['', '–'], $data['wednesday'])),
-			'4 Thursday'  => is_array($data['thursday'])  ? $data['thursday']  : explode('–', str_replace([':', ', '], ['', '–'], $data['thursday'])),
-			'5 Friday'    => is_array($data['friday'])    ? $data['friday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['friday'])),
-			'6 Saturday'  => is_array($data['saturday'])  ? $data['saturday']  : explode('–', str_replace([':', ', '], ['', '–'], $data['saturday'])),
-			'7 Sunday'    => is_array($data['sunday'])    ? $data['sunday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['sunday']))
+			1 => is_array($data['monday'])    ? $data['monday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['monday'])),
+			2 => is_array($data['tuesday'])   ? $data['tuesday']   : explode('–', str_replace([':', ', '], ['', '–'], $data['tuesday'])),
+			3 => is_array($data['wednesday']) ? $data['wednesday'] : explode('–', str_replace([':', ', '], ['', '–'], $data['wednesday'])),
+			4 => is_array($data['thursday'])  ? $data['thursday']  : explode('–', str_replace([':', ', '], ['', '–'], $data['thursday'])),
+			5 => is_array($data['friday'])    ? $data['friday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['friday'])),
+			6 => is_array($data['saturday'])  ? $data['saturday']  : explode('–', str_replace([':', ', '], ['', '–'], $data['saturday'])),
+			7 => is_array($data['sunday'])    ? $data['sunday']    : explode('–', str_replace([':', ', '], ['', '–'], $data['sunday']))
 		];
 
-		// Array ( [1 Monday] => Array ( [0] => 0830 [1] => 1830 ) )
-		// Array ( [1 Monday] => Array ( [0] => 0830 [1] => 1230, [2] => 1530 [3] => 1830 ) )
+		// Array ( [0] => 0000 [1] => 2359 )
+		// Array ( [0] => 0001 [1] => 2359 [2] => 0000 [3] => 0000 )
 		$always = array_unique(array_values(array_map('implode', $days)));
-		if ((count($always) == 1) && in_array($always[0], ['00002359', '00012359']))
+		if ((count($always) == 1) && in_array($always[0], ['00002359', '00012359', '0000235900000000', '0001235900000000']))
 			return '24/7';
 
 		foreach ($days as $day => $str) {
@@ -104,6 +104,12 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 			}
 		}
 
-		return implode("\n", $html);
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
+
+		ksort($html);
+		return implode('~', $html);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/19/02/2022
+ * Updated J/01/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -60,7 +60,7 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 					'city'        => $result['address']['city'],
 					'region'      => $result['address']['province'],
 					'country_id'  => $this->_country,
-					'description' => $result['operating_hours'],
+					'description' => $this->createDesc($result['operating_hours']),
 				];
 			}
 		}
@@ -87,11 +87,58 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 					'city'        => $result['address_details']['city'],
 					'region'      => $result['address_details']['province'],
 					'country_id'  => $this->_country,
-					'description' => $result['opening_hours'],
+					'description' => $this->createDesc($result['opening_hours']),
 				];
 			}
 		}
 
 		return $items;
+	}
+
+	protected function createDesc($data) {
+
+		if ($data == '24/7')
+			return '24/7';
+		if (empty($data))
+			return '';
+
+		$data = explode(';', $data);
+		$days = [1 => 'MON', 2 => 'TUE', 3 => 'WED', 4 => 'THU', 5 => 'FRI', 6 => 'SAT', 7 => 'SUN'];
+		$html = [];
+
+		foreach ($days as $day => $str) {
+
+			foreach ($data as $hours) {
+
+				$hours = array_filter(explode('|', str_replace('-', '|', $hours)));
+				if (empty($hours) || ($hours[0] != $str))
+					continue;
+
+				// ouvert non stop ou fermé le matin ou fermé l'après midi
+				if (count($hours) == 3) {
+					$html[$day] = $day.'#'.
+						str_replace(':', '#', $hours[1]).'#'.
+						str_replace(':', '#', $hours[2]);
+				}
+				// fermé à midi
+				else if (count($hours) == 5) {
+					$html[$day] = $day.'#'.
+						str_replace(':', '#', $hours[1]).'#'.
+						str_replace(':', '#', $hours[2]).'#'.
+						str_replace(':', '#', $hours[3]).'#'.
+						str_replace(':', '#', $hours[4]);
+				}
+
+				break;
+			}
+		}
+
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
+
+		ksort($html);
+		return implode('~', $html);
 	}
 }

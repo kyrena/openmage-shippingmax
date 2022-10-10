@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/08/08/2022
+ * Updated D/18/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -102,7 +102,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 		$app = Mage::app();
 		$str = mb_strtolower(trim($address->getData('postcode').' '.$address->getData('city').', '.$address->getData('country_id')));
-		if (mb_strlen($str) < 6) // géolocalisation
+		if (!empty($address->getData('lat')) && (mb_strlen($str) < 6)) // géolocalisation
 			$str = trim(round($address->getData('lat'), 6).'/'.round($address->getData('lng'), 6));
 
 		$skey = $this->_code.'_'.md5($str); // clef pour le cache des résultats de la recherche actuelle
@@ -155,8 +155,9 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 				if (!empty($items) && is_array($items)) {
 
-					array_walk_recursive($items, static function (&$item) {
-						$item = trim(Mage::helper('shippingmax')->escapeEntities(strip_tags($item)));
+					$help = Mage::helper('shippingmax');
+					array_walk_recursive($items, static function (&$item) use ($help) {
+						$item = (is_bool($item) || empty($item)) ? $item : trim($help->escapeEntities(strip_tags($item)));
 					});
 
 					// sauvegarde dans le cache fichier et dans le cache openmage

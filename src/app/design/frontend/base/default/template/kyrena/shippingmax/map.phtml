@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/06/12/2021
+ * Updated L/19/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -59,9 +59,9 @@ self.data    =  <?php echo json_encode($items) ?>;
 				<div class="search-elements">
 
 					<?php if ($useStreet): ?>
-						<input type="text" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('Street') ?>" title="<?php echo $this->__('Street') ?>" autocorrect="off" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
+						<input type="text" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('Street') ?>" title="<?php echo $this->__('Street') ?>" autocorrect="off" autocomplete="address-line1" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
 					<?php else: ?>
-						<input type="<?php echo in_array($country, $countries) ? 'tel' : 'text' ?>" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('ZIP/Postal Code') ?>" title="<?php echo $this->__('ZIP/Postal Code') ?>" autocorrect="off" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
+						<input type="<?php echo in_array($country, $countries) ? 'tel' : 'text' ?>" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('ZIP/Postal Code') ?>" title="<?php echo $this->__('ZIP/Postal Code') ?>" autocorrect="off" autocomplete="postal-code" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
 					<?php endif ?>
 
 					<input type="text" name="city" value="<?php echo $help->escapeEntities($address->getData('city'), true) ?>" placeholder="<?php echo $this->__('City') ?>" title="<?php echo $this->__('City') ?>" autocorrect="off" spellcheck="false" id="city" <?php echo (!$showAll && !empty($address->getData('postcode')) && empty($address->getData('city'))) ? 'autofocus="autofocus"' : '' ?> />

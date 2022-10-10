@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/23/12/2021
+ * Updated J/29/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -40,9 +40,11 @@ class Kyrena_Shippingmax_Block_Selected extends Mage_Checkout_Block_Onepage_Ship
 			return false;
 
 		// n'autorise pas le changement de pays
-		// sauf pour Monaco qui est considéré comment France avec Mondial Relay
-		if (($data['item']['country_id'] != $country) && !(($code == 'shippingmax_mondialrelay') && ($data['item']['country_id'] == 'FR') && ($country == 'MC')))
-			return false;
+		if ($data['item']['country_id'] != $country) {
+			// sauf si le pays change de FR à MC ou inversement
+			if (!(in_array($data['item']['country_id'], ['FR', 'MC']) && in_array($country, ['FR', 'MC'])))
+				return false;
+		}
 
 		$countries = $help->getCarrierCountries($code);
 		return in_array($data['item']['country_id'], $countries) ? $data['item'] : false;

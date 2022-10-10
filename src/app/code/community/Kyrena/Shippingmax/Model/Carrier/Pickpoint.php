@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/24/06/2022
+ * Updated S/24/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -33,7 +33,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
 			'Accept: application/json',
-			'Content-Type: application/json; charset="utf-8"'
+			'Content-Type: application/json; charset="utf-8"',
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'Login'    => $this->getConfigData('api_username'),
@@ -49,7 +49,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
 			'Accept: application/json',
-			'Content-Type: application/json; charset="utf-8"'
+			'Content-Type: application/json; charset="utf-8"',
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'SessionId' => $results['SessionId'],
@@ -128,17 +128,17 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 
 		$html = [];
 		$days = [
-			'1 Monday'    => $data[0],
-			'2 Tuesday'   => $data[1],
-			'3 Wednesday' => $data[2],
-			'4 Thursday'  => $data[3],
-			'5 Friday'    => $data[4],
-			'6 Saturday'  => $data[5],
-			'7 Sunday'    => $data[6],
+			1 => $data[0],
+			2 => $data[1],
+			3 => $data[2],
+			4 => $data[3],
+			5 => $data[4],
+			6 => $data[5],
+			7 => $data[6],
 		];
 
-		// Array ( [1 Monday] => 09:00-19:00 )
-		// Array ( [1 Monday] => 09:00-19:00/14:00-14:30 )
+		// Array ( [1] => 09:00-19:00 )
+		// Array ( [1] => 09:00-19:00/14:00-14:30 )
 		$always = array_unique(array_values($days));
 		if ((count($always) == 1) && in_array($always[0], ['00:00-23:59', '00:01-23:59']))
 			return '24/7';
@@ -175,6 +175,12 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 			}
 		}
 
-		return implode("\n", $html);
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
+
+		ksort($html);
+		return implode('~', $html);
 	}
 }

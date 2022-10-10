@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/11/07/2019
- * Updated J/10/03/2022
+ * Updated J/01/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -97,15 +97,18 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 
 	protected function createDesc($data) {
 
+		if (empty($data->listeHoraireOuverture))
+			return '';
+
 		$html = [];
 		$days = [
-			'1 Monday'    => ['0000', '0000', '0000', '0000'],
-			'2 Tuesday'   => ['0000', '0000', '0000', '0000'],
-			'3 Wednesday' => ['0000', '0000', '0000', '0000'],
-			'4 Thursday'  => ['0000', '0000', '0000', '0000'],
-			'5 Friday'    => ['0000', '0000', '0000', '0000'],
-			'6 Saturday'  => ['0000', '0000', '0000', '0000'],
-			'7 Sunday'    => ['0000', '0000', '0000', '0000'],
+			1 => ['0000', '0000', '0000', '0000'],
+			2 => ['0000', '0000', '0000', '0000'],
+			3 => ['0000', '0000', '0000', '0000'],
+			4 => ['0000', '0000', '0000', '0000'],
+			5 => ['0000', '0000', '0000', '0000'],
+			6 => ['0000', '0000', '0000', '0000'],
+			7 => ['0000', '0000', '0000', '0000'],
 		];
 
 		foreach ($data->listeHoraireOuverture as $info) {
@@ -126,10 +129,10 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 			}
 		}
 
-		// Array ( [1 Monday] => Array ( [0] => 0930 [1] => 1200 [2] => 1400 [3] => 1800 )
-		// Array ( [1 Monday] => Array ( [0] => 0930 [1] => 2300 [2] => 0000 [3] => 0000 )
+		// Array ( [0] => 0000 [1] => 2359 [2] => 0000 [3] => 0000 )
+		// Array ( [0] => 0001 [1] => 2359 [2] => 0000 [3] => 0000 )
 		$always = array_unique(array_values(array_map('implode', $days)));
-		if ((count($always) == 1) && in_array($always[0], ['0000235900000000', '0100235900000000']))
+		if ((count($always) == 1) && in_array($always[0], ['0000235900000000', '0001235900000000']))
 			return '24/7';
 
 		foreach ($days as $day => $str) {
@@ -154,6 +157,12 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 			}
 		}
 
-		return implode("\n", $html);
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
+
+		ksort($html);
+		return implode('~', $html);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/25/11/2021
+ * Updated S/24/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -19,7 +19,9 @@
  */
 
 $help    = $this->helper('shippingmax');
+$model   = Mage::getModel('customer/address');
 $code    = $this->getData('code');    // code du mode de livraison ou id de la commande
+$title   = Mage::getStoreConfig('carriers/'.$code.'/img_title'); // titre de l'icône
 $items   = $this->getData('items');   // liste des points de livraison
 $address = $this->getData('address'); // adresse de livraison
 $active  = $this->getData('selected');
@@ -39,14 +41,16 @@ $useStreet = ($address->getData('country_id') == 'RU') && Mage::getStoreConfigFl
 					<div class="item-card_details">
 						<h2 class="name" title="<?php echo $help->escapeEntities($item->getData('name')) ?> (<?php echo $item->getId() ?>)">
 							<?php if (!empty($item->getData('carrier'))): ?>
-								<span class="icn ic-<?php echo str_replace(['shippingmax_', 'cash'], '', $item->getData('carrier')) ?>" title="<?php echo $help->escapeEntities(Mage::getStoreConfig('carriers/shippingmax_'.str_replace('shippingmax_', '', $item->getData('carrier')).'/img_title')) ?>"></span>
+								<span class="icn ic-<?php echo str_replace(['shippingmax_', 'cash'], '', $item->getData('carrier')) ?>" title="<?php echo $help->escapeEntities(Mage::getStoreConfig('carriers/'.$item->getData('carrier').'/img_title')) ?>"></span>
+							<?php elseif (!empty($title)): ?>
+								<span class="icn ic-<?php echo str_replace(['shippingmax_', 'cash'], '', $code) ?>" title="<?php echo $help->escapeEntities($title) ?>"></span>
 							<?php else: ?>
-								<span class="icn ic-<?php echo str_replace(['shippingmax_', 'cash'], '', $code) ?>" title="<?php echo $help->escapeEntities(Mage::getStoreConfig('carriers/'.$code.'/img_title')) ?>"></span>
+								<span class="icn ic-<?php echo str_replace(['shippingmax_', 'cash'], '', $code) ?>"></span>
 							<?php endif ?>
 							<span class="pname"><?php echo $item->getData('name') ?></span> <small class="pid">(<?php echo $item->getId() ?>)</small>
 						</h2>
 						<address class="addr">
-							<?php echo preg_replace('#^\s+<br ?/?>#', '', Mage::getModel('customer/address')->addData($item->getData())->format('html')) ?>
+							<?php echo preg_replace('#^\s+<br ?/?>#', '', $model->setData($item->getData())->format('html')) ?>
 						</address>
 						<?php if (!empty($desc = $item->getData('description'))): ?>
 							<p class="desc"><?php echo $help->formatDesc($desc) ?></p>

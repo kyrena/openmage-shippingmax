@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/24/06/2022
+ * Updated D/11/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -168,10 +168,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 
 		// recherche du vrai pays surtout pour la France et ses DROM/COM
-		// Mage::getBlockSingleton('shippingmax/rewrite_renderer')
-		// Mage::app()->getLayout()->getBlockSingleton('shippingmax/rewrite_renderer')
 		$fake    = Mage::getModel('customer/address')->setData('country_id', $country)->setData('postcode', $postcode);
-		$country = Mage::getBlockSingleton('shippingmax/rewrite_renderer')->setType(new Varien_Object())->render($fake, 'country');
+		$country = Mage::getBlockSingleton('shippingmax/rewrite_renderer')->render($fake, 'country');
 		$storeId = is_null($storeId) ? Mage::app()->getStore()->getId() : $storeId;
 
 		// recherche des délais
@@ -284,7 +282,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 	public function isClosedDay(object $date, string $country, $postcode = null) {
 
-		if (mb_stripos(__FILE__, 'vendor/kyrena') === false)
+		if (stripos(__FILE__, 'vendor/kyrena') === false)
 			return false;
 
 		// https://github.com/azuyalabs/yasumi
@@ -316,7 +314,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 			$countries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
 
 		// filtre sur la config des pays possibles sur le mode de livrais
-		$selCountries = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/allowedcountry'))); // config.xml
+		$selCountries = Mage::getStoreConfig('carriers/'.$code.'/allowedcountry');
+		$selCountries = empty($selCountries) ? [] : array_filter(explode(',', $selCountries)); // config.xml
 		if (!empty($selCountries))
 			$countries = array_intersect($countries, $selCountries);
 
@@ -441,7 +440,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 		if (substr_count($data, '#') > 5) {
 
-			$lines = explode("\n", $data);
+			$lines = explode('~', str_replace("\n", '~', $data)); // 'saut de ligne' ou '~'
 			$since = '';
 			$desc  = [];
 
@@ -450,7 +449,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 				if (str_contains($line, '#') && is_numeric($line[0])) {
 
 					$line = explode('#', $line);
-					$day  = isset($line[0][0]) ? (int) $line[0][0] : 0;
+					$day  = isset($line[0][0]) ? (int) $line[0][0] : 0; // '1 Monday' ou '1'
 
 					if ($day > 0) {
 
@@ -469,8 +468,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 							$since = '';
 						}
 
-						// 1 Monday#09#30#12#00#12#00#19#00
-						// 1 Monday#09#30#12#00#14#30#19#00
+						// 1#09#30#12#00#12#00#19#00
+						// 1#09#30#12#00#14#30#19#00
 						if (count($line) >= 9) {
 							if (($line[3] == $line[5]) && ($line[4] == $line[6])) {
 								$desc[] = $this->__('%s: %s:%s - %s:%s', $day,
@@ -485,13 +484,13 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 									str_pad($line[7], 2, '0', STR_PAD_LEFT), str_pad($line[8], 2, '0', STR_PAD_LEFT));
 							}
 						}
-						// 1 Monday#15#00#19#00
+						// 1#15#00#19#00
 						else if (count($line) >= 5) {
 							$desc[] = $this->__('%s: %s:%s - %s:%s', $day,
 								str_pad($line[1], 2, '0', STR_PAD_LEFT), str_pad($line[2], 2, '0', STR_PAD_LEFT),
 								str_pad($line[3], 2, '0', STR_PAD_LEFT), str_pad($line[4], 2, '0', STR_PAD_LEFT));
 						}
-						// 1 Monday#closed
+						// 1#closed
 						else if (count($line) >= 2) {
 							$desc[] = $this->__('%s: closed', $day);
 						}

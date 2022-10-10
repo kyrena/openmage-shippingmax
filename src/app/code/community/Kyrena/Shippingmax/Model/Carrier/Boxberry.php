@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/24/06/2022
+ * Updated J/01/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -93,15 +93,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 
 		// lundi à dimanche en russe abrégé
 		$abbrs = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
-		$days  = [
-			'1 Monday'    => '',
-			'2 Tuesday'   => '',
-			'3 Wednesday' => '',
-			'4 Thursday'  => '',
-			'5 Friday'    => '',
-			'6 Saturday'  => '',
-			'7 Sunday'    => ''
-		];
+		$days  = [1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '', 7 => ''];
 		$positionToDay = array_keys($days);
 
 		$pos = mb_stripos($data, 'обед');
@@ -148,8 +140,8 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 		if (count($days) != 7)
 			return '';
 
-		// Array ( [1 Monday] => 09.00-19.00 )
-		// Array ( [1 Monday] => 09.00-19.00/14.00-14.30 )
+		// Array ( [1] => 09.00-19.00 )
+		// Array ( [1] => 09.00-19.00/14.00-14.30 )
 		$always = array_unique(array_values($days));
 		if ((count($always) == 1) && in_array($always[0], ['00.00-23.59', '00.01-23.59']))
 			return '24/7';
@@ -186,6 +178,12 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 			}
 		}
 
-		return implode("\n", $html);
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
+
+		ksort($html);
+		return implode('~', $html);
 	}
 }

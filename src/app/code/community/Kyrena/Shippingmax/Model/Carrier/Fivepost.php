@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/24/06/2022
+ * Updated S/24/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -36,7 +36,7 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 		curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/jwt-generate-claims/rs256/1?apikey='.$this->getConfigData('api_password', true));
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
 			'Accept: application/json',
-			'Content-Type: application/x-www-form-urlencoded'
+			'Content-Type: application/x-www-form-urlencoded',
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'subject=OpenAPI&audience=A122019!');
 		$results = $this->runCurl($ch, true);
@@ -50,13 +50,13 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_URL, trim($this->getConfigData('api_url'), '/').'/api/v1/pickuppoints/query').
 			curl_setopt($ch, CURLOPT_HTTPHEADER, [
-			'Accept: application/json',
+				'Accept: application/json',
 				'Content-Type: application/json; charset="utf-8"',
-				'Authorization: "Bearer '.$jwt.'"'
+				'Authorization: "Bearer '.$jwt.'"',
 			]);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 				'pageSize'   => 1000,
-				'pageNumber' => $page
+				'pageNumber' => $page,
 			]));
 
 			$results = $this->runCurl($ch, true);

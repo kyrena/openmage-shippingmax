@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/26/07/2021
- * Updated S/19/02/2022
+ * Updated J/01/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -26,6 +26,10 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 
 	public function loadItemsFromApi(object $address) {
 
+		// pour la configuration des prix (cf module dpdfrance 5.2.0 pour magento 1.9)
+		// zones de montage : FR(04120, 04130, 04140, 04160, 04170, 04200, 04240, 04260, 04300, 04310, 04330, 04360, 04370, 04400, 04510, 04530, 04600, 04700, 04850, 05100, 05110, 05120, 05130, 05150, 05160, 05170, 05200, 05220, 05240, 05250, 05260, 05290, 05300, 05310, 05320, 05330, 05340, 05350, 05400, 05460, 05470, 05500, 05560, 05600, 05700, 05800, 06140, 06380, 06390, 06410, 06420, 06430, 06450, 06470, 06530, 06540, 06620, 06710, 06750, 06910, 09110, 09140, 09300, 09460, 25120, 25140, 25240, 25370, 25450, 25500, 25650, 30570, 31110, 38112, 38114, 38142, 38190, 38250, 38350, 38380, 38410, 38580, 38660, 38700, 38750, 38860, 38880, 39220, 39310, 39400, 63113, 63210, 63240, 63610, 63660, 63690, 63840, 63850, 64440, 64490, 64560, 64570, 65110, 65120, 65170, 65200, 65240, 65400, 65510, 65710, 66210, 66760, 66800, 68140, 68610, 68650, 73110, 73120, 73130, 73140, 73150, 73160, 73170, 73190, 73210, 73220, 73230, 73250, 73260, 73270, 73300, 73320, 73340, 73350, 73390, 73400, 73440, 73450, 73460, 73470, 73500, 73530, 73550, 73590, 73600, 73620, 73630, 73640, 73710, 73720, 73870, 74110, 74120, 74170, 74220, 74230, 74260, 74310, 74340, 74350, 74360, 74390, 74400, 74420, 74430, 74440, 74450, 74470, 74480, 74660, 74740, 74920, 83111, 83440, 83530, 83560, 83630, 83690, 83830, 83840, 84390, 88310, 88340, 88370, 88400, 90200)
+		// iles et corse : FR(20*, 17111, 17123, 17190, 17310, 17370, 17410, 17480, 17550, 17580, 17590, 17630, 17650, 17670, 17740, 17840, 17880, 17940, 22870, 29242, 29253, 29259, 29980, 29990, 56360, 56590, 56780, 56840, 85350)
+
 		$items = [];
 		ini_set('default_socket_timeout', 20);
 
@@ -40,7 +44,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 				'latitude'            => round($address->getData('lat'), 11),
 				'longitude'           => round($address->getData('lng'), 11),
 				'max_distance_search' => $this->getConfigData('dst_search'),
-				'max_pudo_number'     => $this->getConfigData('max_points'),
+				'max_pudo_number'     => min(25, $this->getConfigData('max_points')),
                     'date_from'           => date('d/m/Y'),
 				'requestID'           => '1234', // toujours à 1234, cf module dpdfrance 5.2.0 pour magento 1.9 (ligne 79)
 				'request_id'          => '1234', // toujours à 1234, cf module dpdfrance 5.2.0 pour magento 1.9 (ligne 80)
@@ -50,7 +54,8 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 
 			// https://mypudo.pickup-services.com/mypudo/mypudo.asmx?op=GetPudoList
 			// https://mypudo.pickup-services.com/mypudo/mypudo.asmx?op=GetPudoListByLongLat
-			// SoapFault exception: [soap:Server] Le serveur n'a pas pu traiter la demande. ---> La référence d'objet n'est pas définie à une instance d'un objet.
+			// SoapFault exception: [soap:Server] Le serveur n'a pas pu traiter la demande.
+			// ---> La référence d'objet n'est pas définie à une instance d'un objet.
 			//if (empty($params['latitude']) || empty($params['longitude']))
 				$results = $client->getPudoList($params);
 			//else
@@ -98,13 +103,13 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 
 		$html = [];
 		$days = [
-			'1 Monday'    => ['0000', '0000', '0000', '0000'],
-			'2 Tuesday'   => ['0000', '0000', '0000', '0000'],
-			'3 Wednesday' => ['0000', '0000', '0000', '0000'],
-			'4 Thursday'  => ['0000', '0000', '0000', '0000'],
-			'5 Friday'    => ['0000', '0000', '0000', '0000'],
-			'6 Saturday'  => ['0000', '0000', '0000', '0000'],
-			'7 Sunday'    => ['0000', '0000', '0000', '0000'],
+			1 => ['0000', '0000', '0000', '0000'],
+			2 => ['0000', '0000', '0000', '0000'],
+			3 => ['0000', '0000', '0000', '0000'],
+			4 => ['0000', '0000', '0000', '0000'],
+			5 => ['0000', '0000', '0000', '0000'],
+			6 => ['0000', '0000', '0000', '0000'],
+			7 => ['0000', '0000', '0000', '0000'],
 		];
 
 		foreach ($data->OPENING_HOURS_ITEMS->OPENING_HOURS_ITEM as $info) {
@@ -130,10 +135,10 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 			}
 		}
 
-		// Array ( [1 Monday] => Array ( [0] => 0930 [1] => 1200 [2] => 1400 [3] => 1800 )
-		// Array ( [1 Monday] => Array ( [0] => 0930 [1] => 2300 [2] => 0000 [3] => 0000 )
+		// Array ( [0] => 0000 [1] => 2359 [2] => 0000 [3] => 0000 )
+		// Array ( [0] => 0001 [1] => 2359 [2] => 0000 [3] => 0000 )
 		$always = array_unique(array_values(array_map('implode', $days)));
-		if ((count($always) == 1) && in_array($always[0], ['0000235900000000', '0100235900000000']))
+		if ((count($always) == 1) && in_array($always[0], ['0000235900000000', '0001235900000000']))
 			return '24/7';
 
 		foreach ($days as $day => $str) {
@@ -160,6 +165,12 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 			}
 		}
 
-		return implode("\n", $html);
+		foreach ($days as $day => $str) {
+			if (!array_key_exists($day, $html))
+				$html[$day] = $day.'#closed';
+		}
+
+		ksort($html);
+		return implode('~', $html);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/18/10/2021
+ * Updated S/24/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -33,12 +33,12 @@ class Kyrena_Shippingmax_Model_Carrier_Pocztk48Op extends Kyrena_Shippingmax_Mod
 		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
 		curl_setopt($ch, CURLOPT_HTTPHEADER, [
 			'Accept: application/json',
-			'Content-Type: application/json; charset="utf-8"'
+			'Content-Type: application/json; charset="utf-8"',
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 			'latitude'  => $address->getData('lat'),
 			'longitude' => $address->getData('lng'),
-			'type'      => explode(',', $this->getConfigData('allowed_methods'))
+			'type'      => explode(',', $this->getConfigData('allowed_methods')),
 		]));
 
 		$items   = [];

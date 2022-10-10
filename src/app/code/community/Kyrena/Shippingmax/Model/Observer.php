@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/24/05/2022
+ * Updated V/30/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -306,7 +306,7 @@ class Kyrena_Shippingmax_Model_Observer {
 						if (is_object($cron))
 							$cron->setData('messages', implode("\n", $msg))->save();
 
-						// global
+						// global (ignore les autres stores)
 						continue 2;
 					}
 
@@ -328,7 +328,6 @@ class Kyrena_Shippingmax_Model_Observer {
 
 		return $msg;
 	}
-
 
 	// recherche l'id de la région
 	// recherche uniquement si la configuration indique que l'état est obligatoire

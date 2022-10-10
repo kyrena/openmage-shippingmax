@@ -752,7 +752,7 @@ class Owebia_Shipping2_Model_ConfigParser
     protected function _setCache($expression, $value)
     {
         if ($value instanceof Owebia_Shipping2_Model_Os2_Result) {
-            $this->_formulaCache[$expression] = $value;
+            $this->_formulaCache[str_replace('.', '-', $expression)] = $value;
             $this->debug(
                 '      cache <span class=osh-replacement>' . self::esc($expression) . '</span>'
                 . ' = <span class=osh-formula>' . self::esc(self::toString($value->result)) . '</span>'
@@ -1030,8 +1030,8 @@ class Owebia_Shipping2_Model_ConfigParser
                 ->setResult($formulaString);
         }
 
-        if ($useCache && isset($this->_formulaCache[$formulaString])) {
-            $result = $this->_formulaCache[$formulaString];
+        if ($useCache && isset($this->_formulaCache[$formulaStringKey = str_replace('.', '-', $formulaString)])) {
+            $result = $this->_formulaCache[$formulaStringKey];
             $this->debug(
                 '      get cached formula <span class=osh-replacement>' . self::esc($formulaString) . '</span>'
                 . ' = <span class=osh-formula>' . self::esc(self::toString($result->result)) . '</span>'
@@ -1040,7 +1040,6 @@ class Owebia_Shipping2_Model_ConfigParser
         }
 
         $formula = $formulaString;
-
         $formula = $this->_prepareFormulaForeach($process, $row, $propertyName, $formula, $isChecking, $useCache);
 
         if (isset($process['data']['selection'])) {

@@ -11,7 +11,7 @@ Composer dependencies:
 
 Included dependencies:
 * [owebia/shipping](https://github.com/owebia/magento1-module-advanced-shipping) (2.6.10-lite)
-* [leaflet](https://leafletjs.com/) (1.8.0)
+* [leaflet](https://leafletjs.com/) (1.9.2)
 
 External services:
 * [Nominatim](https://nominatim.org/): addresses geocoding (results are stored in database)
@@ -59,7 +59,7 @@ Demo links may not work, don't panic, it's not a bug.
 | **Store delivery** | | [online demo](https://cellu.blue/OmRX8p): 07200, Aubenas, FR<br>source of data: a TSV file |
 | **Store locator** | | [online demo](https://cellu.blue/h9dhKJ)<br>source of data: a TSV file |
 
-Do you want more? Contact us, perhaps we can work together to add new methods! For example: Colissimo, Relais Colis, Swiss Post...
+Do you want more? Contact us, perhaps we can work together to add new methods! For example: Colissimo, Relais Colis, Swiss Post, GLS, UPS...
 
 ## Customization
 
@@ -95,7 +95,7 @@ To display delivery times, you must edit your template with:
 
 ## Copyright and Credits
 
-- Current version: 2.4.1 (08/08/2022)
+- Current version: 2.5.0 (10/10/2022)
 - Compatibility: OpenMage 19.x / 20.x / 21.x, PHP 7.2 / 7.3 / 7.4 / 8.0 / 8.1
 - Client compatibility: Firefox 36+, Chrome 32+, Opera 19+, Edge 16+, Safari 9+
 - Translations: English (en), French (fr-FR/fr-CA), German (de), Italian (it), Portuguese (pt-PT/pt-BR), Spanish (es) / Chinese (zh), Czech (cs), Dutch (nl), Greek (el), Hungarian (hu), Japanese (ja), Polish (pl), Romanian (ro), Russian (ru), Slovak (sk), Turkish (tr), Ukrainian (uk)
@@ -105,9 +105,7 @@ If you like, take some of your time to improve the translations, go to https://b
 
 ## Installation
 
-Warning: there are two packages, one that contains a lite and modified version (without jquery/editor/phpparser/doc) of owebia/shipping ([kyrena/openmage-shippingmax](https://github.com/kyrena/openmage-shippingmax)), and another one without owebia/shipping ([kyrena/openmage-shippingmax-alone](https://github.com/kyrena/openmage-shippingmax-alone)).
-
-#### For kyrena/openmage-shippingmax
+Warning: it contains a lite and modified version (without jquery/editor/phpparser/doc) of owebia/shipping ([kyrena/openmage-shippingmax](https://github.com/kyrena/openmage-shippingmax)).
 
 With composer:
 - `composer remove owebia/magento1-module-advanced-shipping`

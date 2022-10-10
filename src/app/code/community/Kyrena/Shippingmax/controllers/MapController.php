@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/23/12/2021
+ * Updated J/29/09/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -22,6 +22,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	protected function loadItems(object $address, string $code, $session = null) {
 
+		Mage::register('address_ignore_name', true, true);
 		$this->_countries = Mage::helper('shippingmax')->getCarrierCountries($code);
 
 		// récupère l'adresse mémorisée et met à jour l'adresse de livraison
@@ -147,6 +148,8 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 		if (empty($address->getData('country_id')))
 			$address->setData('country_id', Mage::getStoreConfig('general/country/default'));
+		else if ($address->getData('country_id') == 'MC')
+			$address->setData('country_id', 'FR');
 
 		return $address;
 	}
@@ -268,12 +271,13 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 		$session  = $this->getSession();
 		$address  = $this->getShippingAddress();
-		$code     = $this->getRequest()->getParam('code');
-		$city     = $this->getRequest()->getPost('city');
-		$postcode = $this->getRequest()->getPost('postcode');
-		$country  = $this->getRequest()->getPost('country');
-		$lat      = $this->getRequest()->getPost('lat');
-		$lng      = $this->getRequest()->getPost('lng');
+		$request  = $this->getRequest();
+		$code     = $request->getParam('code');
+		$city     = $request->getPost('city');
+		$postcode = $request->getPost('postcode');
+		$country  = $request->getPost('country');
+		$lat      = $request->getPost('lat');
+		$lng      = $request->getPost('lng');
 
 		if (($country == 'RU') && Mage::getStoreConfigFlag('carriers/shippingmax/search_by_street')) {
 			$message = $this->__('Please enter your street (or your postal code) and city.');
@@ -294,7 +298,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			$data['city']       = $city;
 			$data['postcode']   = $postcode;
 			$data['country_id'] = $country;
-			$data['geoloc']     = !empty($this->getRequest()->getPost('geoloc'));
+			$data['geoloc']     = !empty($request->getPost('geoloc'));
 			if (!empty($lat)) $data['lat'] = $lat;
 			if (!empty($lng)) $data['lng'] = $lng;
 			$session->setData($code, $data);
@@ -313,6 +317,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 			// réponse
 			if ($this->isAjax()) {
+
 				$this->loadLayout();
 				$this->initOurLayoutMessages();
 				$html = $this->getLayout()->getBlock('maplist')
@@ -323,27 +328,31 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 					->setData('geoloc', $data['geoloc'])
 					->toHtml();
 
-				$this->getResponse()->setHeader('Content-Type', 'application/json', true);
-				$this->getResponse()->setHeader('Cache-Control', 'no-cache, must-revalidate', true);
-				$this->getResponse()->setBody(json_encode([
-					'status'   => true,
-					'city'     => $address->getData('city'),
-					'postcode' => $address->getData('postcode'),
-					'country'  => $address->getData('country_id'),
-					'lat'      => (float) $address->getData('lat'),
-					'lng'      => (float) $address->getData('lng'),
-					'maplist'  => trim(preg_replace("#\s{2,}#", ' ', $html)), // pour le html
-					'items'    => $items // pour le JavaScript
-				]));
+				$this->getResponse()
+					->setHttpResponseCode(200)
+					->setHeader('Content-Type', 'application/json', true)
+					->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+					->setBody(json_encode([
+						'status'   => true,
+						'city'     => $address->getData('city'),
+						'postcode' => $address->getData('postcode'),
+						'country'  => $address->getData('country_id'),
+						'lat'      => (float) $address->getData('lat'),
+						'lng'      => (float) $address->getData('lng'),
+						'maplist'  => trim(preg_replace("#\s{2,}#", ' ', $html)), // pour le html
+						'items'    => $items, // pour le JavaScript
+					]));
 			}
 			else {
 				$this->_redirect('*/*/index', ['code' => $code]);
 			}
 		}
 		else if ($this->isAjax()) {
-			$this->getResponse()->setHeader('Content-Type', 'application/json', true);
-			$this->getResponse()->setHeader('Cache-Control', 'no-cache, must-revalidate', true);
-			$this->getResponse()->setBody(json_encode(['status' => false, 'error' => $message]));
+			$this->getResponse()
+				->setHttpResponseCode(200)
+				->setHeader('Content-Type', 'application/json', true)
+				->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+				->setBody(json_encode(['status' => false, 'error' => $message]));
 		}
 		else {
 			$session->addError($message);
@@ -379,28 +388,40 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			$html = trim(preg_replace("#\s{2,}#", ' ', $this->getLayout()->getBlock('shippingmax_selected')->setData('code', $code)->toHtml()));
 
 			if ($this->isAjax()) {
-				$this->getResponse()->setHeader('Content-Type', 'application/json', true);
-				$this->getResponse()->setHeader('Cache-Control', 'no-cache, must-revalidate', true);
-				$this->getResponse()->setBody(json_encode([
-					'status' => true,
-					'code'   => $code,
-					'id'     => $id,
-					'html'   => $html
-				]));
+				$this->getResponse()
+					->setHttpResponseCode(200)
+					->setHeader('Content-Type', 'application/json', true)
+					->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+					->setBody(json_encode([
+						'status' => true,
+						'code'   => $code,
+						'id'     => $id,
+						'html'   => $html,
+					]));
 			}
 			else {
-				$this->getResponse()->setBody('<html lang="en"><body><script type="text/javascript">self.parent.shippingmax.show('.json_encode([
-					'status' => true,
-					'code'   => $code,
-					'id'     => $id,
-					'html'   => $html
-				]).')</script></body></html>');
+				$this->getResponse()
+					->setHttpResponseCode(200)
+					->setHeader('Content-Type', 'text/html; charset=utf-8', true)
+					->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+					->setBody('<html lang="en"><head><title>shippingmax</title>'.
+						'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.
+						'<meta name="robots" content="noindex,nofollow"></head>'.
+						'<body><script type="text/javascript">self.parent.shippingmax.show('.json_encode([
+							'status' => true,
+							'code'   => $code,
+							'id'     => $id,
+							'html'   => $html,
+						]).')</script></body></html>'
+					);
 			}
 		}
 		else if ($this->isAjax()) {
-			$this->getResponse()->setHeader('Content-Type', 'application/json', true);
-			$this->getResponse()->setHeader('Cache-Control', 'no-cache, must-revalidate', true);
-			$this->getResponse()->setBody(json_encode(['status' => false, 'error' => 'refresh']));
+			$this->getResponse()
+				->setHttpResponseCode(200)
+				->setHeader('Content-Type', 'application/json', true)
+				->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+				->setBody(json_encode(['status' => false, 'error' => 'refresh']));
 		}
 		else {
 			$this->_redirect('*/*/index', ['code' => $code]);
@@ -466,12 +487,16 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 				'<br><b>cache:keys/count:</b> '.print_r($cache, true);
 		}
 
-		$this->getResponse()->setBody(
-			'<html lang="en"><head><title>shippingmax</title>'.
-			'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.
-			'<meta name="robots" content="noindex,nofollow"></head><body><pre style="white-space:pre-wrap;">'.
-			date('c').$link.'<br><br>'.$text.
-			'</pre></body></html>');
+		$this->getResponse()
+			->setHttpResponseCode(200)
+			->setHeader('Content-Type', 'text/html; charset=utf-8', true)
+			->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+			->setBody(
+				'<html lang="en"><head><title>shippingmax</title>'.
+				'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.
+				'<meta name="robots" content="noindex,nofollow"></head>'.
+				'<body><pre style="white-space:pre-wrap;">'.date('c').$link.'<br><br>'.$text.'</pre></body></html>'
+			);
 	}
 
 	public function debugclearcacheAction() {
