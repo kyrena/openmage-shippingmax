@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/29/09/2022
+ * Updated J/03/11/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -19,6 +19,8 @@
  */
 
 class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action {
+
+	protected $_countries;
 
 	protected function loadItems(object $address, string $code, $session = null) {
 
@@ -169,9 +171,8 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		}
 	}
 
-	public function indexAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
+	public function indexAction() {
 
 		$session = $this->getSession();
 		$address = $this->getShippingAddress();
@@ -267,8 +268,6 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	public function updateAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
-
 		$session  = $this->getSession();
 		$address  = $this->getShippingAddress();
 		$request  = $this->getRequest();
@@ -362,8 +361,6 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	public function saveAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
-
 		$session = $this->getSession();
 		$address = $this->getShippingAddress();
 		$code    = $this->getRequest()->getParam('code');
@@ -430,8 +427,6 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 
 	public function debugAction() {
-
-		Mage::register('turpentine_nocache_flag', true, true);
 
 		$pass = Mage::getStoreConfig('carriers/shippingmax/debug_password');
 		if (!Mage::getStoreConfigFlag('carriers/shippingmax/debug_enabled')) {
@@ -501,8 +496,6 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	public function debugclearcacheAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
-
 		$pass = Mage::getStoreConfig('carriers/shippingmax/debug_password');
 		if (Mage::getStoreConfigFlag('carriers/shippingmax/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 
@@ -522,8 +515,6 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	public function debugclearsessionAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
-
 		$pass = Mage::getStoreConfig('carriers/shippingmax/debug_password');
 		if (Mage::getStoreConfigFlag('carriers/shippingmax/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 
@@ -541,8 +532,6 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 	}
 
 	public function debugsetaddressAction() {
-
-		Mage::register('turpentine_nocache_flag', true, true);
 
 		$pass = Mage::getStoreConfig('carriers/shippingmax/debug_password');
 		if (Mage::getStoreConfigFlag('carriers/shippingmax/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {

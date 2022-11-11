@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/01/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -36,7 +36,7 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
 
 		$items   = [];
-		$results = $this->runCurl($ch, true, 199);
+		$results = $this->runCurl($ch);
 
 		//echo '<pre>';print_r(array_slice($results['_embedded']['machines'], 0, 20));exit;
 		// https://api-pl.easypack24.net/v4/machines

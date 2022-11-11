@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated M/05/07/2022
+ * Updated M/11/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -372,7 +372,7 @@
 				</shippingmax_storepts>
 				<!-- pickup FR -->
 				<shippingmax_chronorelais>
-					<label>FR - (chronorelais) - Chrono Relais</label>
+					<label>FR - (chronorelais) - Shop2Shop</label>
 					<frontend_model>shippingmax/adminhtml_config_comment</frontend_model>
 					<sort_order>-994</sort_order>
 					<show_in_default>1</show_in_default>

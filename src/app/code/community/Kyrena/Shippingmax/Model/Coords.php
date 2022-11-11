@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated D/11/09/2022
+ * Updated J/20/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -19,6 +19,8 @@
  */
 
 class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
+
+	protected $_eventPrefix = 'shippingmax_coords';
 
 	public function _construct() {
 		$this->_init('shippingmax/coords');
@@ -393,6 +395,7 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_ENCODING , ''); // https://stackoverflow.com/q/17744112/2980105
 		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 
 		if (empty($post)) {

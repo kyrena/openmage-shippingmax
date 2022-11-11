@@ -936,3 +936,61 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Os2/Data/
          parent::__construct(
              [
                  'id' => $customerGroupId,
+#
+# php 8.1/8.2
+#
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigParser.php b/Model/ConfigParser.php
+index 44c0dcf6c..4a58e806c 100644
+--- a/Model/ConfigParser.php
++++ b/Model/ConfigParser.php
+@@ -752,7 +752,7 @@ class Owebia_Shipping2_Model_ConfigParser
+     protected function _setCache($expression, $value)
+     {
+         if ($value instanceof Owebia_Shipping2_Model_Os2_Result) {
+-            $this->_formulaCache[$expression] = $value;
++            $this->_formulaCache[str_replace('.', '-', $expression)] = $value;
+             $this->debug(
+                 '      cache <span class=osh-replacement>' . self::esc($expression) . '</span>'
+                 . ' = <span class=osh-formula>' . self::esc(self::toString($value->result)) . '</span>'
+@@ -1030,8 +1030,8 @@ class Owebia_Shipping2_Model_ConfigParser
+                 ->setResult($formulaString);
+         }
+ 
+-        if ($useCache && isset($this->_formulaCache[$formulaString])) {
+-            $result = $this->_formulaCache[$formulaString];
++        if ($useCache && isset($this->_formulaCache[$formulaStringKey = str_replace('.', '-', $formulaString)])) {
++            $result = $this->_formulaCache[$formulaStringKey];
+             $this->debug(
+                 '      get cached formula <span class=osh-replacement>' . self::esc($formulaString) . '</span>'
+                 . ' = <span class=osh-formula>' . self::esc(self::toString($result->result)) . '</span>'
+diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigParser.php b/Model/ConfigParser.php
+index 4a58e806c..b46169dd9 100644
+--- a/Model/ConfigParser.php
++++ b/Model/ConfigParser.php
+@@ -13,6 +13,8 @@ class Owebia_Shipping2_Model_ConfigParser
+     const FLOAT_REGEX  = '[-]?\d+(?:[.]\d+)?';
+     const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
+ 
++    protected $constants;
++    protected $_currencyCodes;
+     public static $debugIndexCounter = 0;
+ 
+     public static function esc($input)
+@@ -1198,15 +1200,10 @@ class Owebia_Shipping2_Model_ConfigParser
+         }
+     }
+ 
+-    protected function getChar($charCode)
+-    {
+-        return utf8_encode(chr($charCode));
+-    }
+-
+     protected function _parseInputPrepareInput($input)
+     {
+-        $openingQuote = $this->getChar(147);
+-        $closingQuote = $this->getChar(148);
++        $openingQuote = hex2bin('c293'); // bin2hex(utf8_encode(chr(147))) = c293 = var_dump(hex2bin('c293') == utf8_encode(chr(147)));
++        $closingQuote = hex2bin('c294'); // bin2hex(utf8_encode(chr(148))) = c294 = var_dump(hex2bin('c294') == utf8_encode(chr(148)));
+         $input = str_replace(
+             ['&gt;', '&lt;', '“', '”', $openingQuote, $closingQuote, '&laquo;', '&raquo;', "\r\n", "\t"],
+             ['>', '<', '"', '"', '"', '"', '"', '"', "\n", ' '],

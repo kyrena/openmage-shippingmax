@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated D/11/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -21,13 +21,16 @@
 class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_Model_Carrier {
 
 	protected $_code = 'shippingmax_colisprivpts';
-	protected $_full = false;
 	protected $_api  = true;
 	protected $_fullCacheLifetime = 21600; // 6 heures en secondes
+	protected $_full; // isFull()
 
-	public function __construct() {
-		$this->_full = mb_stripos($this->getConfigData('api_url'), 'http') === false;
-		return parent::__construct();
+	public function isFull() {
+
+		if (!is_bool($this->_full))
+			$this->_full = mb_stripos($this->getConfigData('api_url'), 'http') === false;
+
+		return parent::isFull();
 	}
 
 	public function loadItemsFromApi(object $address) {
@@ -43,7 +46,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 			curl_setopt($ch, CURLOPT_USERPWD, $this->getConfigData('api_username').':'.$this->getConfigData('api_password', true));
 
 			$results = $this->runCurl($ch, false);
-			$results = explode("\n", utf8_encode($results)); // le fichier est en iso-8859-1
+			$results = explode("\n", mb_convert_encoding($results, 'UTF-8', 'ISO-8859-1')); // le fichier est en iso-8859-1
 
 			$today = new DateTime();
 			$today->setTimezone(new DateTimeZone('Europe/Paris'));

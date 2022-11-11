@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated D/11/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -354,7 +354,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 				Mage::getModel('shippingmax/coords')->setAddressCoords($address);
 				$items = $rate->getCarrierInstance()->loadItemsFromCache($address);
 				foreach ($details as $detail) {
-					$detail = json_decode($detail->getData('details'), true);
+					$detail = @json_decode($detail->getData('details'), true);
 					if (array_key_exists($detail['id'], $items)) {
 						$result = ['item' => $items[$detail['id']]];
 						$result['lat'] = $result['item']['lat'];
@@ -370,7 +370,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 				// cherche ensuite par rapport à l'adresse des points relais précédemment sélectionnés
 				if (empty($result['selected'])) {
 					foreach ($details as $detail) {
-						$detail = json_decode($detail->getData('details'), true);
+						$detail = @json_decode($detail->getData('details'), true);
 						$items  = $rate->getCarrierInstance()->loadItemsFromCache(new Varien_Object($detail));
 						if (array_key_exists($detail['id'], $items)) {
 							$result = ['item' => $items[$detail['id']]];

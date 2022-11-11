@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/30/08/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -66,7 +66,7 @@ try {
 }
 catch (Throwable $t) {
 	$lock->unlock();
-	throw $t;
+	Mage::throwException($t);
 }
 
 $this->endSetup();

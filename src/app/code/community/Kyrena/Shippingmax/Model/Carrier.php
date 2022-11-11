@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated D/18/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -110,6 +110,8 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 			$skey = $this->_code;
 
 		$cache = $this->getCacheFile();
+		$life  = $this->getFullCacheLifetime();
+		$full  = $this->isFull();
 		$items = [];
 
 		// RETOURNE LES RÉSULTATS DEPUIS LE CACHE (1h)
@@ -125,7 +127,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 		// CHARGE LES DONNÉES DEPUIS LE FICHIER
 		// s'il y a un fichier avec tous les points relais
-		if ($this->_full) {
+		if ($full) {
 
 			// charge les données depuis le cache openmage
 			if ($app->useCache('shippingmax_places')) {
@@ -136,13 +138,13 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 			// charge les données depuis le cache fichier s'il n'a pas expiré
 			// puis sauvegarde dans le cache openmage
-			if ((empty($items) || !is_array($items)) && is_file($cache) && (filemtime($cache) > (time() - $this->_fullCacheLifetime))) {
+			if ((empty($items) || !is_array($items)) && is_file($cache) && (filemtime($cache) > (time() - $life))) {
 
 				$items = file_get_contents($cache);
 				$items = empty($items) ? null : @unserialize($items, ['allowed_classes' => false]);
 
 				if (!empty($items) && is_array($items) && $app->useCache('shippingmax_places'))
-					$app->saveCache(serialize($items), $this->_code, ['SHIPPINGMAX_PLACES'], $this->_fullCacheLifetime);
+					$app->saveCache(serialize($items), $this->_code, ['SHIPPINGMAX_PLACES'], $life);
 			}
 		}
 
@@ -162,7 +164,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 					// sauvegarde dans le cache fichier et dans le cache openmage
 					// voir aussi Kyrena_Shippingmax_Model_Observer::updateFullFiles
-					if ($this->_full) {
+					if ($full) {
 
 						$dir = dirname($cache);
 						if (!is_dir($dir))
@@ -171,7 +173,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 						// met à jour le fichier et le cache
 						file_put_contents($cache, serialize($items));
 						if ($app->useCache('shippingmax_places'))
-							$app->saveCache(serialize($items), $this->_code, ['SHIPPINGMAX_PLACES'], $this->_fullCacheLifetime);
+							$app->saveCache(serialize($items), $this->_code, ['SHIPPINGMAX_PLACES'], $life);
 
 						// supprime les résultats en cache
 						$ids = $app->getCache()->getIds();
@@ -273,13 +275,14 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		return [];
 	}
 
-	protected function runCurl($ch, bool $json, int $timeout = 20) {
+	protected function runCurl($ch, bool $json = true) {
 
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_ENCODING , ''); // https://stackoverflow.com/q/17744112/2980105
 		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 
 		$result = curl_exec($ch);

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/04/2019
- * Updated V/26/04/2019
+ * Updated J/20/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -19,6 +19,8 @@
  */
 
 class Kyrena_Shippingmax_Model_Details extends Mage_Core_Model_Abstract {
+
+	protected $_eventPrefix = 'shippingmax_details';
 
 	public function _construct() {
 		$this->_init('shippingmax/details');

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated S/24/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -39,7 +39,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 			'Login'    => $this->getConfigData('api_username'),
 			'Password' => $this->getConfigData('api_password', true),
 		]));
-		$results = $this->runCurl($ch, true);
+		$results = $this->runCurl($ch);
 
 		if (empty($results['SessionId']))
 			return $items;
@@ -57,7 +57,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		]));
 
 		$mapping = ['BY' => 'BY', 'RUS' => 'RU'];
-		$results = $this->runCurl($ch, true, 99);
+		$results = $this->runCurl($ch);
 
 		//echo '<pre>';print_r(array_slice($results, 0, 20));exit;
 		if (!empty($results) && is_array($results)) {
@@ -147,12 +147,12 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 
 			// fermé toute la journée
 			if (($str == 'NODAY') || (strlen($str) < 11)) {
-				$html[] = $day.'#closed';
+				$html[$day] = $day.'#closed';
 			}
 			// ouvert non stop
 			// 09:00-19:00
 			else if (!str_contains($str, '/')) {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str, 0, 2).'#'.substr($str, 3, 2).'#'.
 					substr($str, 6, 2).'#'.substr($str, 9, 2);
 			}
@@ -160,14 +160,14 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 			// 09:00-14:00/14:30-19:00
 			// 09:00-19:00/14:00-14:30
 			else if ((int) substr($str, 6, 2) > (int) substr($str, 12, 2)) {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str, 0, 2).'#'.substr($str, 3, 2).'#'.
 					substr($str, 12, 2).'#'.substr($str, 15, 2).'#'.
 					substr($str, 18, 2).'#'.substr($str, 21, 2).'#'.
 					substr($str, 6, 2).'#'.substr($str, 9, 2);
 			}
 			else {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str, 0, 2).'#'.substr($str, 3, 2).'#'.
 					substr($str, 6, 2).'#'.substr($str, 9, 2).'#'.
 					substr($str, 12, 2).'#'.substr($str, 15, 2).'#'.

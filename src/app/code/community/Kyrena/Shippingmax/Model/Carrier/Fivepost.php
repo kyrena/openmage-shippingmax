@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated S/24/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -39,7 +39,7 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 			'Content-Type: application/x-www-form-urlencoded',
 		]);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'subject=OpenAPI&audience=A122019!');
-		$results = $this->runCurl($ch, true);
+		$results = $this->runCurl($ch);
 
 		if (empty($results['jwt']))
 			return $items;
@@ -59,7 +59,7 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 				'pageNumber' => $page,
 			]));
 
-			$results = $this->runCurl($ch, true);
+			$results = $this->runCurl($ch);
 			$mapping = ['Россия' => 'RU'];
 
 			//echo '<pre>';print_r(array_slice($results['content'], 0, 20));exit;

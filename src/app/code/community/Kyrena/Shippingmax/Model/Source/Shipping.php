@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated J/02/12/2021
+ * Updated J/20/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -19,6 +19,8 @@
  */
 
 class Kyrena_Shippingmax_Model_Source_Shipping {
+
+	protected $_options;
 
 	public function toOptionArray() {
 

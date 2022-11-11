@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/20/05/2022
+ * Updated D/06/11/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -25,12 +25,12 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 		$legend = $element->getData('legend');
 
 		// entête autres modes de livraison
-		if (stripos($element->getHtmlId(), 'openmage') !== false)
+		if (str_contains($element->getHtmlId(), 'openmage'))
 			return sprintf('<p class="box" style="margin-top:16px;">%s</p>', $legend);
 
 		// entête modes de livraison d'owebia
 		$version = $this->helper('shippingmax')->getOwebiaVersion();
-		if (stripos($element->getHtmlId(), 'owebia') !== false) {
+		if (str_contains($element->getHtmlId(), 'owebia')) {
 			if (empty(Mage::getConfig()->getNode('modules/Owebia_Shipping2/lite')))
 				return sprintf('<p class="box" style="margin-top:16px;">%s %s &nbsp; <u>%s</u> <span class="right"><a href="%s">github.com/owebia</a></span></p>',
 					'Owebia/Shipping', $version, $legend,

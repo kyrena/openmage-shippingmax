@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/24/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -42,7 +42,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pocztk48Op extends Kyrena_Shippingmax_Mod
 		]));
 
 		$items   = [];
-		$results = $this->runCurl($ch, true);
+		$results = $this->runCurl($ch);
 
 		//echo '<pre>';print_r(array_slice($results, 0, 20));exit;
 		if (!empty($results) && is_array($results)) {

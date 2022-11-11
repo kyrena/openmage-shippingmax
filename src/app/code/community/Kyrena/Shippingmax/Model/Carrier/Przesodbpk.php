@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/02/02/2021
- * Updated J/01/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -27,11 +27,16 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 
 	public function loadItemsFromApi(object $address) {
 
+		// https://stackoverflow.com/a/33035088/2980105
+		$limit = (int) str_replace(['G', 'M', 'K'], ['000000000', '000000', '000'], ini_get('memory_limit'));
+		if ($limit < 1073741824)
+			ini_set('memory_limit', '1G');
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
 
 		$items   = [];
-		$results = $this->runCurl($ch, true, 199);
+		$results = $this->runCurl($ch);
 
 		//echo '<pre>';print_r(array_slice($results['data'], 0, 20));exit;
 		if (!empty($results['data']) && is_array($results['data'])) {
@@ -86,17 +91,17 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 
 			// fermé toute la journée
 			if (empty($str)) {
-				$html[] = $day.'#closed';
+				$html[$day] = $day.'#closed';
 			}
 			// ouvert non stop
 			else if (count($str) == 2) {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str[0], 0, 2).'#'.substr($str[0], 2, 2).'#'.
 					substr($str[1], 0, 2).'#'.substr($str[1], 2, 2);
 			}
 			// fermé à midi
 			else {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str[0], 0, 2).'#'.substr($str[0], 2, 2).'#'.
 					substr($str[1], 0, 2).'#'.substr($str[1], 2, 2).'#'.
 					substr($str[2], 0, 2).'#'.substr($str[2], 2, 2).'#'.

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated S/24/09/2022
+ * Updated V/28/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -44,7 +44,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 			'method'  => 'getDeliveryPoints',
 			'params'  => ['kladr_id' => $address->getData('kladr')],
 		]));
-		$results = $this->runCurl($ch, true, 99);
+		$results = $this->runCurl($ch);
 
 		//echo '<pre>';print_r(array_slice($results['result'], 0, 20));exit;
 		if (!empty($results['result']) && is_array($results['result'])) {
@@ -145,24 +145,24 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 				$str = explode(' ', $str);
 				// fermé toute la journée
 				if (($str[1] == '-') || (strlen($str[1]) < 11)) {
-					$html[] = $day.'#closed';
+					$html[$day] = $day.'#closed';
 				}
 				// ouvert non stop
 				// 09:00-19:00
 				else if (str_contains($str[1], '-')) {
-					$html[] = $day.'#'.
+					$html[$day] = $day.'#'.
 						substr($str[1], 0, 2).'#'.substr($str[1], 3, 2).'#'.
 						substr($str[1], 6, 2).'#'.substr($str[1], 9, 2);
 				}
 			}
 			// fermé toute la journée
 			else if (empty($str['workTime'])) {
-				$html[] = $day.'#closed';
+				$html[$day] = $day.'#closed';
 			}
 			// ouvert non stop
 			// 09:00-19:00
 			else if (empty($str['breaks'])) {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str['workTime'], 0, 2).'#'.substr($str['workTime'], 3, 2).'#'.
 					substr($str['workTime'], 6, 2).'#'.substr($str['workTime'], 9, 2);
 			}
@@ -174,7 +174,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 					$str['breaks'] = $str['breaks'][0];
 				}
 
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str['workTime'], 0, 2).'#'.substr($str['workTime'], 3, 2).'#'.
 					substr($str['breaks'], 0, 2).'#'.substr($str['breaks'], 3, 2).'#'.
 					substr($str['breaks'], 6, 2).'#'.substr($str['breaks'], 9, 2).'#'.

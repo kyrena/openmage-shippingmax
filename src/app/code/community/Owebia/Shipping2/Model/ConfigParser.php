@@ -13,6 +13,8 @@ class Owebia_Shipping2_Model_ConfigParser
     const FLOAT_REGEX  = '[-]?\d+(?:[.]\d+)?';
     const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
 
+    protected $constants;
+    protected $_currencyCodes;
     public static $debugIndexCounter = 0;
 
     public static function esc($input)
@@ -1198,15 +1200,10 @@ class Owebia_Shipping2_Model_ConfigParser
         }
     }
 
-    protected function getChar($charCode)
-    {
-        return utf8_encode(chr($charCode));
-    }
-
     protected function _parseInputPrepareInput($input)
     {
-        $openingQuote = $this->getChar(147);
-        $closingQuote = $this->getChar(148);
+        $openingQuote = hex2bin('c293'); // bin2hex(utf8_encode(chr(147))) = c293 = var_dump(hex2bin('c293') == utf8_encode(chr(147)));
+        $closingQuote = hex2bin('c294'); // bin2hex(utf8_encode(chr(148))) = c294 = var_dump(hex2bin('c294') == utf8_encode(chr(148)));
         $input = str_replace(
             ['&gt;', '&lt;', '“', '”', $openingQuote, $closingQuote, '&laquo;', '&raquo;', "\r\n", "\t"],
             ['>', '<', '"', '"', '"', '"', '"', '"', "\n", ' '],

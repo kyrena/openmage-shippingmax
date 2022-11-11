@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/11/07/2019
- * Updated J/01/09/2022
+ * Updated M/11/10/2022
  *
  * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -20,7 +20,7 @@
 
 class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_Model_Carrier {
 
-	protected $_code = 'shippingmax_chronorelais';
+	protected $_code = 'shippingmax_chronorelais'; // or shippingmax_shop2shop
 	protected $_full = false;
 	protected $_api  = true;
 
@@ -139,17 +139,17 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 
 			// fermé toute la journée
 			if ($str[0] == '0000') {
-				$html[] = $day.'#closed';
+				$html[$day] = $day.'#closed';
 			}
 			// ouvert non stop
 			else if ($str[2] == '0000') {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str[0], 0, 2).'#'.substr($str[0], 2, 2).'#'.
 					substr($str[1], 0, 2).'#'.substr($str[1], 2, 2);
 			}
 			// fermé à midi
 			else {
-				$html[] = $day.'#'.
+				$html[$day] = $day.'#'.
 					substr($str[0], 0, 2).'#'.substr($str[0], 2, 2).'#'.
 					substr($str[1], 0, 2).'#'.substr($str[1], 2, 2).'#'.
 					substr($str[2], 0, 2).'#'.substr($str[2], 2, 2).'#'.
