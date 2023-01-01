@@ -6,12 +6,12 @@
  */
 -->
 <config>
-    <modules>
-        <Owebia_Shipping2>
-            <active>true</active>
-            <codePool>community</codePool>
-            <!-- see https://www.luigifab.fr/openmage/modules for more information -->
-            <update>https://raw.githubusercontent.com/owebia/magento1-module-advanced-shipping/master/app/code/community/Owebia/Shipping2/etc/config.xml</update>
-        </Owebia_Shipping2>
-    </modules>
+	<modules>
+		<Owebia_Shipping2>
+			<active>true</active>
+			<codePool>community</codePool>
+			<!-- see https://github.com/luigifab/openmage-modules for more information -->
+			<update>https://raw.githubusercontent.com/owebia/magento1-module-advanced-shipping/master/app/code/community/Owebia/Shipping2/etc/config.xml</update>
+		</Owebia_Shipping2>
+	</modules>
 </config>

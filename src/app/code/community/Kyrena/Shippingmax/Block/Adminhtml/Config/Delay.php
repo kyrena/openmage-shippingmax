@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated J/30/06/2022
+ * Updated J/29/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -41,7 +41,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 
 		$html = $this->toHtml();
 		$text = $code.' - '.Mage::getSingleton('core/locale')->getCountryTranslation($code).(str_contains($html, 'todo"') ? ' *' : '');
-		if (($code != 'FR') && in_array($code, Mage::helper('shippingmax')->getFranceDromCom(true)))
+		if (($code != 'FR') && in_array($code, $this->helper('shippingmax')->getFranceDromCom(true)))
 			$text = 'FR - '.$text;
 
 		if (!empty(self::$_config[$code]['franco']))
@@ -56,9 +56,9 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 
 	protected function getArrayConfig() {
 
-		$ids     = Mage::getResourceModel('core/store_collection')->setOrder('name', 'asc')->getColumnValues('store_id');
-		$dromcom = $this->helper('shippingmax')->getFranceDromCom(false);
-		$items   = [];
+		$storeIds = Mage::getResourceModel('core/store_collection')->setOrder('name', 'asc')->getAllIds();
+		$dromcom  = $this->helper('shippingmax')->getFranceDromCom(false);
+		$items    = [];
 
 		$postcodes = [
 			[null, null, null],
@@ -71,11 +71,11 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 			['ES', '52006', '_52'],   // Melilla (52)
 		];
 
-		foreach ($ids as $storeId) {
+		foreach ($storeIds as $storeId) {
 
 			if (empty($storeId)) continue;
 
-			$carriers  = Mage::getModel('shipping/config')->getActiveCarriers($storeId);
+			$carriers  = Mage::getSingleton('shipping/config')->getActiveCarriers($storeId);
 			$countries = explode(',', Mage::getStoreConfig('general/country/allow', $storeId));
 			$franco    = 50000;
 

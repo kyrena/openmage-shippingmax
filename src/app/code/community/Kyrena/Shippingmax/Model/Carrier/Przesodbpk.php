@@ -1,9 +1,9 @@
 <?php
 /**
  * Created M/02/02/2021
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -48,15 +48,15 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 
 				$items[$result['id']] = [
 					'id'          => $result['id'],
-					'lat'         => trim(str_replace(',', '.', $result['latitude']), '0'),
-					'lng'         => trim(str_replace(',', '.', $result['longitude']), '0'),
+					'lat'         => (float) str_replace(',', '.', $result['latitude']),
+					'lng'         => (float) str_replace(',', '.', $result['longitude']),
 					'name'        => $result['name'],
 					'street'      => implode("\n", array_filter([$result['street'], $result['place']])),
 					'postcode'    => $result['zip'],
 					'city'        => $result['city'],
 					'region'      => $result['region'] ?? null,
 					'country_id'  => strtoupper($result['country']),
-					'description' => $this->createDesc($result['openingHours']['regular']),
+					'description' => $this->getDescription($result['openingHours']['regular']),
 					//'max_weight'  => $result['maxWeight'] ?? null, // kg
 					'cod'         => ($result['creditCardPayment'] == 'yes') && (stripos($result['name'], 'ZBOX') === false) && (stripos($result['name'], 'Z BOX') === false) && (stripos($result['name'], 'Z-BOX') === false) && (stripos($result['name'], 'ALZABOX') === false) && (stripos($result['name'], 'ALZA-BOX') === false) && (stripos($result['name'], 'ALZA BOX') === false),
 				];
@@ -66,7 +66,7 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 		return $items;
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		$html = [];
 		$days = [

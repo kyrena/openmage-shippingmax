@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -99,8 +99,8 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 
 				$items[$result['Id']] = [
 					'id'          => $result['Id'],
-					'lat'         => trim(str_replace(',', '.', $result['Latitude']), '0'),
-					'lng'         => trim(str_replace(',', '.', $result['Longitude']), '0'),
+					'lat'         => (float) str_replace(',', '.', $result['Latitude']),
+					'lng'         => (float) str_replace(',', '.', $result['Longitude']),
 					'name'        => $result['Name'],
 					'street'      => $result['Address'],
 					'postcode'    => $result['PostCode'],
@@ -109,7 +109,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 					'country_id'  => $mapping[$country],
 					'description' => implode("\n", array_filter([
 						$result['OutDescription'],
-						$this->createDesc($result['WorkTime']),
+						$this->getDescription($result['WorkTime']),
 					])),
 					//'max_weight'  => $result['MaxWeight'] ?? null, // kg
 					'cod'         => !empty($result['Cash']),
@@ -120,7 +120,7 @@ class Kyrena_Shippingmax_Model_Carrier_Pickpoint extends Kyrena_Shippingmax_Mode
 		return $items;
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		$data = explode(',', $data);
 		if (count($data) != 7)

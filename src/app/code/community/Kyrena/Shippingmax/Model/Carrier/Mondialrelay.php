@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/11/10/2022
+ * Updated V/02/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -34,11 +34,11 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 			// https://www.mondialrelay.fr/media/123560/solution-web-service-v58.pdf
 			$client = new SoapClient($this->getConfigData('api_url'), ['trace' => 1]);
 			$params = [
-				'Enseigne'  => $this->getConfigData('api_username'),
-				'Pays'      => ($address->getData('country_id') == 'MC') ? 'FR' : $address->getData('country_id'),
-				'CP'        => trim(is_numeric($address->getData('city')) ? $address->getData('city') : $address->getData('postcode')),
-				'Latitude'  => number_format(round($address->getData('lat'), 11), 6),
-				'Longitude' => number_format(round($address->getData('lng'), 11), 6),
+				'Enseigne'       => $this->getConfigData('api_username'),
+				'Pays'           => ($address->getData('country_id') == 'MC') ? 'FR' : $address->getData('country_id'),
+				'CP'             => trim(is_numeric($address->getData('city')) ? $address->getData('city') : $address->getData('postcode')),
+				'Latitude'       => number_format($address->getData('lat') ?? 0, 6),
+				'Longitude'      => number_format($address->getData('lng') ?? 0, 6),
 				'RayonRecherche' => $this->getConfigData('dst_search'),
 			];
 
@@ -79,14 +79,14 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 
 				$items[$result->Num] = [
 					'id'          => $result->Num,
-					'lat'         => trim(str_replace(',', '.', $result->Latitude), '0'),
-					'lng'         => trim(str_replace(',', '.', $result->Longitude), '0'),
+					'lat'         => (float) str_replace(',', '.', $result->Latitude),
+					'lng'         => (float) str_replace(',', '.', $result->Longitude),
 					'name'        => $result->LgAdr1,
 					'street'      => implode("\n", array_filter([$result->LgAdr2, $result->LgAdr3, $result->LgAdr4])),
 					'postcode'    => $result->CP,
 					'city'        => $result->Ville,
 					'country_id'  => $result->Pays,
-					'description' => $this->createDesc($result),
+					'description' => $this->getDescription($result),
 					'dst'         => round($result->Distance / 1000, 1),
 				];
 			}
@@ -149,7 +149,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 		return parent::checkIfAvailable($request);
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		$html = [];
 		$days = [

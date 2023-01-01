@@ -3,7 +3,7 @@
  * Created V/12/04/2019
  * Updated V/10/09/2021
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -30,7 +30,7 @@
 				<Mage_Sales />
 				<Owebia_Shipping2 />
 			</depends>
-			<!-- see https://www.luigifab.fr/openmage/modules for more information -->
+			<!-- see https://github.com/luigifab/openmage-modules for more information -->
 			<update>https://raw.githubusercontent.com/kyrena/openmage-shippingmax/master/src/app/code/community/Kyrena/Shippingmax/etc/config.xml</update>
 		</Kyrena_Shippingmax>
 	</modules>

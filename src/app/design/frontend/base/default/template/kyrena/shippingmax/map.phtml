@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/19/09/2022
+ * Updated L/14/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -55,16 +55,11 @@ self.data    =  <?php echo json_encode($items) ?>;
 <div class="top">
 	<div class="search">
 		<?php if (!is_numeric($code)): ?>
-			<form action="<?php echo $this->getUrl('*/*/update', ['code' => $code, 'q' => ($code == 'shippingmax_storelocator') ? $this->getRequest()->getParam('q') : null]) ?>" method="post" class="address" onsubmit="return shippingmax.formAjax(this);">
+			<form action="<?php echo $this->getUrl('*/*/update', [
+				'code' => $code,
+				'q'    => ($code == 'shippingmax_storelocator') ? $this->getRequest()->getParam('q', null) : null,
+			]) ?>" method="post" class="address" onsubmit="return shippingmax.submitFormAjax(this);">
 				<div class="search-elements">
-
-					<?php if ($useStreet): ?>
-						<input type="text" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('Street') ?>" title="<?php echo $this->__('Street') ?>" autocorrect="off" autocomplete="address-line1" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
-					<?php else: ?>
-						<input type="<?php echo in_array($country, $countries) ? 'tel' : 'text' ?>" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('ZIP/Postal Code') ?>" title="<?php echo $this->__('ZIP/Postal Code') ?>" autocorrect="off" autocomplete="postal-code" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
-					<?php endif ?>
-
-					<input type="text" name="city" value="<?php echo $help->escapeEntities($address->getData('city'), true) ?>" placeholder="<?php echo $this->__('City') ?>" title="<?php echo $this->__('City') ?>" autocorrect="off" spellcheck="false" id="city" <?php echo (!$showAll && !empty($address->getData('postcode')) && empty($address->getData('city'))) ? 'autofocus="autofocus"' : '' ?> />
 
 					<div class="country-choice">
 						<ul class="<?php echo $isMulti ? 'country-list multi' : 'country-list single' ?>">
@@ -101,6 +96,14 @@ self.data    =  <?php echo json_encode($items) ?>;
 						<?php endif ?>
 					</div>
 
+					<?php if ($useStreet): ?>
+						<input type="text" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('Street') ?>" title="<?php echo $this->__('Street') ?>" autocorrect="off" autocomplete="address-line1" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
+					<?php else: ?>
+						<input type="<?php echo in_array($country, $countries) ? 'tel' : 'text' ?>" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('ZIP/Postal Code') ?>" title="<?php echo $this->__('ZIP/Postal Code') ?>" autocorrect="off" autocomplete="postal-code" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
+					<?php endif ?>
+
+					<input type="text" name="city" value="<?php echo $help->escapeEntities($address->getData('city'), true) ?>" placeholder="<?php echo $this->__('City') ?>" title="<?php echo $this->__('City') ?>" autocorrect="off" spellcheck="false" id="city" <?php echo (!$showAll && !empty($address->getData('postcode')) && empty($address->getData('city'))) ? 'autofocus="autofocus"' : '' ?> />
+
 					<button type="submit" class="btn-search">
 						<span class="ic-search"><?php echo $this->__('Search') ?></span>
 					</button>
@@ -129,7 +132,7 @@ self.data    =  <?php echo json_encode($items) ?>;
 	<div class="map">
 		<div id="map"></div>
 	</div>
-	<form action="<?php echo $this->getUrl('*/*/save', ['code' => $code]) ?>" method="post" class="results" onsubmit="return shippingmax.formAjax(this);">
+	<form action="<?php echo $this->getUrl('*/*/save', ['code' => $code]) ?>" method="post" class="results" onsubmit="return shippingmax.submitFormAjax(this);">
 		<?php echo $this->getChildHtml('maplist') ?>
 	</form>
 </div>

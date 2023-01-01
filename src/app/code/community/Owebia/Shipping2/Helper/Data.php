@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright © 2008-2020 Owebia. All rights reserved.
- * Copyright © 2019-2022 Kyrena. All rights reserved.
+ * Copyright © 2019-2023 Kyrena. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -173,7 +173,7 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
     {
         $extract = [];
         foreach ($attributes as $to => $from) {
-            $extract[$to] = isset($data[$from]) ? $data[$from] : null;
+            $extract[$to] = $data[$from] ?? null;
         }
         return $extract;
     }

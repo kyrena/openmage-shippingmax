@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/20/10/2022
+ * Updated V/02/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -84,7 +84,7 @@ class Kyrena_Shippingmax_Model_Coords extends Mage_Core_Model_Abstract {
 
 			if (array_key_exists((int) $postcode, $arrondissement))
 				$city = $arrondissement[(int) $postcode];
-			else if (mb_stripos($city, 'cedex') !== false)
+			else if (!empty($city) && (mb_stripos($city, 'cedex') !== false))
 				$city = preg_replace('#\s+cedex\s*\d*\s*#i', '', $city);
 		}
 

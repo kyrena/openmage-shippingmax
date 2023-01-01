@@ -70,7 +70,7 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
         foreach ($cartItems as $item) {
             $type = $item->getProduct()->getTypeId();
             $parentItemId = $item->getData('parent_item_id');
-            $parentItem = isset($cartItems[$parentItemId]) ? $cartItems[$parentItemId] : null;
+            $parentItem = $cartItems[$parentItemId] ?? null;
             $parentType = isset($parentItem) ? $parentItem->getProduct()->getTypeId() : null;
             if ($type != 'configurable') {
                 if ($type == 'bundle' && $bundleProcessChildren) {
@@ -126,9 +126,8 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
 
     public function __set($name, $value)
     {
-        switch ($name) {
-            case 'items':
-                return $this->_items = $value;
+        if ($name == 'items') {
+            return $this->_items = $value;
         }
         return parent::__set($name, $value);
     }

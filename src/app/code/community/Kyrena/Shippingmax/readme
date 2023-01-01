@@ -3,7 +3,7 @@ Tracker   : https://github.com/kyrena/openmage-shippingmax
 Composer  : https://packagist.org/packages/kyrena/openmage-shippingmax
 Module    : Kyrena/Shippingmax
 License   : GNU GPL 2+ (https://opensource.org/licenses/gpl-2.0)
-Copyright : 2019-2022 Fabrice Creuzot <fabrice~cellublue~com>
+Copyright : 2019-2023 Fabrice Creuzot <fabrice~cellublue~com>
 Copyright : 2019-2022 Jérôme Siau <jerome~cellublue~com>
 Submodule : Owebia/Shipping (lite)
 Sublicense: MIT (https://opensource.org/licenses/mit)
@@ -127,7 +127,7 @@ License: MIT (https://opensource.org/licenses/mit)
 Files: /skin/frontend/base/default/*/kyrena/shippingmax/leaflet.min.*
 Files: /skin/*/*/default/images/kyrena/shippingmax/layers*.png
 Files: /skin/*/*/default/images/kyrena/shippingmax/marker*.png
-Source: https://leafletjs.com/ (1.9.2)
+Source: https://leafletjs.com/ (1.9.3)
 Copyright: 2010-2022 Vladimir Agafonkin
 Copyright: 2010-2011 CloudMade
 License: BSD 2-clauses (https://opensource.org/licenses/BSDplusPatent)

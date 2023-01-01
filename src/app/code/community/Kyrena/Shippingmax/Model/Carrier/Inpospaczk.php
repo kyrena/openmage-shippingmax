@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -52,15 +52,15 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 
 				$items[$result['id']] = [
 					'id'          => $result['id'],
-					'lat'         => trim(str_replace(',', '.', $result['location'][0]), '0'),
-					'lng'         => trim(str_replace(',', '.', $result['location'][1]), '0'),
+					'lat'         => (float) str_replace(',', '.', $result['location'][0]),
+					'lng'         => (float) str_replace(',', '.', $result['location'][1]),
 					'name'        => $result['location_description'],
 					'street'      => $result['address']['street'].' '.$result['address']['building_no'],
 					'postcode'    => $result['address']['post_code'],
 					'city'        => $result['address']['city'],
 					'region'      => $result['address']['province'],
 					'country_id'  => $this->_country,
-					'description' => $this->createDesc($result['operating_hours']),
+					'description' => $this->getDescription($result['operating_hours']),
 				];
 			}
 		}
@@ -79,15 +79,15 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 
 				$items[$result['name']] = [
 					'id'          => $result['name'],
-					'lat'         => trim(str_replace(',', '.', $result['location']['latitude']), '0'),
-					'lng'         => trim(str_replace(',', '.', $result['location']['longitude']), '0'),
+					'lat'         => (float) str_replace(',', '.', $result['location']['latitude']),
+					'lng'         => (float) str_replace(',', '.', $result['location']['longitude']),
 					'name'        => $result['location_description'],
 					'street'      => $result['address_details']['street'].' '.$result['address_details']['building_number'],
 					'postcode'    => $result['address_details']['post_code'],
 					'city'        => $result['address_details']['city'],
 					'region'      => $result['address_details']['province'],
 					'country_id'  => $this->_country,
-					'description' => $this->createDesc($result['opening_hours']),
+					'description' => $this->getDescription($result['opening_hours']),
 				];
 			}
 		}
@@ -95,7 +95,7 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 		return $items;
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		if ($data == '24/7')
 			return '24/7';

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/23/04/2020
- * Updated S/19/02/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -54,8 +54,8 @@ class Kyrena_Shippingmax_Model_Carrier_Storelocator extends Kyrena_Shippingmax_M
 
 					$items[$data['id']] = [
 						'id'         => $data['id'],
-						'lat'        => trim(str_replace(',', '.', $data['LATITUDE']), '0'),
-						'lng'        => trim(str_replace(',', '.', $data['LONGITUDE']), '0'),
+						'lat'        => (float) str_replace(',', '.', $data['LATITUDE']),
+						'lng'        => (float) str_replace(',', '.', $data['LONGITUDE']),
 						'name'       => $data['NOM DU MAGASIN'],
 						'street'     => implode("\n", array_filter([$data['ADRESSE']])),
 						'postcode'   => $data['CODE POSTAL'],

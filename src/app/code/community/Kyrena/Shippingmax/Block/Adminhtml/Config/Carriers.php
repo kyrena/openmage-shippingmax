@@ -1,9 +1,9 @@
 <?php
 /**
  * Created M/31/03/2020
- * Updated M/28/06/2022
+ * Updated J/29/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -26,7 +26,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Carriers extends Mage_Adminhtml_
 
 		$hid   = $element->getHtmlId();
 		$scope = $element->getScopeLabel();
-		$items = Mage::getModel('shipping/config')->getAllCarriers();
+		$items = Mage::getSingleton('shipping/config')->getAllCarriers();
 		$data  = [];
 
 		foreach ($items as $code => $carrier) {

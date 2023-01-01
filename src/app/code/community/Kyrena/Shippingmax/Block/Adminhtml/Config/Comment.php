@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/21/05/2021
- * Updated D/11/09/2022
+ * Updated M/06/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -19,6 +19,8 @@
  */
 
 class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_Block_System_Config_Form_Fieldset {
+
+	protected $_html;
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
@@ -96,22 +98,22 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_B
 		$this->_html = str_replace(': ,', ': ',
 			'<div class="comment shippingmax">'.
 				(empty($svg = Mage::getStoreConfig('carriers/'.$code.'/img_backend')) ? '' : '<img src="'.$this->getSkinUrl('images/kyrena/shippingmax/'.$svg).'" alt="" class="shippingmax logo" />').
-				((($code == 'shippingmax_storelocator') || (stripos($code, 'shippingmax_') === false)) ? '' : '<p>'.$this->__('Maximum weight: %d kg.', empty($maxWeight) ? 30 : $maxWeight).'</p>').
+				((($code == 'shippingmax_storelocator') || !str_contains($code, 'shippingmax_')) ? '' : '<p>'.$this->__('Maximum weight: %d kg.', empty($maxWeight) ? 30 : $maxWeight).'</p>').
 				(empty($html['all']) ? '' : '<p>'.implode(', ', $html['all']).'.</p>').
 				(empty($html['sel']) ? '' : '<p>'.implode(', ', $html['sel']).'.</p>').
 			'</div>');
 
 		// drapeau utf8
 		$flag = '';
-		if (preg_match('#^[A-Z]{2} - #', $element->getData('legend')) === 1) {
-			$flag = substr($element->getData('legend'), 0, 2);
+		if (preg_match('#^[A-Z]{2} - #', $element->getLegend()) === 1) {
+			$flag = substr($element->getLegend(), 0, 2);
 			$flag = mb_convert_encoding('&#'.(127397 + ord($flag[0])).';', 'UTF-8', 'HTML-ENTITIES').
 				mb_convert_encoding('&#'.(127397 + ord($flag[1])).';', 'UTF-8', 'HTML-ENTITIES').
 				' &nbsp;';
 		}
 
 		// marquage
-		$element->setLegend($flag.$element->getData('legend').((in_array($defaultCountry, $selCountries) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId)) ? ' *' : ''));
+		$element->setLegend($flag.$element->getLegend().((in_array($defaultCountry, $selCountries) && Mage::getStoreConfigFlag('carriers/'.$code.'/active', $storeId)) ? ' *' : ''));
 
 		return parent::render($element);
 	}

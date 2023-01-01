@@ -1,9 +1,9 @@
 <?php
 /**
  * Created M/23/04/2019
- * Updated M/16/03/2021
+ * Updated S/03/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -21,7 +21,7 @@
 class Kyrena_Shippingmax_Block_Adminhtml_Config_Debug extends Mage_Adminhtml_Block_System_Config_Form_Field {
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
-		$element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue();
+		$element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue()->unsPath();
 		return parent::render($element);
 	}
 

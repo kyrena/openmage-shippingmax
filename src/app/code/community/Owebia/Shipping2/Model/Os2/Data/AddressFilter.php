@@ -1,13 +1,13 @@
 <?php
 /**
  * Copyright © 2008-2020 Owebia. All rights reserved.
- * Copyright © 2019-2022 Kyrena. All rights reserved.
+ * Copyright © 2019-2023 Kyrena. All rights reserved.
  * See COPYING.txt for license details.
  */
 
 class Owebia_Shipping2_Model_Os2_Data_AddressFilter extends Owebia_Shipping2_Model_Os2_Data_Abstract
 {
-    protected static $_countries = null;
+    protected static $_countries;
 
     // source : geonames.org, 2012-09-26
     protected static $_shortcuts = [
@@ -97,11 +97,7 @@ class Owebia_Shipping2_Model_Os2_Data_AddressFilter extends Owebia_Shipping2_Mod
         $elems = preg_split('/\b/', $input);
         $output = '';
         foreach ($elems as $elem) {
-            if (isset(self::$_countries[$elem])) {
-                $output .= self::$_countries[$elem];
-            } else {
-                $output .= $elem;
-            }
+            $output .= self::$_countries[$elem] ?? $elem;
         }
         while (preg_match('/{address_filter\.([^}]+)}/', $output, $result)) {
             $name = $result[1];

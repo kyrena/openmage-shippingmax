@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated D/06/11/2022
+ * Updated S/03/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -22,7 +22,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
-		$legend = $element->getData('legend');
+		$legend = $element->getLegend();
 
 		// entête autres modes de livraison
 		if (str_contains($element->getHtmlId(), 'openmage'))

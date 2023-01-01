@@ -1,13 +1,13 @@
 <?php
 /**
  * Copyright © 2008-2020 Owebia. All rights reserved.
- * Copyright © 2019-2022 Kyrena. All rights reserved.
+ * Copyright © 2019-2023 Kyrena. All rights reserved.
  * See COPYING.txt for license details.
  */
 
 class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Model_Os2_Data_Abstract
 {
-    protected static $_customerGroups = null;
+    protected static $_customerGroups;
 
     public static function getCollection()
     {
@@ -28,7 +28,7 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
         $elems = preg_split('/\b/', $input);
         $output = '';
         foreach ($elems as $elem) {
-            $output .= isset($customerGroups[$elem]) ? $customerGroups[$elem] : $elem;
+            $output .= $customerGroups[$elem] ?? $elem;
         }
         return $output;
     }
@@ -44,7 +44,7 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
                 $customerGroupId = $adminCustomerGroupId;
             }
         }
-        if ($customerGroupId == 0 && isset($arguments['quote'])) { // Pour les commandes depuis l'API
+        if (($customerGroupId == 0) && isset($arguments['quote'])) { // Pour les commandes depuis l'API
              $customerGroupId = $arguments['quote']->getData('customer_group_id');
         }
         parent::__construct(

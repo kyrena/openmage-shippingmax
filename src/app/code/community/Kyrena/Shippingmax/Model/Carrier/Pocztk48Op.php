@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -54,8 +54,8 @@ class Kyrena_Shippingmax_Model_Carrier_Pocztk48Op extends Kyrena_Shippingmax_Mod
 
 				$items[$result['pni']] = [
 					'id'          => $result['pni'],
-					'lat'         => trim(str_replace(',', '.', $result['latitude']), '0'),
-					'lng'         => trim(str_replace(',', '.', $result['longitude']), '0'),
+					'lat'         => (float) str_replace(',', '.', $result['latitude']),
+					'lng'         => (float) str_replace(',', '.', $result['longitude']),
 					'name'        => $result['name'],
 					'street'      => $result['street'],
 					'postcode'    => $result['zipCode'],

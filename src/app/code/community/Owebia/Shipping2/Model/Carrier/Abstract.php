@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright © 2008-2020 Owebia. All rights reserved.
- * Copyright © 2019-2022 Kyrena. All rights reserved.
+ * Copyright © 2019-2023 Kyrena. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -21,7 +21,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
      * Collect rates for this shipping method based on information in $request
      *
      * @param Mage_Shipping_Model_Rate_Request $data
-     * @return Mage_Shipping_Model_Rate_Result
+     * @return Mage_Shipping_Model_Rate_Result|false
      */
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
     {
@@ -141,7 +141,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
 
     protected function __checkRequest($httpRequest, $path)
     {
-        list($router, $controller, $action) = explode('/', $path);
+        [$router, $controller, $action] = explode('/', $path);
         return $httpRequest->getRouteName() == $router
             && $httpRequest->getControllerName() == $controller
             && $httpRequest->getActionName() == $action;
@@ -150,7 +150,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
     protected function __getProcess($request)
     {
         $data = Mage::helper('owebia_shipping2')->getDataModelMap($this->getParser(), $this->_code, $request);
-        $process = [
+        return [
             'data' => $data,
             'cart.items' => [],
             'config' => $this->_getConfig(),
@@ -161,7 +161,6 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
                 'stop_to_first_match' => (boolean)$this->__getConfigData('stop_to_first_match'),
             ],
         ];
-        return $process;
     }
 
     public function addDataModel($name, $model)

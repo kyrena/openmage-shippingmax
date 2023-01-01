@@ -10,9 +10,8 @@ class Owebia_Shipping2_Model_Os2_Data_Address extends Owebia_Shipping2_Model_Os2
 
     protected function _load($name)
     {
-        switch ($name) {
-            case 'country_name':
-                return Mage::getModel('directory/country')->load($this->getData('country_id'))->getName();
+        if ($name == 'country_name') {
+            return Mage::getModel('directory/country')->load($this->getData('country_id'))->getName();
         }
         return parent::_load($name);
     }

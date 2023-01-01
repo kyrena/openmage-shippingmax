@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * Copyright 2021      | Florian Palamuso <florian~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
@@ -29,8 +29,8 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 	public function loadItemsFromApi(object $address) {
 
 		$url = $this->getConfigData('api_url');
-		if (stripos($url, 'prepaid') !== false)
-			$url = preg_replace('#prepaid=\d?#i', 'prepaid=1', $url);
+		if (str_contains($url, 'prepaid'))
+			$url = preg_replace('#prepaid=\d?#', 'prepaid=1', $url);
 		else
 			$url = str_contains($url, '?') ? $url.'&prepaid=1': $url.'?prepaid=1';
 
@@ -61,21 +61,21 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 					continue;
 
 				$name = $result['Name'];
-				$name = (($pos = strpos($name, '_')) === false) ? $name : substr($name, 0, $pos);
+				$name = (($pos = mb_strpos($name, '_')) === false) ? $name : mb_substr($name, 0, $pos);
 
 				$items[$result['Code']] = [
 					'id'          => $result['Code'],
-					'lat'         => trim(str_replace(',', '.', $gps[0]), '0'),
-					'lng'         => trim(str_replace(',', '.', $gps[1]), '0'),
+					'lat'         => (float) str_replace(',', '.', $gps[0]),
+					'lng'         => (float) str_replace(',', '.', $gps[1]),
 					'name'        => $name,
 					'street'      => $result['AddressReduce'],
-					'postcode'    => substr($result['Address'], 0, strpos($result['Address'], ',')),
+					'postcode'    => mb_substr($result['Address'], 0, mb_strpos($result['Address'], ',')),
 					'city'        => $result['CityName'],
 					'region'      => $result['Area'],
 					'country_id'  => $mapping[$country],
 					'description' => implode("\n", array_filter([
 						trim($result['TripDescription']),
-						$this->createDesc($result['WorkShedule'])
+						$this->getDescription($result['WorkShedule'])
 					])),
 					//'max_weight'  => $result['LoadLimit'] ?? null, // kg
 					'cod'         => ($result['OnlyPrepaidOrders'] != 'Yes'),
@@ -86,7 +86,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberry extends Kyrena_Shippingmax_Model
 		return $items;
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		if (empty($data))
 			return '';

@@ -31,7 +31,7 @@ class Owebia_Shipping2_Model_Os2_Data
 
     public function getData($name)
     {
-        return isset($this->_data[$name]) ? $this->_data[$name] : null;
+        return $this->_data[$name] ?? null;
     }
 
     public function set($name, $value)

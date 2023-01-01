@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright © 2008-2020 Owebia. All rights reserved.
- * Copyright © 2019-2022 Kyrena. All rights reserved.
+ * Copyright © 2019-2023 Kyrena. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -10,15 +10,17 @@
 
 class Owebia_Shipping2_Model_ConfigParser
 {
-    const FLOAT_REGEX  = '[-]?\d+(?:[.]\d+)?';
-    const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
+    public const FLOAT_REGEX  = '[-]?\d+(?:[.]\d+)?';
+    public const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
 
-    protected $constants;
+    protected $_constants;
     protected $_currencyCodes;
+    protected $_propertiesSort;
     public static $debugIndexCounter = 0;
 
     public static function esc($input)
     {
+        if (empty($input)) return (string)$input;
         $input = htmlspecialchars($input, ENT_NOQUOTES, 'UTF-8');
         return preg_replace('/&lt;(\/?)span([^&]*)&gt;/', '<\1span\2>', $input);
     }
@@ -29,20 +31,19 @@ class Owebia_Shipping2_Model_ConfigParser
         else if (is_bool($value)) return $value ? 'true' : 'false';
         else if (is_float($value)) return str_replace(',', '.', (string)$value); // To avoid locale problems
         else if (is_array($value)) return 'array(size:' . count($value) . ')';
-        else if (is_object($value)) return get_class($value) . '';
+        else if (is_object($value)) return get_class($value);
         else return $value;
     }
 
     public static function getInfos()
     {
-        $properties = [
+        return [
             'server_os' => PHP_OS,
             'server_software' => getenv('SERVER_SOFTWARE'),
             'php_version' => PHP_VERSION,
             //'memory_limit' => self::formatSize(self::parseSize(ini_get('memory_limit'))),
             //'memory_usage' => self::formatSize(memory_get_usage(true)),
         ];
-        return $properties;
     }
 
     public static function getDefaultProcessData()
@@ -105,14 +106,13 @@ class Owebia_Shipping2_Model_ConfigParser
         if ($isAssociative) {
             $classes = [];
             if (isset($data['type']) && $data['type']=='meta') $classes[] = 'json-meta';
-            $output = ($html && $classes ? '<span class="' . implode(' ', $classes) . '">' : '')
+            return ($html && $classes ? '<span class="' . implode(' ', $classes) . '">' : '')
                 .'{'
                 .($beautify ? "{$lineBreak}{$newIndent}" : '')
                 .implode(',' . ($beautify ? "{$lineBreak}{$newIndent}" : ''), $output)
                 .($beautify ? "{$lineBreak}{$currentIndent}" : '')
                 .'}'
                 .($html && $classes ? '</span>' : '');
-            return $output;
         } else {
             return '[' . implode(',' . ($beautify ? ' ' : ''), $output) . ']';
         }
@@ -152,40 +152,24 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected static function json_decode($input)
     {
-        if (function_exists('json_decode')) { // PHP >= 5.2.0
-            $output = json_decode($input);
-            if (function_exists('json_last_error')) { // PHP >= 5.3.0
-                $error = json_last_error();
-                if ($error != JSON_ERROR_NONE) {
-                    Mage::throwException($error);
-                }
-            }
-            return $output;
-        } else {
-            return Zend_Json::decode($input);
+        $output = json_decode($input);
+        $error = json_last_error();
+        if ($error != JSON_ERROR_NONE) {
+            Mage::throwException($error);
         }
-    }
-
-    protected static function json_encode($input)
-    {
-        if (function_exists('json_encode')) {
-            return json_encode($input);
-        } else {
-            return Zend_Json::encode($input);
-        }
+        return $output;
     }
 
     public static function escapeString($input)
     {
-        $escaped = self::json_encode($input);
-        $escaped = preg_replace_callback(
+        $escaped = json_encode($input);
+        return preg_replace_callback(
             '/\\\\u([0-9a-fA-F]{4})/',
-            function ($match) {
+            static function ($match) {
                 return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
             },
             $escaped
         );
-        return $escaped;
     }
 
     protected $_defaultTitle;
@@ -195,9 +179,9 @@ class Owebia_Shipping2_Model_ConfigParser
     protected $_formulaCache;
     protected $_expressionCache;
     protected $_debugPrefix;
-    public $debugCode = null;
+    public $debugCode;
     public $debugOutput = '';
-    public $debugHeader = null;
+    public $debugHeader;
 
     public function init($input, $autoCorrection, $title = null)
     {
@@ -219,7 +203,7 @@ class Owebia_Shipping2_Model_ConfigParser
 
     public function removeDebugIndent()
     {
-        $this->_debugPrefix = substr($this->_debugPrefix, 0, strlen($this->_debugPrefix) - 3);
+        $this->_debugPrefix = substr($this->_debugPrefix, 0, -3);
     }
 
     public function debug($text)
@@ -230,7 +214,7 @@ class Owebia_Shipping2_Model_ConfigParser
     public function getDebug()
     {
         $index = $this->debugCode . '-' . self::$debugIndexCounter++;
-        $output = "<style rel=stylesheet type=\"text/css\">"
+        return "<style rel=stylesheet type=\"text/css\">"
             . ".osh-debug{background:#000;color:#bbb;-webkit-opacity:0.9;-moz-opacity:0.9;opacity:0.9;"
                 . "text-align:left;white-space:pre-wrap;overflow:auto;}"
             . ".osh-debug p{margin:2px 0;}"
@@ -245,7 +229,6 @@ class Owebia_Shipping2_Model_ConfigParser
                         . " onclick=\"document.getElementById('osh-debug-{$index}').style.display = 'none';\""
                         . ">[<span style=\"padding:0 5px;color:#f00;\">X</span>]</span>"
             . "<p>{$this->debugHeader}</p>{$this->debugOutput}</div></div>";
-        return $output;
     }
 
     protected function getVariableDisplay($variablePath, $variableValue)
@@ -317,7 +300,7 @@ class Owebia_Shipping2_Model_ConfigParser
 
     public function getConfigRow($id)
     {
-        return isset($this->_config[$id]) ? $this->_config[$id] : null;
+        return $this->_config[$id] ?? null;
     }
 
     public function setConfig($config)
@@ -334,8 +317,8 @@ class Owebia_Shipping2_Model_ConfigParser
 
     public function sortProperties($firstKey, $secondKey)
     {
-        $firstKeyPosition = isset($this->propertiesSort[$firstKey]) ? $this->propertiesSort[$firstKey] : 1000;
-        $secondKeyPosition = isset($this->propertiesSort[$secondKey]) ? $this->propertiesSort[$secondKey] : 1000;
+        $firstKeyPosition = $this->_propertiesSort[$firstKey] ?? 1000;
+        $secondKeyPosition = $this->_propertiesSort[$secondKey] ?? 1000;
         return $firstKeyPosition == $secondKeyPosition
             ? strcmp($firstKey, $secondKey) : $firstKeyPosition - $secondKeyPosition;
     }
@@ -343,7 +326,7 @@ class Owebia_Shipping2_Model_ConfigParser
     public function formatConfig($compress, $keysToRemove = [], $html = false)
     {
         $objectArray = [];
-        $this->propertiesSort = array_flip(
+        $this->_propertiesSort = array_flip(
             $this->addCurrencyCodesForFeesAndConditions([
                 'type',
                 'about',
@@ -361,7 +344,7 @@ class Owebia_Shipping2_Model_ConfigParser
         foreach ($this->_config as $code => $row) {
             $object = [];
             foreach ($row as $key => $property) {
-                if (substr($key, 0, 1) != '*' && !in_array($key, $keysToRemove)) {
+                if (strpos($key, '*') !== 0 && !in_array($key, $keysToRemove)) {
                     $object[$key] = $property['value'];
                 }
             }
@@ -382,7 +365,7 @@ class Owebia_Shipping2_Model_ConfigParser
         foreach ($this->_config as $code => &$row) {
             $this->processRow($process, $row, $checkAllConditions = true);
             foreach ($row as $propertyName => $propertyValue) {
-                if (substr($propertyName, 0, 1) != '*') {
+                if (strpos($propertyName, '*') !== 0) {
                     $this->debug('   check ' . $propertyName);
                     $this->getRowProperty($row, $propertyName);
                 }
@@ -402,7 +385,7 @@ class Owebia_Shipping2_Model_ConfigParser
         if ($type == 'data') {
             foreach ($row as $key => $data) {
                 if (in_array($key, ['*id', 'code', 'type'])) continue;
-                $value = isset($data['value']) ? $data['value'] : $data;
+                $value = $data['value'] ?? $data;
                 $this->debug(
                     '         .<span class=osh-key>' . self::esc($key) . '</span>'
                     . ' = <span class=osh-formula>' . self::esc(self::toString($value)) . '</span>'
@@ -422,12 +405,10 @@ class Owebia_Shipping2_Model_ConfigParser
     protected function processRowEnabled(&$row, $isChecking)
     {
         $enabled = $this->getRowProperty($row, 'enabled');
-        if (isset($enabled)) {
-            if (!$isChecking && !$enabled) {
-                $this->addMessage('info', $row, 'enabled', 'Configuration disabled');
-                return $this->createResult()
-                    ->setSuccess(false);
-            }
+        if (isset($enabled) && !$isChecking && !$enabled) {
+            $this->addMessage('info', $row, 'enabled', 'Configuration disabled');
+            return $this->createResult()
+                ->setSuccess(false);
         }
         return null;
     }
@@ -435,8 +416,8 @@ class Owebia_Shipping2_Model_ConfigParser
     protected function processRowConditions($process, &$row, $isChecking)
     {
         $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
-        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
-        $conditions = $this->getRowProperty($row, 'conditions_'.$currency);
+        $currency = is_object($currency) ? $currency->getCurrencyCode() : $currency;
+        $conditions = empty($currency) ? null : $this->getRowProperty($row, 'conditions_'.strtolower($currency));
         $conditions = empty($conditions) ? $this->getRowProperty($row, 'conditions') : $conditions;
 
         if (isset($conditions)) {
@@ -519,8 +500,8 @@ class Owebia_Shipping2_Model_ConfigParser
     protected function processRowFees($process, &$row, $isChecking)
     {
         $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
-        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
-        $fees = $this->getRowProperty($row, 'fees_'.$currency);
+        $currency = is_object($currency) ? $currency->getCurrencyCode() : $currency;
+        $fees = empty($currency) ? null : $this->getRowProperty($row, 'fees_'.strtolower($currency));
         $fees = empty($fees) ? $this->getRowProperty($row, 'fees') : $fees;
 
         if (isset($fees)) {
@@ -591,7 +572,7 @@ class Owebia_Shipping2_Model_ConfigParser
     {
         $property = null;
         $output = null;
-        if (isset($originalRow) && isset($originalKey) && $originalRow['*id'] == $row['*id'] && $originalKey == $key) {
+        if (isset($originalRow, $originalKey) && $originalRow['*id'] == $row['*id'] && $originalKey == $key) {
             $this->addMessage(
                 'error',
                 $row,
@@ -611,7 +592,7 @@ class Owebia_Shipping2_Model_ConfigParser
             );
             preg_match_all('/{([a-z0-9_]+)\.([a-z0-9_]+)}/i', $output, $resultSet, PREG_SET_ORDER);
             foreach ($resultSet as $result) {
-                list($original, $refCode, $refKey) = $result;
+                [$original, $refCode, $refKey] = $result;
                 if ($refCode == $row['*id'] && $refKey == $key) {
                     $this->addMessage(
                         'error',
@@ -626,8 +607,8 @@ class Owebia_Shipping2_Model_ConfigParser
                     $replacement = $this->getRowProperty(
                         $this->_config[$refCode],
                         $refKey,
-                        isset($originalRow) ? $originalRow : $row,
-                        isset($originalKey) ? $originalKey : $key
+                        $originalRow ?? $row,
+                        $originalKey ?? $key
                     );
                     if (is_array($replacement) && isset($replacement['error'])) {
                         return isset($originalRow) ? $replacement : 'false';
@@ -721,7 +702,7 @@ class Owebia_Shipping2_Model_ConfigParser
     public function array_match_allCallback()
     {
         $args = func_get_args();
-        if (!isset($args[0]) || !isset($args[1])) return false;
+        if (!isset($args[0], $args[1])) return false;
         $result = $this->callFunction('array_intersect', $args);
         return count($result) == count($args[1]);
     }
@@ -783,11 +764,11 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function _prepare_regexp($regexp)
     {
-        if (!isset($this->constants)) {
+        if (!isset($this->_constants)) {
             $reflector = new ReflectionClass(get_class($this));
-            $this->constants = $reflector->getConstants();
+            $this->_constants = $reflector->getConstants();
         }
-        foreach ($this->constants as $name => $value) {
+        foreach ($this->_constants as $name => $value) {
             $regexp = str_replace('{' . $name . '}', $value, $regexp);
         }
         return $regexp;
@@ -797,14 +778,14 @@ class Owebia_Shipping2_Model_ConfigParser
     {
         $regexp = $this->_prepare_regexp($regexp);
         if ($debug) $this->debug('      preg_match <span class=osh-replacement>' . self::esc($regexp) . '</span>');
-        return preg_match($regexp, $input, $result);
+        return preg_match($regexp, (string)$input, $result);
     }
 
     protected function _preg_match_all($regexp, $input, &$result, $debug = false)
     {
         $regexp = $this->_prepare_regexp($regexp);
         if ($debug) $this->debug('      preg_match_all <span class=osh-replacement>' . self::esc($regexp) . '</span>');
-        $return = preg_match_all($regexp, $input, $result, PREG_SET_ORDER);
+        return preg_match_all($regexp, (string)$input, $result, PREG_SET_ORDER);
     }
 
     protected function _loadValue($process, $objectName, $attribute)
@@ -842,8 +823,8 @@ class Owebia_Shipping2_Model_ConfigParser
                         $tmpValue = $this->_getItemProperty($item, $loopVar);
                         $values = (array)$tmpValue;
                         foreach ($values as $valueItem) {
-                            $key = self::_autoEscapeStrings($valueItem);
-                            $sel = isset($selections[$key]) ? $selections[$key] : null;
+                            $key = $this->_autoEscapeStrings($valueItem);
+                            $sel = $selections[$key] ?? null;
                             $selections[$key]['items'][] = $item;
                         }
                         $this->debug(
@@ -1087,10 +1068,9 @@ class Owebia_Shipping2_Model_ConfigParser
         $formula = $this->_prepareFormulaSwitch($row, $propertyName, $formula, $isChecking, $useCache);
         $formula = $this->_prepareFormulaTable($row, $propertyName, $formula, $isChecking, $useCache);
 
-        $result = $this->createResult()
+        return $this->createResult()
             ->setSuccess(true)
             ->setResult($formula);
-        return $result;
     }
 
     protected function _evalFormula($formula, &$row, $propertyName = null, $isChecking = false)
@@ -1204,12 +1184,11 @@ class Owebia_Shipping2_Model_ConfigParser
     {
         $openingQuote = hex2bin('c293'); // bin2hex(utf8_encode(chr(147))) = c293 = var_dump(hex2bin('c293') == utf8_encode(chr(147)));
         $closingQuote = hex2bin('c294'); // bin2hex(utf8_encode(chr(148))) = c294 = var_dump(hex2bin('c294') == utf8_encode(chr(148)));
-        $input = str_replace(
+        return str_replace(
             ['&gt;', '&lt;', '“', '”', $openingQuote, $closingQuote, '&laquo;', '&raquo;', "\r\n", "\t"],
             ['>', '<', '"', '"', '"', '"', '"', '"', "\n", ' '],
             $input
         );
-        return $input;
     }
 
     protected function _parseInputParseJsonObject($object, &$autoCorrectionWarnings, &$missingEnquoteOfPropertyName)
@@ -1225,8 +1204,7 @@ class Owebia_Shipping2_Model_ConfigParser
                     'JSON: missing enquote of property name: %s';
                 $missingEnquoteOfPropertyName[] = self::toString(trim($name, '"'));
             }
-            $propertySeparator = isset($property['property_separator'])
-                ? $property['property_separator'] : null;
+            $propertySeparator = $property['property_separator'] ?? null;
             $isLastProperty = ( $j == $propertiesCount - 1 );
             if (!$isLastProperty && $propertySeparator != ',') {
                 $autoCorrectionWarnings[] = 'JSON: missing property separator (comma)';
@@ -1277,8 +1255,8 @@ class Owebia_Shipping2_Model_ConfigParser
                 $configString = substr($configString, $pos, strlen($configString));
             }
             $configString = str_replace($object[0], '', $configString);
-            $objectName = isset($object['object_name']) ? $object['object_name'] : null;
-            $objectSeparator = isset($object['object_separator']) ? $object['object_separator'] : null;
+            $objectName = $object['object_name'] ?? null;
+            $objectSeparator = $object['object_separator'] ?? null;
             $isLastObject = ( $i == $objectsCount - 1 );
             if (!$isLastObject && $objectSeparator != ',') {
                 $autoCorrectionWarnings[] = 'JSON: missing object separator (comma)';
@@ -1305,7 +1283,7 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function _parseInputParseComments(&$configString, &$autoCorrectionWarnings)
     {
-        if (preg_match_all('/((?:#+[^{\\n]*\\s+)+)\\s*{/s', $configString, $result, PREG_SET_ORDER)) {
+        if (preg_match_all('/((?:#+[^{\\n]*\\s+)+)\\s*{/', $configString, $result, PREG_SET_ORDER)) {
             $autoCorrectionWarnings[] = 'JSON: usage of incompatible comments';
             foreach ($result as $set) {
                 $commentLines = explode("\n", $set[1]);
@@ -1353,7 +1331,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 }
                 $this->_parseInputIgnore((array)$toIgnore, $json, $autoCorrectionWarnings);
             }
-            $configString = $this->jsonEncode($json);
+            $configString = self::jsonEncode($json);
             $configString = str_replace(["\n"], ["\\n"], $configString);
 
             $lastJsonError = null;
@@ -1425,23 +1403,19 @@ class Owebia_Shipping2_Model_ConfigParser
         }
 
         $row = [];
-        $i = 1;
         foreach ($object as $propertyName => $propertyValue) {
             if (in_array($propertyName, $reservedKeys)) {
                 continue;
             }
             if (in_array($propertyName, $availableKeys)
-                || substr($propertyName, 0, 1) == '_'
+                || strpos($propertyName, '_') === 0
                 || in_array($object['type'], ['data', 'meta'])
             ) {
                 if (isset($propertyValue)) {
                     $row[$propertyName] = ['value' => $propertyValue, 'original_value' => $propertyValue];
                     if ($autoCorrection) $this->cleanProperty($row, $propertyName);
                 }
-            } else {
-                if (!in_array($propertyName, $unknownProperties)) $unknownProperties[] = $propertyName;
-            }
-            $i++;
+            } else if (!in_array($propertyName, $unknownProperties)) $unknownProperties[] = $propertyName;
         }
         return $row;
     }
@@ -1490,7 +1464,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 $this->addMessage('error', $row, 'code', 'The id must be unique, `%s` has been found twice', $code);
             }
             while (isset($this->_config[$code])) {
-                $code .= rand(0, 9);
+                $code .= random_int(0, 9);
             }
         }
         $row['*id'] = $code;
@@ -1541,7 +1515,7 @@ class Owebia_Shipping2_Model_ConfigParser
         // data
         while ($this->_preg_match("#{({$keys})\.([a-z0-9_\+\-\.]+)}#i", $input, $result)) {
             $original = $result[0];
-            $objectName = isset($aliases[$result[1]]) ? $aliases[$result[1]] : $result[1];
+            $objectName = $aliases[$result[1]] ?? $result[1];
             $replacement = $this->_loadValue($process, $objectName, $result[2]);
             $input = $this->_replaceVariable($process, $input, $original, $replacement);
         }
@@ -1586,7 +1560,7 @@ class Owebia_Shipping2_Model_ConfigParser
             foreach ($input as $v) {
                 $items[] = isset($v) && (is_string($v) || empty($v)) ? self::escapeString($v) : self::toString($v);
             }
-            return 'array(' . join(',', $items) . ')';
+            return 'array(' . implode(',', $items) . ')';
         } else {
             return isset($input) && (is_string($input))
                 ? self::escapeString($input) : self::toString($input);
@@ -1600,9 +1574,9 @@ class Owebia_Shipping2_Model_ConfigParser
             || $operation == 'max'
             || $operation == 'count distinct'
         ) {
-            return isset($regexpResult[3]) ? $regexpResult[3] : null;
+            return $regexpResult[3] ?? null;
         } elseif ($operation == 'count') {
-            return isset($regexpResult[2]) ? $regexpResult[2] : null;
+            return $regexpResult[2] ?? null;
         }
         return null;
     }
@@ -1646,7 +1620,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 }
                 break;
             case 'sum':
-                $returnValue = (isset($returnValue) ? $returnValue : 0) + $value * $item->qty;
+                $returnValue = ($returnValue ?? 0) + $value * $item->qty;
                 break;
             case 'count distinct':
                 if (!isset($returnValue)) {
@@ -1714,9 +1688,9 @@ class Owebia_Shipping2_Model_ConfigParser
                 }
                 else $evalResult = true;
 
-                if ($evalResult == true) {
+                if ($evalResult) {
                     if ($operation == 'count') {
-                        $returnValue = (isset($returnValue) ? $returnValue : 0) + $item->qty;
+                        $returnValue = ($returnValue ?? 0) + $item->qty;
                     } else {
                         $value = $this->_getItemProperty($item, $reference);
                         $this->debug(

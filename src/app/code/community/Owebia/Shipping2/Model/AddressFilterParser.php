@@ -7,18 +7,19 @@
 class Owebia_Shipping2_Model_AddressFilterParser
 {
     protected $_configParser;
-    protected $_input = null;
-    protected $_position = null;
-    protected $_bufferStart = null;
-    protected $_char = null;
-    protected $_join = null;
+    protected $_input;
+    protected $_length;
+    protected $_position;
+    protected $_bufferStart;
+    protected $_char;
+    protected $_join;
 
     protected $_output = '';
-    protected $_level = null;
-    protected $_parentLevel = null;
+    protected $_level;
+    protected $_parentLevel;
     protected $_regexp = false;
     protected $_litteral = false;
-    protected $_litteralQuote = null;
+    protected $_litteralQuote;
     protected $_callbackMap = [
         '(' => 'openingParenthesisCallback',
         ')' => 'closingParenthesisCallback',
@@ -37,13 +38,11 @@ class Owebia_Shipping2_Model_AddressFilterParser
 
     public function parse($input)
     {
-        $this->current = [];
-
         $this->_input = $input;
-        $this->length = strlen($this->_input);
+        $this->_length = strlen($this->_input);
         // look at each character
         $this->_join = ' && ';
-        for ($this->_position = 0; $this->_position < $this->length; $this->_position++) {
+        for ($this->_position = 0; $this->_position < $this->_length; $this->_position++) {
             $this->_char = $this->_input[$this->_position];
             if (isset($this->_callbackMap[$this->_char])) {
                 $this->{$this->_callbackMap[$this->_char]}();
@@ -145,8 +144,8 @@ class Owebia_Shipping2_Model_AddressFilterParser
                 if (preg_match('/^[A-Z]{2}$/', $buffer)) {
                     $buffer = "{{c}}==={$this->escapeString($buffer)}";
                     $this->_level = 'country';
-                } else if (substr($buffer, 0, 1) == '/'
-                    && (substr($buffer, strlen($buffer) - 1, 1) == '/'
+                } else if (strpos($buffer, '/') === 0
+                    && ($buffer[strlen($buffer) - 1] == '/'
                         || substr($buffer, strlen($buffer) - 2, 2) == '/i'
                     )
                 ) {

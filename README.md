@@ -10,8 +10,8 @@ Composer dependencies:
 * [azuyalabs/yasumi](https://github.com/azuyalabs/yasumi)
 
 Included dependencies:
-* [owebia/shipping](https://github.com/owebia/magento1-module-advanced-shipping) (2.6.10-lite)
-* [leaflet](https://leafletjs.com/) (1.9.2)
+* [owebia/shipping](https://github.com/owebia/magento1-module-advanced-shipping) (2.6.10-lite, without jquery/editor/phpparser/doc)
+* [leaflet](https://leafletjs.com/) (1.9.3)
 
 External services:
 * [Nominatim](https://nominatim.org/): addresses geocoding (results are stored in database)
@@ -95,8 +95,8 @@ To display delivery times, you must edit your template with:
 
 ## Copyright and Credits
 
-- Current version: 2.6.0 (11/11/2022)
-- Compatibility: OpenMage 19.x / 20.x / 21.x, PHP 7.2 / 7.3 / 7.4 / 8.0 / 8.1
+- Current version: 2.7.0 (01/01/2023)
+- Compatibility: OpenMage 19.x / 20.x / 21.x, PHP 7.2 / 7.3 / 7.4 / 8.0 / 8.1 / 8.2
 - Client compatibility: Firefox 36+, Chrome 32+, Opera 19+, Edge 16+, Safari 9+
 - Translations: English (en), French (fr-FR/fr-CA), German (de), Italian (it), Portuguese (pt-PT/pt-BR), Spanish (es) / Chinese (zh), Czech (cs), Dutch (nl), Greek (el), Hungarian (hu), Japanese (ja), Polish (pl), Romanian (ro), Russian (ru), Slovak (sk), Turkish (tr), Ukrainian (uk)
 - License: GNU GPL 2+
@@ -105,12 +105,10 @@ If you like, take some of your time to improve the translations, go to https://b
 
 ## Installation
 
-Warning: it contains a lite and modified version (without jquery/editor/phpparser/doc) of owebia/shipping ([kyrena/openmage-shippingmax](https://github.com/kyrena/openmage-shippingmax)).
-
 With composer:
 - `composer remove owebia/magento1-module-advanced-shipping`
 - search and remove all owebia/shipping files and directories
-- `composer require kyrena/openmage-shippingmax [--ignore-platform-reqs]`
+- `composer require kyrena/openmage-shippingmax`
 - clear cache
 
 Without composer:

@@ -8,8 +8,6 @@ class Owebia_Shipping2_Model_Os2_Data_Billto extends Owebia_Shipping2_Model_Os2_
 {
     protected function _loadObject()
     {
-        $quote = Mage::getModel('checkout/cart')->getQuote();
-        $address = $quote->getBillingAddress();
-        return $address;
+        return Mage::getModel('checkout/cart')->getQuote()->getBillingAddress();
     }
 }

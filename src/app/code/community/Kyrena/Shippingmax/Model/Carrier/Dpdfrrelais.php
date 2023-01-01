@@ -1,9 +1,9 @@
 <?php
 /**
  * Created L/26/07/2021
- * Updated M/11/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -78,8 +78,8 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 			foreach ($results as $result) {
 				$items[(string) $result->PUDO_ID] = [
 					'id'          => (string) $result->PUDO_ID,
-					'lat'         => trim(str_replace(',', '.', (string) $result->LATITUDE), '0'),
-					'lng'         => trim(str_replace(',', '.', (string) $result->LONGITUDE), '0'),
+					'lat'         => (float) str_replace(',', '.', (string) $result->LATITUDE),
+					'lng'         => (float) str_replace(',', '.', (string) $result->LONGITUDE),
 					'name'        => (string) $result->NAME,
 					'street'      => implode("\n", array_filter([(string) $result->ADDRESS1, (string) $result->ADDRESS2, (string) $result->ADDRESS3])),
 					'postcode'    => (string) $result->ZIPCODE,
@@ -87,7 +87,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 					'country_id'  => 'FR',
 					'description' => implode("\n", array_filter([
 						(string) $result->LOCAL_HINT,
-						$this->createDesc($result)
+						$this->getDescription($result)
 					])),
 				];
 			}
@@ -96,7 +96,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 		return $items;
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		if (empty($data->OPENING_HOURS_ITEMS))
 			return '';

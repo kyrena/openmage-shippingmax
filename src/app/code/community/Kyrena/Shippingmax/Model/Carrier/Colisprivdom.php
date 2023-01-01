@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated L/18/10/2021
+ * Updated J/17/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -67,7 +67,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivdom extends Kyrena_Shippingmax_M
 		$address = new Varien_Object();
 		foreach ($request->getData() as $key => $value) {
 			if (strncasecmp($key, 'dest_', 5) === 0)
-				$address->setData(str_replace('dest_', '', $key), trim($value));
+				$address->setData(str_replace('dest_', '', $key), empty($value) ? '' : trim($value));
 		}
 
 		$items = $this->loadItemsFromCache($address);

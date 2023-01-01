@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/04/2019
- * Updated L/25/10/2021
+ * Updated V/02/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -27,8 +27,10 @@ class Kyrena_Shippingmax_Block_Rewrite_Info extends Mage_Sales_Block_Order_Info 
 	protected function _toHtml() {
 
 		$order = $this->getOrder();
-		$desc  = $order->getShippingDescription();
+		if ($order->getIsVirtual())
+			return parent::_toHtml(); // sinon content vide dans order view
 
+		$desc  = $order->getShippingDescription();
 		$order->setShippingDescription('~!!!~');
 		$html = str_replace('~!!!~', $this->getInfos(), parent::_toHtml());
 		$order->setShippingDescription($desc);

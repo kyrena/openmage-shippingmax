@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -85,14 +85,14 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 
 						$items[$data['REF_CAB']] = [
 							'id'          => $data['REF_CAB'],
-							'lat'         => trim(str_replace(',', '.', $data['LATITUDE']), '0'),
-							'lng'         => trim(str_replace(',', '.', $data['LONGITUDE']), '0'),
+							'lat'         => (float) str_replace(',', '.', $data['LATITUDE']),
+							'lng'         => (float) str_replace(',', '.', $data['LONGITUDE']),
 							'name'        => $data['NOM'],
 							'street'      => $data['ADRESSE'],
 							'postcode'    => $data['CODE_POSTAL'],
 							'city'        => $data['VILLE'],
 							'country_id'  => $data['PAYS'],
-							'description' => $this->createDescCurl($data),
+							'description' => $this->getDescriptionCurl($data),
 						];
 					}
 				}
@@ -123,14 +123,14 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 
 					$items[$result['code_dest']] = [
 						'id'          => $result['code_dest'],
-						'lat'         => trim(str_replace(',', '.', $result['coordinate']['latitude']), '0'),
-						'lng'         => trim(str_replace(',', '.', $result['coordinate']['longitude']), '0'),
+						'lat'         => (float) str_replace(',', '.', $result['coordinate']['latitude']),
+						'lng'         => (float) str_replace(',', '.', $result['coordinate']['longitude']),
 						'name'        => $result['name'],
 						'street'      => $result['address']['street'],
 						'postcode'    => $result['address']['zip'],
 						'city'        => $result['address']['city'],
 						'country_id'  => $result['address']['country'],
-						'description' => $this->createDescApi($result['openingHours']),
+						'description' => $this->getDescriptionApi($result['openingHours']),
 						'dst'         => round($result['distance'], 1)
 					];
 				}
@@ -176,7 +176,7 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 		return parent::checkIfAvailable($request);
 	}
 
-	protected function createDescCurl($values) {
+	protected function getDescriptionCurl($values) {
 
 		$html = [];
 		$days = [
@@ -205,10 +205,10 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 			}
 		}
 
-		return implode("\n", $html);
+		return implode('~', $html);
 	}
 
-	protected function createDescApi($values) {
+	protected function getDescriptionApi($values) {
 
 		$html = [];
 		$days = [
@@ -253,6 +253,6 @@ class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_M
 		}
 
 		ksort($html);
-		return implode("\n", $html);
+		return implode('~', $html);
 	}
 }

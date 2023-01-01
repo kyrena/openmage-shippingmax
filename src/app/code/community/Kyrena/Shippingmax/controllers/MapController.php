@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/03/11/2022
+ * Updated J/17/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -536,26 +536,26 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		$pass = Mage::getStoreConfig('carriers/shippingmax/debug_password');
 		if (Mage::getStoreConfigFlag('carriers/shippingmax/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 
-			$session = $this->getSession();
-			$session->setData('shippingmax_boxberry',       ['city' => 'Иркутск', 'postcode' => '664003', 'country_id' => 'RU']);
-			$session->setData('shippingmax_boxberrycash',   ['city' => 'Иркутск', 'postcode' => '664003', 'country_id' => 'RU']);
-			$session->setData('shippingmax_chronorelais',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR']);
-			$session->setData('shippingmax_colisprivpts',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR']);
-			$session->setData('shippingmax_dpdfrrelais',    ['city' => 'Voiron', 'postcode' => '38500', 'country_id' => 'FR']);
-			$session->setData('shippingmax_fivepost',       ['city' => 'Челябинск', 'postcode' => '454000', 'country_id' => 'RU']);
-			$session->setData('shippingmax_fivepostcash',   ['city' => 'Челябинск', 'postcode' => '454000', 'country_id' => 'RU']);
-			$session->setData('shippingmax_inpospacit',     ['city' => 'Roma', 'postcode' => '00121', 'country_id' => 'IT']);
-			$session->setData('shippingmax_inpospacuk',     ['city' => 'Kilmarnock', 'postcode' => 'KA1 2QA', 'country_id' => 'GB']);
-			$session->setData('shippingmax_inpospaczk',     ['city' => 'Chełm', 'postcode' => '22-100', 'country_id' => 'PL']);
-			$session->setData('shippingmax_mondialrelay',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR']);
-			$session->setData('shippingmax_pickpoint',      ['city' => 'Люберцы', 'postcode' => '140000', 'country_id' => 'RU']);
-			$session->setData('shippingmax_pickpointcash',  ['city' => 'Люберцы', 'postcode' => '140000', 'country_id' => 'RU']);
-			$session->setData('shippingmax_pocztk48Op',     ['city' => 'Wrocław', 'postcode' => '50-307', 'country_id' => 'PL']);
-			$session->setData('shippingmax_przesodbpk',     ['city' => 'Náchod', 'postcode' => '547 01', 'country_id' => 'CZ']);
-			$session->setData('shippingmax_przesodbpkcash', ['city' => 'Náchod', 'postcode' => '547 01', 'country_id' => 'CZ']);
-			$session->setData('shippingmax_shiptor',        ['city' => 'Москва', 'postcode' => '127299', 'country_id' => 'RU']);
-			$session->setData('shippingmax_shiptorcash',    ['city' => 'Москва', 'postcode' => '127299', 'country_id' => 'RU']);
-			$session->setData('shippingmax_storepts',       ['city' => 'Aubenas', 'postcode' => '07200', 'country_id' => 'FR']);
+			$session = $this->getSession()
+				->setData('shippingmax_boxberry',       ['city' => 'Иркутск', 'postcode' => '664003', 'country_id' => 'RU'])
+				->setData('shippingmax_boxberrycash',   ['city' => 'Иркутск', 'postcode' => '664003', 'country_id' => 'RU'])
+				->setData('shippingmax_chronorelais',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR'])
+				->setData('shippingmax_colisprivpts',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR'])
+				->setData('shippingmax_dpdfrrelais',    ['city' => 'Voiron', 'postcode' => '38500', 'country_id' => 'FR'])
+				->setData('shippingmax_fivepost',       ['city' => 'Челябинск', 'postcode' => '454000', 'country_id' => 'RU'])
+				->setData('shippingmax_fivepostcash',   ['city' => 'Челябинск', 'postcode' => '454000', 'country_id' => 'RU'])
+				->setData('shippingmax_inpospacit',     ['city' => 'Roma', 'postcode' => '00121', 'country_id' => 'IT'])
+				->setData('shippingmax_inpospacuk',     ['city' => 'Kilmarnock',    'postcode' => 'KA1 2QA', 'country_id' => 'GB'])
+				->setData('shippingmax_inpospaczk',     ['city' => 'Chełm',         'postcode' => '22-100', 'country_id' => 'PL'])
+				->setData('shippingmax_mondialrelay',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR'])
+				->setData('shippingmax_pickpoint',      ['city' => 'Люберцы', 'postcode' => '140000', 'country_id' => 'RU'])
+				->setData('shippingmax_pickpointcash',  ['city' => 'Люберцы', 'postcode' => '140000', 'country_id' => 'RU'])
+				->setData('shippingmax_pocztk48Op',     ['city' => 'Wrocław', 'postcode' => '50-307', 'country_id' => 'PL'])
+				->setData('shippingmax_przesodbpk',     ['city' => 'Náchod',  'postcode' => '547 01', 'country_id' => 'CZ'])
+				->setData('shippingmax_przesodbpkcash', ['city' => 'Náchod',  'postcode' => '547 01', 'country_id' => 'CZ'])
+				->setData('shippingmax_shiptor',        ['city' => 'Москва',  'postcode' => '127299', 'country_id' => 'RU'])
+				->setData('shippingmax_shiptorcash',    ['city' => 'Москва',  'postcode' => '127299', 'country_id' => 'RU'])
+				->setData('shippingmax_storepts',       ['city' => 'Aubenas', 'postcode' => '07200', 'country_id' => 'FR']);
 
 			$this->_redirect('*/*/debug', ['pass' => $pass]);
 		}

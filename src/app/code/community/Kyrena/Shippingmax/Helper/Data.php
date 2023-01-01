@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/28/10/2022
+ * Updated M/20/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -20,8 +20,10 @@
 
 class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
-	public const ADMIN_SESSION_NAME = 'adminhtml/session_quote';
-	public const FRONT_SESSION_NAME = 'checkout/session';
+	protected $_yasumiProviders;
+	protected $_yasumiTranslations;
+	protected $_dayNames = [];
+
 
 	public function getVersion() {
 		return (string) Mage::getConfig()->getModuleConfig('Kyrena_Shippingmax')->version;
@@ -119,7 +121,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 			$user = $action->getFullActionName();
 		// frontend
 		else
-			$user = sprintf('frontend %d', Mage::app()->getStore()->getData('code'));
+			$user = sprintf('frontend %s', Mage::app()->getStore()->getData('code'));
 
 		return $user;
 	}
@@ -313,7 +315,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		else
 			$countries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
 
-		// filtre sur la config des pays possibles sur le mode de livrais
+		// filtre sur la config des pays possibles sur le mode de livraison
 		$selCountries = Mage::getStoreConfig('carriers/'.$code.'/allowedcountry');
 		$selCountries = empty($selCountries) ? [] : array_filter(explode(',', $selCountries)); // config.xml
 		if (!empty($selCountries))
@@ -400,7 +402,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 	public function getSession(bool $string = false) {
 
 		// pour le checkout/onepage du front-office ou pour la création de commande du back-office
-		$name = Mage::app()->getStore()->isAdmin() ? self::ADMIN_SESSION_NAME : self::FRONT_SESSION_NAME;
+		$name = Mage::app()->getStore()->isAdmin() ? 'adminhtml/session_quote' : 'checkout/session';
 		return $string ? $name : Mage::getSingleton($name);
 	}
 
@@ -438,6 +440,12 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 	public function formatDesc(string $data) {
 
+		if (empty($this->_dayNames)) {
+			$date = Mage::getSingleton('core/locale')->date();
+			foreach (range(1, 7) as $day)
+				$this->_dayNames[$day] = ucfirst($date->setWeekday($day)->toString(Zend_Date::WEEKDAY));
+		}
+
 		if (substr_count($data, '#') > 5) {
 
 			$lines = explode('~', str_replace("\n", '~', $data)); // 'saut de ligne' ou '~'
@@ -453,7 +461,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 					if ($day > 0) {
 
-						$day  = ucfirst(Mage::getSingleton('core/locale')->date()->setWeekday($day)->toString(Zend_Date::WEEKDAY));
+						$day  = $this->_dayNames[$day];
 						$curr = implode(array_slice($line, 1));
 						$next = empty($lines[$idx + 1]) ? '' : implode(array_slice(explode('#', $lines[$idx + 1]), 1));
 

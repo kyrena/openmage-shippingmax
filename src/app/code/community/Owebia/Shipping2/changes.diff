@@ -1,31 +1,123 @@
 #
 # If you see this file, that's because you are using a derived work of Owebia/Shipping2 (2.6.10).
+# This version is compatible with PHP 8.0-8.2.
 # Owebia provide NO support for it.
 #
-# Before apply this patch on owebia code:
-# - remove all <frontend_type>text</frontend_type>
+# BEFORE APPLY THIS PATCH ON OWEBIA CODE:
+# - keep only etc, Helper, and Model directories
+# - search and remove all <frontend_type>text</frontend_type>
 # - convert to short array syntax (https://github.com/thomasbachem/php-short-array-syntax-converter)
+# - replace `catch (Exception` by `catch (Throwable`
+# - find ... -type f -exec perl -pi -e 'chomp if eof' {} \;
 #
 # This derived work is provided with Kyrena/Shippingmax (composer require kyrena/openmage-shippingmax)
-# You will found our changes bellow.
+# You will found all changes bellow.
 #
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' null b/Model/Os2/Data/Config.php
---- null
-+++ b/Model/Os2/Data/Config.php	2021-01-12 17:00:58 +0100
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Carrier/Abstract.php b/Model/Carrier/Abstract.php
---- a/Model/Carrier/Abstract.php	2021-02-12 16:55:25 +0100
-+++ b/Model/Carrier/Abstract.php	2021-02-08 19:01:03 +0100
-@@ -125,7 +125,8 @@
-             $this->_parser = Mage::getModel('owebia_shipping2/ConfigParser')
-                 ->init(
-                     $this->__getConfigData('config'),
--                    (boolean)$this->__getConfigData('auto_correction')
-+                    (boolean)$this->__getConfigData('auto_correction'),
-+                    $this->__getConfigData('title')
-                 );
+diff -r -u -w Shipping2/Helper/Data.php Shipping2/Helper/Data.php
+--- Shipping2/Helper/Data.php
++++ Shipping2/Helper/Data.php
+@@ -105,6 +105,7 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
+                     $helper->getInfos(),
+                     [
+                         'magento_version' => Mage::getVersion(),
++                        'openmage_version' => Mage::getOpenMageVersion(),
+                         'module_version' => (string)$mageConfig->getNode('modules/Owebia_Shipping2/version'),
+                         'carrier_code' => $carrierCode,
+                     ]
+@@ -118,6 +119,7 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
+                     'options' => $cartOptions,
+                 ]
+             ),
++            'config' => Mage::getModel('owebia_shipping2/Os2_Data_Config'),
+             'quote' => $quoteWrapper,
+             'selection' => Mage::getModel('owebia_shipping2/Os2_Data_Selection'),
+             'customer' => Mage::getModel(
+@@ -126,7 +128,12 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
+                     'quote' => $quoteWrapper,
+                 ]
+             ),
+-            'customer_group' => Mage::getModel('owebia_shipping2/Os2_Data_CustomerGroup'),
++            'customer_group' => Mage::getModel(
++                'owebia_shipping2/Os2_Data_CustomerGroup',
++                [
++                    'quote' => $quoteWrapper,
++                ]
++            ),
+             'customvar' => Mage::getModel('owebia_shipping2/Os2_Data_Customvar'),
+             'date' => Mage::getModel('owebia_shipping2/Os2_Data_Date'),
+             'address_filter' => Mage::getModel('owebia_shipping2/Os2_Data_AddressFilter'),
+@@ -166,7 +173,7 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
+     {
+         $extract = [];
+         foreach ($attributes as $to => $from) {
+-            $extract[$to] = isset($data[$from]) ? $data[$from] : null;
++            $extract[$to] = $data[$from] ?? null;
          }
-         return $this->_parser;
-@@ -11,6 +11,12 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+         return $extract;
+     }
+diff -r -u -w Shipping2/Model/AddressFilterParser.php Shipping2/Model/AddressFilterParser.php
+--- Shipping2/Model/AddressFilterParser.php
++++ Shipping2/Model/AddressFilterParser.php
+@@ -7,19 +7,19 @@
+ class Owebia_Shipping2_Model_AddressFilterParser
+ {
+     protected $_configParser;
+-    protected $_input = null;
+-    protected $_length = null;
+-    protected $_position = null;
+-    protected $_bufferStart = null;
+-    protected $_char = null;
+-    protected $_join = null;
++    protected $_input;
++    protected $_length;
++    protected $_position;
++    protected $_bufferStart;
++    protected $_char;
++    protected $_join;
+ 
+     protected $_output = '';
+-    protected $_level = null;
+-    protected $_parentLevel = null;
++    protected $_level;
++    protected $_parentLevel;
+     protected $_regexp = false;
+     protected $_litteral = false;
+-    protected $_litteralQuote = null;
++    protected $_litteralQuote;
+     protected $_callbackMap = [
+         '(' => 'openingParenthesisCallback',
+         ')' => 'closingParenthesisCallback',
+@@ -38,13 +38,11 @@ class Owebia_Shipping2_Model_AddressFilterParser
+ 
+     public function parse($input)
+     {
+-        $this->current = [];
+-
+         $this->_input = $input;
+-        $this->length = strlen($this->_input);
++        $this->_length = strlen($this->_input);
+         // look at each character
+         $this->_join = ' && ';
+-        for ($this->_position = 0; $this->_position < $this->length; $this->_position++) {
++        for ($this->_position = 0; $this->_position < $this->_length; $this->_position++) {
+             $this->_char = $this->_input[$this->_position];
+             if (isset($this->_callbackMap[$this->_char])) {
+                 $this->{$this->_callbackMap[$this->_char]}();
+@@ -146,8 +144,8 @@ class Owebia_Shipping2_Model_AddressFilterParser
+                 if (preg_match('/^[A-Z]{2}$/', $buffer)) {
+                     $buffer = "{{c}}==={$this->escapeString($buffer)}";
+                     $this->_level = 'country';
+-                } else if (substr($buffer, 0, 1) == '/'
+-                    && (substr($buffer, strlen($buffer) - 1, 1) == '/'
++                } else if (strpos($buffer, '/') === 0
++                    && ($buffer[strlen($buffer) - 1] == '/'
+                         || substr($buffer, strlen($buffer) - 2, 2) == '/i'
+                     )
+                 ) {
+diff -r -u -w Shipping2/Model/Carrier/Abstract.php Shipping2/Model/Carrier/Abstract.php
+--- Shipping2/Model/Carrier/Abstract.php
++++ Shipping2/Model/Carrier/Abstract.php
+@@ -11,11 +11,17 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
      protected $_parser;
      protected $_dataModels = [];
  
@@ -38,10 +130,52 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Carrier/A
      /**
       * Collect rates for this shipping method based on information in $request
       *
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigParser.php b/Model/ConfigParser.php
---- a/Model/ConfigParser.php	2021-02-12 16:55:25 +0100
-+++ b/Model/ConfigParser.php	2021-02-12 16:36:54 +0100
-@@ -4,8 +4,8 @@
+      * @param Mage_Shipping_Model_Rate_Request $data
+-     * @return Mage_Shipping_Model_Rate_Result
++     * @return Mage_Shipping_Model_Rate_Result|false
+      */
+     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
+     {
+@@ -126,7 +132,8 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+             $this->_parser = Mage::getModel('owebia_shipping2/ConfigParser')
+                 ->init(
+                     $this->__getConfigData('config'),
+-                    (boolean)$this->__getConfigData('auto_correction')
++                    (boolean)$this->__getConfigData('auto_correction'),
++                    $this->__getConfigData('title')
+                 );
+         }
+         return $this->_parser;
+@@ -134,7 +141,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+ 
+     protected function __checkRequest($httpRequest, $path)
+     {
+-        list($router, $controller, $action) = explode('/', $path);
++        [$router, $controller, $action] = explode('/', $path);
+         return $httpRequest->getRouteName() == $router
+             && $httpRequest->getControllerName() == $controller
+             && $httpRequest->getActionName() == $action;
+@@ -143,7 +150,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+     protected function __getProcess($request)
+     {
+         $data = Mage::helper('owebia_shipping2')->getDataModelMap($this->getParser(), $this->_code, $request);
+-        $process = [
++        return [
+             'data' => $data,
+             'cart.items' => [],
+             'config' => $this->_getConfig(),
+@@ -154,7 +161,6 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+                 'stop_to_first_match' => (boolean)$this->__getConfigData('stop_to_first_match'),
+             ],
+         ];
+-        return $process;
+     }
+ 
+     public function addDataModel($name, $model)
+diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
+--- Shipping2/Model/ConfigParser.php
++++ Shipping2/Model/ConfigParser.php
+@@ -5,18 +5,22 @@
   * See COPYING.txt for license details.
   */
  
@@ -52,7 +186,28 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
  
  class Owebia_Shipping2_Model_ConfigParser
  {
-@@ -30,38 +30,14 @@
+-    const FLOAT_REGEX = '[-]?\d+(?:[.]\d+)?';
+-    const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
++    public const FLOAT_REGEX  = '[-]?\d+(?:[.]\d+)?';
++    public const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
+ 
++    protected $_constants;
++    protected $_currencyCodes;
++    protected $_propertiesSort;
+     public static $debugIndexCounter = 0;
+ 
+     public static function esc($input)
+     {
++        if (empty($input)) return (string)$input;
+         $input = htmlspecialchars($input, ENT_NOQUOTES, 'UTF-8');
+         return preg_replace('/&lt;(\/?)span([^&]*)&gt;/', '<\1span\2>', $input);
+     }
+@@ -27,44 +31,19 @@ class Owebia_Shipping2_Model_ConfigParser
+         else if (is_bool($value)) return $value ? 'true' : 'false';
+         else if (is_float($value)) return str_replace(',', '.', (string)$value); // To avoid locale problems
+         else if (is_array($value)) return 'array(size:' . count($value) . ')';
+-        else if (is_object($value)) return get_class($value) . '';
++        else if (is_object($value)) return get_class($value);
          else return $value;
      }
  
@@ -82,7 +237,8 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
 -
      public static function getInfos()
      {
-         $properties = [
+-        $properties = [
++        return [
              'server_os' => PHP_OS,
 -            'server_software' => $_SERVER['SERVER_SOFTWARE'],
 +            'server_software' => getenv('SERVER_SOFTWARE'),
@@ -92,9 +248,11 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
 +            //'memory_limit' => self::formatSize(self::parseSize(ini_get('memory_limit'))),
 +            //'memory_usage' => self::formatSize(memory_get_usage(true)),
          ];
-         return $properties;
+-        return $properties;
      }
-@@ -71,6 +47,7 @@
+ 
+     public static function getDefaultProcessData()
+@@ -72,6 +51,7 @@ class Owebia_Shipping2_Model_ConfigParser
          return [
              'info'              => Mage::getModel('owebia_shipping2/Os2_Data')->setData(self::getInfos()),
              'cart'              => Mage::getModel('owebia_shipping2/Os2_Data'),
@@ -102,7 +260,7 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
              'quote'             => Mage::getModel('owebia_shipping2/Os2_Data'),
              'selection'         => Mage::getModel('owebia_shipping2/Os2_Data'),
              'customer'          => Mage::getModel('owebia_shipping2/Os2_Data'),
-@@ -104,7 +81,7 @@
+@@ -105,7 +85,7 @@ class Owebia_Shipping2_Model_ConfigParser
                  $classes = [];
                  if ($key == 'about') {
                      $classes[] = 'json-about';
@@ -111,24 +269,88 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
                      $classes[] = 'json-formula';
                  }
                  $propertyClasses = ['json-property'];
-@@ -208,6 +185,7 @@
-         return $escaped;
+@@ -126,14 +106,13 @@ class Owebia_Shipping2_Model_ConfigParser
+         if ($isAssociative) {
+             $classes = [];
+             if (isset($data['type']) && $data['type']=='meta') $classes[] = 'json-meta';
+-            $output = ($html && $classes ? '<span class="' . implode(' ', $classes) . '">' : '')
++            return ($html && $classes ? '<span class="' . implode(' ', $classes) . '">' : '')
+                 .'{'
+                 .($beautify ? "{$lineBreak}{$newIndent}" : '')
+                 .implode(',' . ($beautify ? "{$lineBreak}{$newIndent}" : ''), $output)
+                 .($beautify ? "{$lineBreak}{$currentIndent}" : '')
+                 .'}'
+                 .($html && $classes ? '</span>' : '');
+-            return $output;
+         } else {
+             return '[' . implode(',' . ($beautify ? ' ' : ''), $output) . ']';
+         }
+@@ -173,52 +152,38 @@ class Owebia_Shipping2_Model_ConfigParser
+ 
+     protected static function json_decode($input)
+     {
+-        if (function_exists('json_decode')) { // PHP >= 5.2.0
+-            $output = json_decode($input);
+-            if (function_exists('json_last_error')) { // PHP >= 5.3.0
+-                $error = json_last_error();
+-                if ($error != JSON_ERROR_NONE) {
+-                    Mage::throwException($error);
+-                }
+-            }
+-            return $output;
+-        } else {
+-            return Zend_Json::decode($input);
+-        }
+-    }
+-
+-    protected static function json_encode($input)
+-    {
+-        if (function_exists('json_encode')) {
+-            return json_encode($input);
+-        } else {
+-            return Zend_Json::encode($input);
++        $output = json_decode($input);
++        $error = json_last_error();
++        if ($error != JSON_ERROR_NONE) {
++            Mage::throwException($error);
+         }
++        return $output;
+     }
+ 
+     public static function escapeString($input)
+     {
+-        $escaped = self::json_encode($input);
++        $escaped = json_encode($input);
++        return preg_replace_callback(
+             '/\\\\u([0-9a-fA-F]{4})/',
+-            function ($match) {
++            static function ($match) {
+                 return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
+             },
+             $escaped
+         );
+-        return $escaped;
      }
  
 +    protected $_defaultTitle;
      protected $_input;
      protected $_config;
      protected $_messages;
-@@ -218,7 +196,7 @@
+     protected $_formulaCache;
+     protected $_expressionCache;
+     protected $_debugPrefix;
+-    public $debugCode = null;
++    public $debugCode;
      public $debugOutput = '';
-     public $debugHeader = null;
+-    public $debugHeader = null;
++    public $debugHeader;
  
 -    public function init($input, $autoCorrection)
 +    public function init($input, $autoCorrection, $title = null)
      {
          $this->_config = [];
          $this->_messages = [];
-@@ -227,6 +205,7 @@
+@@ -227,6 +192,7 @@ class Owebia_Shipping2_Model_ConfigParser
          $this->_debugPrefix = '';
          $this->_input = $input;
          $this->_parseInput($autoCorrection);
@@ -136,16 +358,64 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
          return $this;
      }
  
-@@ -362,7 +341,7 @@
+@@ -237,7 +203,7 @@ class Owebia_Shipping2_Model_ConfigParser
+ 
+     public function removeDebugIndent()
+     {
+-        $this->_debugPrefix = substr($this->_debugPrefix, 0, strlen($this->_debugPrefix) - 3);
++        $this->_debugPrefix = substr($this->_debugPrefix, 0, -3);
+     }
+ 
+     public function debug($text)
+@@ -248,7 +214,7 @@ class Owebia_Shipping2_Model_ConfigParser
+     public function getDebug()
+     {
+         $index = $this->debugCode . '-' . self::$debugIndexCounter++;
+-        $output = "<style rel=stylesheet type=\"text/css\">"
++        return "<style rel=stylesheet type=\"text/css\">"
+             . ".osh-debug{background:#000;color:#bbb;-webkit-opacity:0.9;-moz-opacity:0.9;opacity:0.9;"
+                 . "text-align:left;white-space:pre-wrap;overflow:auto;}"
+             . ".osh-debug p{margin:2px 0;}"
+@@ -263,7 +229,6 @@ class Owebia_Shipping2_Model_ConfigParser
+                         . " onclick=\"document.getElementById('osh-debug-{$index}').style.display = 'none';\""
+                         . ">[<span style=\"padding:0 5px;color:#f00;\">X</span>]</span>"
+             . "<p>{$this->debugHeader}</p>{$this->debugOutput}</div></div>";
+-        return $output;
+     }
+ 
+     protected function getVariableDisplay($variablePath, $variableValue)
+@@ -335,7 +300,7 @@ class Owebia_Shipping2_Model_ConfigParser
+ 
+     public function getConfigRow($id)
+     {
+-        return isset($this->_config[$id]) ? $this->_config[$id] : null;
++        return $this->_config[$id] ?? null;
+     }
+ 
+     public function setConfig($config)
+@@ -352,8 +317,8 @@ class Owebia_Shipping2_Model_ConfigParser
+ 
+     public function sortProperties($firstKey, $secondKey)
+     {
+-        $firstKeyPosition = isset($this->propertiesSort[$firstKey]) ? $this->propertiesSort[$firstKey] : 1000;
+-        $secondKeyPosition = isset($this->propertiesSort[$secondKey]) ? $this->propertiesSort[$secondKey] : 1000;
++        $firstKeyPosition = $this->_propertiesSort[$firstKey] ?? 1000;
++        $secondKeyPosition = $this->_propertiesSort[$secondKey] ?? 1000;
+         return $firstKeyPosition == $secondKeyPosition
+             ? strcmp($firstKey, $secondKey) : $firstKeyPosition - $secondKeyPosition;
+     }
+@@ -361,8 +326,8 @@ class Owebia_Shipping2_Model_ConfigParser
+     public function formatConfig($compress, $keysToRemove = [], $html = false)
      {
          $objectArray = [];
-         $this->propertiesSort = array_flip(
+-        $this->propertiesSort = array_flip(
 -            [
++        $this->_propertiesSort = array_flip(
 +            $this->addCurrencyCodesForFeesAndConditions([
                  'type',
                  'about',
                  'enabled',
-@@ -374,7 +353,7 @@
+@@ -374,12 +339,12 @@ class Owebia_Shipping2_Model_ConfigParser
                  'conditions',
                  'fees',
                  'tracking_url',
@@ -154,33 +424,70 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
          );
          foreach ($this->_config as $code => $row) {
              $object = [];
-@@ -452,7 +431,11 @@
+             foreach ($row as $key => $property) {
+-                if (substr($key, 0, 1) != '*' && !in_array($key, $keysToRemove)) {
++                if (strpos($key, '*') !== 0 && !in_array($key, $keysToRemove)) {
+                     $object[$key] = $property['value'];
+                 }
+             }
+@@ -400,7 +365,7 @@ class Owebia_Shipping2_Model_ConfigParser
+         foreach ($this->_config as $code => &$row) {
+             $this->processRow($process, $row, $checkAllConditions = true);
+             foreach ($row as $propertyName => $propertyValue) {
+-                if (substr($propertyName, 0, 1) != '*') {
++                if (strpos($propertyName, '*') !== 0) {
+                     $this->debug('   check ' . $propertyName);
+                     $this->getRowProperty($row, $propertyName);
+                 }
+@@ -420,7 +385,7 @@ class Owebia_Shipping2_Model_ConfigParser
+         if ($type == 'data') {
+             foreach ($row as $key => $data) {
+                 if (in_array($key, ['*id', 'code', 'type'])) continue;
+-                $value = isset($data['value']) ? $data['value'] : $data;
++                $value = $data['value'] ?? $data;
+                 $this->debug(
+                     '         .<span class=osh-key>' . self::esc($key) . '</span>'
+                     . ' = <span class=osh-formula>' . self::esc(self::toString($value)) . '</span>'
+@@ -440,19 +405,21 @@ class Owebia_Shipping2_Model_ConfigParser
+     protected function processRowEnabled(&$row, $isChecking)
+     {
+         $enabled = $this->getRowProperty($row, 'enabled');
+-        if (isset($enabled)) {
+-            if (!$isChecking && !$enabled) {
++        if (isset($enabled) && !$isChecking && !$enabled) {
+             $this->addMessage('info', $row, 'enabled', 'Configuration disabled');
+             return $this->createResult()
+                 ->setSuccess(false);
+-            }
+         }
+         return null;
+     }
  
      protected function processRowConditions($process, &$row, $isChecking)
      {
 -        $conditions = $this->getRowProperty($row, 'conditions');
 +        $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
-+        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
-+        $conditions = $this->getRowProperty($row, 'conditions_'.$currency);
++        $currency = is_object($currency) ? $currency->getCurrencyCode() : $currency;
++        $conditions = empty($currency) ? null : $this->getRowProperty($row, 'conditions_'.strtolower($currency));
 +        $conditions = empty($conditions) ? $this->getRowProperty($row, 'conditions') : $conditions;
 +
          if (isset($conditions)) {
              $result = $this->processFormula($process, $row, 'conditions', $conditions, $isChecking);
              if (!$isChecking) {
-@@ -532,7 +514,11 @@
+@@ -532,7 +499,11 @@ class Owebia_Shipping2_Model_ConfigParser
  
      protected function processRowFees($process, &$row, $isChecking)
      {
 -        $fees = $this->getRowProperty($row, 'fees');
 +        $currency = empty($process['data']['request']) ? Mage::app()->getStore()->getCurrentCurrencyCode() : $process['data']['request']->getData('package_currency');
-+        $currency = strtolower(is_object($currency) ? $currency->getCurrencyCode() : $currency);
-+        $fees = $this->getRowProperty($row, 'fees_'.$currency);
++        $currency = is_object($currency) ? $currency->getCurrencyCode() : $currency;
++        $fees = empty($currency) ? null : $this->getRowProperty($row, 'fees_'.strtolower($currency));
 +        $fees = empty($fees) ? $this->getRowProperty($row, 'fees') : $fees;
 +
          if (isset($fees)) {
              $result = $this->processFormula($process, $row, 'fees', $fees, $isChecking);
              if (!$result->success) return $result;
-@@ -566,7 +551,7 @@
+@@ -566,7 +537,7 @@ class Owebia_Shipping2_Model_ConfigParser
          }
  
          if (!isset($row['label']['value'])) {
@@ -189,7 +496,97 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
          }
  
          $result = $this->processRowEnabled($row, $isChecking);
-@@ -1013,7 +998,7 @@
+@@ -601,7 +572,7 @@ class Owebia_Shipping2_Model_ConfigParser
+     {
+         $property = null;
+         $output = null;
+-        if (isset($originalRow) && isset($originalKey) && $originalRow['*id'] == $row['*id'] && $originalKey == $key) {
++        if (isset($originalRow, $originalKey) && $originalRow['*id'] == $row['*id'] && $originalKey == $key) {
+             $this->addMessage(
+                 'error',
+                 $row,
+@@ -621,7 +592,7 @@ class Owebia_Shipping2_Model_ConfigParser
+             );
+             preg_match_all('/{([a-z0-9_]+)\.([a-z0-9_]+)}/i', $output, $resultSet, PREG_SET_ORDER);
+             foreach ($resultSet as $result) {
+-                list($original, $refCode, $refKey) = $result;
++                [$original, $refCode, $refKey] = $result;
+                 if ($refCode == $row['*id'] && $refKey == $key) {
+                     $this->addMessage(
+                         'error',
+@@ -636,8 +607,8 @@ class Owebia_Shipping2_Model_ConfigParser
+                     $replacement = $this->getRowProperty(
+                         $this->_config[$refCode],
+                         $refKey,
+-                        isset($originalRow) ? $originalRow : $row,
+-                        isset($originalKey) ? $originalKey : $key
++                        $originalRow ?? $row,
++                        $originalKey ?? $key
+                     );
+                     if (is_array($replacement) && isset($replacement['error'])) {
+                         return isset($originalRow) ? $replacement : 'false';
+@@ -731,7 +702,7 @@ class Owebia_Shipping2_Model_ConfigParser
+     public function array_match_allCallback()
+     {
+         $args = func_get_args();
+-        if (!isset($args[0]) || !isset($args[1])) return false;
++        if (!isset($args[0], $args[1])) return false;
+         $result = $this->callFunction('array_intersect', $args);
+         return count($result) == count($args[1]);
+     }
+@@ -764,7 +735,7 @@ class Owebia_Shipping2_Model_ConfigParser
+     protected function _setCache($expression, $value)
+     {
+         if ($value instanceof Owebia_Shipping2_Model_Os2_Result) {
+-            $this->_formulaCache[$expression] = $value;
++            $this->_formulaCache[str_replace('.', '-', $expression)] = $value;
+             $this->debug(
+                 '      cache <span class=osh-replacement>' . self::esc($expression) . '</span>'
+                 . ' = <span class=osh-formula>' . self::esc(self::toString($value->result)) . '</span>'
+@@ -793,11 +764,11 @@ class Owebia_Shipping2_Model_ConfigParser
+ 
+     protected function _prepare_regexp($regexp)
+     {
+-        if (!isset($this->constants)) {
++        if (!isset($this->_constants)) {
+             $reflector = new ReflectionClass(get_class($this));
+-            $this->constants = $reflector->getConstants();
++            $this->_constants = $reflector->getConstants();
+         }
+-        foreach ($this->constants as $name => $value) {
++        foreach ($this->_constants as $name => $value) {
+             $regexp = str_replace('{' . $name . '}', $value, $regexp);
+         }
+         return $regexp;
+@@ -807,14 +778,14 @@ class Owebia_Shipping2_Model_ConfigParser
+     {
+         $regexp = $this->_prepare_regexp($regexp);
+         if ($debug) $this->debug('      preg_match <span class=osh-replacement>' . self::esc($regexp) . '</span>');
+-        return preg_match($regexp, $input, $result);
++        return preg_match($regexp, (string)$input, $result);
+     }
+ 
+     protected function _preg_match_all($regexp, $input, &$result, $debug = false)
+     {
+         $regexp = $this->_prepare_regexp($regexp);
+         if ($debug) $this->debug('      preg_match_all <span class=osh-replacement>' . self::esc($regexp) . '</span>');
+-        $return = preg_match_all($regexp, $input, $result, PREG_SET_ORDER);
++        return preg_match_all($regexp, (string)$input, $result, PREG_SET_ORDER);
+     }
+ 
+     protected function _loadValue($process, $objectName, $attribute)
+@@ -852,8 +823,8 @@ class Owebia_Shipping2_Model_ConfigParser
+                         $tmpValue = $this->_getItemProperty($item, $loopVar);
+                         $values = (array)$tmpValue;
+                         foreach ($values as $valueItem) {
+-                            $key = self::_autoEscapeStrings($valueItem);
+-                            $sel = isset($selections[$key]) ? $selections[$key] : null;
++                            $key = $this->_autoEscapeStrings($valueItem);
++                            $sel = $selections[$key] ?? null;
+                             $selections[$key]['items'][] = $item;
+                         }
+                         $this->debug(
+@@ -1013,7 +984,7 @@ class Owebia_Shipping2_Model_ConfigParser
                          $maxValue = trim($feeData[0]);
  
                          $includingMaxValue = $this->_prepareFormulaTableIncludeMaxValue(
@@ -198,7 +595,38 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
                          );
  
                          $maxValue = str_replace(['[', ']'], '', $maxValue);
-@@ -1148,7 +1133,7 @@
+@@ -1042,8 +1013,8 @@ class Owebia_Shipping2_Model_ConfigParser
+                 ->setResult($formulaString);
+         }
+ 
+-        if ($useCache && isset($this->_formulaCache[$formulaString])) {
+-            $result = $this->_formulaCache[$formulaString];
++        if ($useCache && isset($this->_formulaCache[$formulaStringKey = str_replace('.', '-', $formulaString)])) {
++            $result = $this->_formulaCache[$formulaStringKey];
+             $this->debug(
+                 '      get cached formula <span class=osh-replacement>' . self::esc($formulaString) . '</span>'
+                 . ' = <span class=osh-formula>' . self::esc(self::toString($result->result)) . '</span>'
+@@ -1052,7 +1023,6 @@ class Owebia_Shipping2_Model_ConfigParser
+         }
+ 
+         $formula = $formulaString;
+-
+         $formula = $this->_prepareFormulaForeach($process, $row, $propertyName, $formula, $isChecking, $useCache);
+ 
+         if (isset($process['data']['selection'])) {
+@@ -1098,10 +1068,9 @@ class Owebia_Shipping2_Model_ConfigParser
+         $formula = $this->_prepareFormulaSwitch($row, $propertyName, $formula, $isChecking, $useCache);
+         $formula = $this->_prepareFormulaTable($row, $propertyName, $formula, $isChecking, $useCache);
+ 
+-        $result = $this->createResult()
++        return $this->createResult()
+             ->setSuccess(true)
+             ->setResult($formula);
+-        return $result;
+     }
+ 
+     protected function _evalFormula($formula, &$row, $propertyName = null, $isChecking = false)
+@@ -1148,7 +1117,7 @@ class Owebia_Shipping2_Model_ConfigParser
              $evalResult = (double) $formula;
          } else {
              try {
@@ -207,7 +635,7 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
                  $stmts = $parser->parse('<?php $evalResult = ('. $formula . ');');
  
                  $callbackManager = $this;
-@@ -1163,7 +1148,8 @@
+@@ -1163,7 +1132,8 @@ class Owebia_Shipping2_Model_ConfigParser
                      $evaluator->initialize();
                  }
  
@@ -217,7 +645,7 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
  
                  $this->debug(
                      '      parse and evaluate AST <span class=osh-formula>' . self::esc($formula) . '</span>'
-@@ -1177,25 +1163,6 @@
+@@ -1177,25 +1147,6 @@ class Owebia_Shipping2_Model_ConfigParser
          return $evalResult;
      }
  
@@ -243,7 +671,32 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
      protected function _parseInputIsValidConfig($config)
      {
          if ($config) {
-@@ -1254,7 +1221,7 @@
+@@ -1229,21 +1180,15 @@ class Owebia_Shipping2_Model_ConfigParser
+         }
+     }
+ 
+-    protected function getChar($charCode)
+-    {
+-        return utf8_encode(chr($charCode));
+-    }
+-
+     protected function _parseInputPrepareInput($input)
+     {
+-        $openingQuote = $this->getChar(147);
+-        $closingQuote = $this->getChar(148);
+-        $input = str_replace(
++        $openingQuote = hex2bin('c293'); // bin2hex(utf8_encode(chr(147))) = c293 = var_dump(hex2bin('c293') == utf8_encode(chr(147)));
++        $closingQuote = hex2bin('c294'); // bin2hex(utf8_encode(chr(148))) = c294 = var_dump(hex2bin('c294') == utf8_encode(chr(148)));
++        return str_replace(
+             ['&gt;', '&lt;', '“', '”', $openingQuote, $closingQuote, '&laquo;', '&raquo;', "\r\n", "\t"],
+             ['>', '<', '"', '"', '"', '"', '"', '"', "\n", ' '],
+             $input
+         );
+-        return $input;
+     }
+ 
+     protected function _parseInputParseJsonObject($object, &$autoCorrectionWarnings, &$missingEnquoteOfPropertyName)
+@@ -1254,13 +1199,12 @@ class Owebia_Shipping2_Model_ConfigParser
          $propertiesCount = count($propertySet);
          foreach ($propertySet as $j => $property) {
              $name = $property['property_name'];
@@ -252,30 +705,46 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
                  $autoCorrectionWarnings['missing_enquote_of_property_name'] =
                      'JSON: missing enquote of property name: %s';
                  $missingEnquoteOfPropertyName[] = self::toString(trim($name, '"'));
-@@ -1364,7 +1331,7 @@
-         $lastJsonError = null;
-         try {
-             $config = self::json_decode($configString);
--        } catch (Exception $e) {
-+        } catch (Throwable $e) {
-             $lastJsonError = $e;
-         }
-         if (!$this->_parseInputIsValidConfig($config)) {
-@@ -1393,7 +1360,7 @@
-             $lastJsonError = null;
-             try {
-                 $config = self::json_decode($configString);
--            } catch (Exception $e) {
-+            } catch (Throwable $e) {
-                 $lastJsonError = $e;
              }
-         }
-@@ -1446,11 +1413,11 @@
+-            $propertySeparator = isset($property['property_separator'])
+-                ? $property['property_separator'] : null;
++            $propertySeparator = $property['property_separator'] ?? null;
+             $isLastProperty = ( $j == $propertiesCount - 1 );
+             if (!$isLastProperty && $propertySeparator != ',') {
+                 $autoCorrectionWarnings[] = 'JSON: missing property separator (comma)';
+@@ -1311,8 +1255,8 @@ class Owebia_Shipping2_Model_ConfigParser
+                 $configString = substr($configString, $pos, strlen($configString));
+             }
+             $configString = str_replace($object[0], '', $configString);
+-            $objectName = isset($object['object_name']) ? $object['object_name'] : null;
+-            $objectSeparator = isset($object['object_separator']) ? $object['object_separator'] : null;
++            $objectName = $object['object_name'] ?? null;
++            $objectSeparator = $object['object_separator'] ?? null;
+             $isLastObject = ( $i == $objectsCount - 1 );
+             if (!$isLastObject && $objectSeparator != ',') {
+                 $autoCorrectionWarnings[] = 'JSON: missing object separator (comma)';
+@@ -1339,7 +1283,7 @@ class Owebia_Shipping2_Model_ConfigParser
+ 
+     protected function _parseInputParseComments(&$configString, &$autoCorrectionWarnings)
      {
+-        if (preg_match_all('/((?:#+[^{\\n]*\\s+)+)\\s*{/s', $configString, $result, PREG_SET_ORDER)) {
++        if (preg_match_all('/((?:#+[^{\\n]*\\s+)+)\\s*{/', $configString, $result, PREG_SET_ORDER)) {
+             $autoCorrectionWarnings[] = 'JSON: usage of incompatible comments';
+             foreach ($result as $set) {
+                 $commentLines = explode("\n", $set[1]);
+@@ -1387,7 +1331,7 @@ class Owebia_Shipping2_Model_ConfigParser
+                 }
+                 $this->_parseInputIgnore((array)$toIgnore, $json, $autoCorrectionWarnings);
+             }
+-            $configString = $this->jsonEncode($json);
++            $configString = self::jsonEncode($json);
+             $configString = str_replace(["\n"], ["\\n"], $configString);
+ 
+             $lastJsonError = null;
+@@ -1447,10 +1391,10 @@ class Owebia_Shipping2_Model_ConfigParser
          $this->_parseInputAddRowsDetectDeprecatedProperties($autoCorrection, $object, $deprecatedProperties);
  
--        $reservedKeys = ['*id'];
-+        $reservedKeys  = ['*id'];
+         $reservedKeys  = ['*id'];
 -        $availableKeys = [
 +        $availableKeys = $this->addCurrencyCodesForFeesAndConditions([
              'type', 'about', 'label', 'enabled', 'description', 'fees', 'conditions',
@@ -285,7 +754,93 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
          if ($autoCorrection) {
              $availableKeys = array_merge(
                  $availableKeys,
-@@ -1935,7 +1902,6 @@
+@@ -1459,23 +1403,19 @@ class Owebia_Shipping2_Model_ConfigParser
+         }
+ 
+         $row = [];
+-        $i = 1;
+         foreach ($object as $propertyName => $propertyValue) {
+             if (in_array($propertyName, $reservedKeys)) {
+                 continue;
+             }
+             if (in_array($propertyName, $availableKeys)
+-                || substr($propertyName, 0, 1) == '_'
++                || strpos($propertyName, '_') === 0
+                 || in_array($object['type'], ['data', 'meta'])
+             ) {
+                 if (isset($propertyValue)) {
+                     $row[$propertyName] = ['value' => $propertyValue, 'original_value' => $propertyValue];
+                     if ($autoCorrection) $this->cleanProperty($row, $propertyName);
+                 }
+-            } else {
+-                if (!in_array($propertyName, $unknownProperties)) $unknownProperties[] = $propertyName;
+-            }
+-            $i++;
++            } else if (!in_array($propertyName, $unknownProperties)) $unknownProperties[] = $propertyName;
+         }
+         return $row;
+     }
+@@ -1524,7 +1464,7 @@ class Owebia_Shipping2_Model_ConfigParser
+                 $this->addMessage('error', $row, 'code', 'The id must be unique, `%s` has been found twice', $code);
+             }
+             while (isset($this->_config[$code])) {
+-                $code .= rand(0, 9);
++                $code .= random_int(0, 9);
+             }
+         }
+         $row['*id'] = $code;
+@@ -1575,7 +1515,7 @@ class Owebia_Shipping2_Model_ConfigParser
+         // data
+         while ($this->_preg_match("#{({$keys})\.([a-z0-9_\+\-\.]+)}#i", $input, $result)) {
+             $original = $result[0];
+-            $objectName = isset($aliases[$result[1]]) ? $aliases[$result[1]] : $result[1];
++            $objectName = $aliases[$result[1]] ?? $result[1];
+             $replacement = $this->_loadValue($process, $objectName, $result[2]);
+             $input = $this->_replaceVariable($process, $input, $original, $replacement);
+         }
+@@ -1620,7 +1560,7 @@ class Owebia_Shipping2_Model_ConfigParser
+             foreach ($input as $v) {
+                 $items[] = isset($v) && (is_string($v) || empty($v)) ? self::escapeString($v) : self::toString($v);
+             }
+-            return 'array(' . join(',', $items) . ')';
++            return 'array(' . implode(',', $items) . ')';
+         } else {
+             return isset($input) && (is_string($input))
+                 ? self::escapeString($input) : self::toString($input);
+@@ -1634,9 +1574,9 @@ class Owebia_Shipping2_Model_ConfigParser
+             || $operation == 'max'
+             || $operation == 'count distinct'
+         ) {
+-            return isset($regexpResult[3]) ? $regexpResult[3] : null;
++            return $regexpResult[3] ?? null;
+         } elseif ($operation == 'count') {
+-            return isset($regexpResult[2]) ? $regexpResult[2] : null;
++            return $regexpResult[2] ?? null;
+         }
+         return null;
+     }
+@@ -1680,7 +1620,7 @@ class Owebia_Shipping2_Model_ConfigParser
+                 }
+                 break;
+             case 'sum':
+-                $returnValue = (isset($returnValue) ? $returnValue : 0) + $value * $item->qty;
++                $returnValue = ($returnValue ?? 0) + $value * $item->qty;
+                 break;
+             case 'count distinct':
+                 if (!isset($returnValue)) {
+@@ -1748,9 +1688,9 @@ class Owebia_Shipping2_Model_ConfigParser
+                 }
+                 else $evalResult = true;
+ 
+-                if ($evalResult == true) {
++                if ($evalResult) {
+                     if ($operation == 'count') {
+-                        $returnValue = (isset($returnValue) ? $returnValue : 0) + $item->qty;
++                        $returnValue = ($returnValue ?? 0) + $item->qty;
+                     } else {
+                         $value = $this->_getItemProperty($item, $reference);
+                         $this->debug(
+@@ -1935,7 +1875,6 @@ class Owebia_Shipping2_Model_ConfigParser
          }
      }
  
@@ -293,7 +848,7 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
      public function cleanProperty(&$row, $key)
      {
          $input = $row[$key]['value'];
-@@ -1998,4 +1964,17 @@
+@@ -1998,4 +1937,17 @@ class Owebia_Shipping2_Model_ConfigParser
          }
          $row[$key]['value'] = $input;
      }
@@ -312,10 +867,56 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigPar
 +    }
  }
 \ No newline at end of file
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Os2/Data/AddressFilter.php b/Model/Os2/Data/AddressFilter.php
---- a/Model/Os2/Data/AddressFilter.php	2021-02-12 16:55:25 +0100
-+++ b/Model/Os2/Data/AddressFilter.php	2021-01-07 18:53:31 +0100
-@@ -63,7 +63,6 @@
+diff -r -u -w Shipping2/Model/Os2/Data.php Shipping2/Model/Os2/Data.php
+--- Shipping2/Model/Os2/Data.php
++++ Shipping2/Model/Os2/Data.php
+@@ -31,7 +31,7 @@ class Owebia_Shipping2_Model_Os2_Data
+ 
+     public function getData($name)
+     {
+-        return isset($this->_data[$name]) ? $this->_data[$name] : null;
++        return $this->_data[$name] ?? null;
+     }
+ 
+     public function set($name, $value)
+diff -r -u -w Shipping2/Model/Os2/Data/AbstractWithAttributes.php Shipping2/Model/Os2/Data/AbstractWithAttributes.php
+--- Shipping2/Model/Os2/Data/AbstractWithAttributes.php
++++ Shipping2/Model/Os2/Data/AbstractWithAttributes.php
+@@ -26,7 +26,7 @@ class Owebia_Shipping2_Model_Os2_Data_AbstractWithAttributes extends Owebia_Ship
+         $getValue = false;
+         if (substr($attributeName, strlen($attributeName) - 6, 6) == '.value') {
+             $getValue = true;
+-            $attributeName = substr($attributeName, 0, strlen($attributeName) - 6);
++            $attributeName = substr($attributeName, 0, -6);
+         }
+ 
+         $object = $this->_getObject();
+diff -r -u -w Shipping2/Model/Os2/Data/Address.php Shipping2/Model/Os2/Data/Address.php
+--- Shipping2/Model/Os2/Data/Address.php
++++ Shipping2/Model/Os2/Data/Address.php
+@@ -10,8 +10,7 @@ class Owebia_Shipping2_Model_Os2_Data_Address extends Owebia_Shipping2_Model_Os2
+ 
+     protected function _load($name)
+     {
+-        switch ($name) {
+-            case 'country_name':
++        if ($name == 'country_name') {
+             return Mage::getModel('directory/country')->load($this->getData('country_id'))->getName();
+         }
+         return parent::_load($name);
+diff -r -u -w Shipping2/Model/Os2/Data/AddressFilter.php Shipping2/Model/Os2/Data/AddressFilter.php
+--- Shipping2/Model/Os2/Data/AddressFilter.php
++++ Shipping2/Model/Os2/Data/AddressFilter.php
+@@ -7,7 +7,7 @@
+ 
+ class Owebia_Shipping2_Model_Os2_Data_AddressFilter extends Owebia_Shipping2_Model_Os2_Data_Abstract
+ {
+-    protected static $_countries = null;
++    protected static $_countries;
+ 
+     // source : geonames.org, 2012-09-26
+     protected static $_shortcuts = [
+@@ -64,7 +64,6 @@ class Owebia_Shipping2_Model_Os2_Data_AddressFilter extends Owebia_Shipping2_Mod
              'label' => 'Antartica',
              'replace' => ['AQ', 'BV', 'GS', 'HM', 'TF'],
          ],
@@ -323,7 +924,7 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Os2/Data/
          'EU-27' => [
              'label' => 'European Union',
              'replace' => [
-@@ -76,10 +75,10 @@
+@@ -77,10 +76,10 @@ class Owebia_Shipping2_Model_Os2_Data_AddressFilter extends Owebia_Shipping2_Mod
              'label' => "Département d'Outre-Mer",
              'replace' => ['GP', 'MQ', 'GF', 'RE', 'YT'],
          ],
@@ -336,588 +937,118 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Os2/Data/
          ],
      ];
  
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Helper/Data.php b/Helper/Data.php
---- a/Helper/Data.php	2021-02-12 16:55:25 +0100
-+++ b/Helper/Data.php	2021-01-30 13:08:07 +0100
-@@ -104,6 +104,7 @@
-                     $helper->getInfos(),
-                     [
-                         'magento_version' => Mage::getVersion(),
-+                        'openmage_version' => Mage::getOpenMageVersion(),
-                         'module_version' => (string)$mageConfig->getNode('modules/Owebia_Shipping2/version'),
-                         'carrier_code' => $carrierCode,
-                     ]
-@@ -117,6 +118,7 @@
-                     'options' => $cartOptions,
-                 ]
-             ),
-+            'config' => Mage::getModel('owebia_shipping2/Os2_Data_Config'),
-             'quote' => $quoteWrapper,
-             'selection' => Mage::getModel('owebia_shipping2/Os2_Data_Selection'),
-             'customer' => Mage::getModel(
-@@ -128,7 +128,12 @@ class Owebia_Shipping2_Helper_Data extends Mage_Core_Helper_Data
-                     'quote' => $quoteWrapper,
-                 ]
-             ),
--            'customer_group' => Mage::getModel('owebia_shipping2/Os2_Data_CustomerGroup'),
-+            'customer_group' => Mage::getModel(
-+                'owebia_shipping2/Os2_Data_CustomerGroup',
-+                [
-+                    'quote' => $quoteWrapper,
-+                ]
-+            ),
-             'customvar' => Mage::getModel('owebia_shipping2/Os2_Data_Customvar'),
-             'date' => Mage::getModel('owebia_shipping2/Os2_Data_Date'),
-             'address_filter' => Mage::getModel('owebia_shipping2/Os2_Data_AddressFilter'),
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/etc/adminhtml.xml b/etc/adminhtml.xml
---- a/etc/adminhtml.xml	2021-02-12 16:55:25 +0100
-+++ b/etc/adminhtml.xml	2021-01-07 18:53:31 +0100
-@@ -5,7 +5,6 @@
-  * See COPYING.txt for license details.
-  */
- -->
--<!-- Magento 1.4.0 and upper -->
- <config>
-     <acl>
-         <resources>
-@@ -16,7 +15,7 @@
-                             <config>
-                                 <children>
-                                     <owebia_shipping2>
--                                        <title>Advanced Shipping Section</title>
-+                                        <title>Owebia Shipping</title>
-                                         <sort_order>100</sort_order>
-                                     </owebia_shipping2>
-                                 </children>
-@@ -27,13 +26,4 @@
-             </admin>
-         </resources>
-     </acl>
--    <translate>
--        <modules>
--            <Mage_Shipping>
--                <files>
--                    <owebia_shipping2>Owebia_Shipping2.csv</owebia_shipping2>
--                </files>
--            </Mage_Shipping>
--        </modules>
--    </translate>
- </config>
+@@ -98,11 +97,7 @@ class Owebia_Shipping2_Model_Os2_Data_AddressFilter extends Owebia_Shipping2_Mod
+         $elems = preg_split('/\b/', $input);
+         $output = '';
+         foreach ($elems as $elem) {
+-            if (isset(self::$_countries[$elem])) {
+-                $output .= self::$_countries[$elem];
+-            } else {
+-                $output .= $elem;
+-            }
++            $output .= self::$_countries[$elem] ?? $elem;
+         }
+         while (preg_match('/{address_filter\.([^}]+)}/', $output, $result)) {
+             $name = $result[1];
+diff -r -u -w Shipping2/Model/Os2/Data/Billto.php Shipping2/Model/Os2/Data/Billto.php
+--- Shipping2/Model/Os2/Data/Billto.php
++++ Shipping2/Model/Os2/Data/Billto.php
+@@ -8,8 +8,6 @@ class Owebia_Shipping2_Model_Os2_Data_Billto extends Owebia_Shipping2_Model_Os2_
+ {
+     protected function _loadObject()
+     {
+-        $quote = Mage::getModel('checkout/cart')->getQuote();
+-        $address = $quote->getBillingAddress();
+-        return $address;
++        return Mage::getModel('checkout/cart')->getQuote()->getBillingAddress();
+     }
+ }
 \ No newline at end of file
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/etc/config.xml b/etc/config.xml
---- a/etc/config.xml	2020-12-24 18:14:10 +0100
-+++ b/etc/config.xml	2021-02-08 19:25:15 +0100
-@@ -9,12 +9,9 @@
-     <modules>
-         <Owebia_Shipping2>
-             <version>2.6.10</version>
--            <depends>
--                <Mage_Shipping />
--            </depends>
-+            <lite>true</lite>
-         </Owebia_Shipping2>
-     </modules>
--
-     <global>
-         <models>
-             <owebia_shipping2>
-@@ -31,99 +28,35 @@
-                 <class>Owebia_Shipping2_Helper</class>
-             </owebia_shipping2>
-         </helpers>
--        <events>
--            <resource_get_tablename>
--                <observers>
--                    <owebia_shipping2>
--                        <class>owebia_shipping2/observer</class>
--                        <method>registerAutoloader</method>
--                    </owebia_shipping2>
--                </observers>
--            </resource_get_tablename>
--        </events>
-         <resources>
--            <owebia_shipping2_setup>
--                <setup>
--                    <module>Owebia_Shipping2</module>
--                </setup>
--            </owebia_shipping2_setup>
-             <sales>
-                 <shipping>
-                     <carriers>
-                         <owebiashipping1>
-                             <class>Owebia_Shipping2_Model_Carrier_OwebiaShipping1</class>
-                         </owebiashipping1>
-+                        <owebiashipping2>
-+                            <class>Owebia_Shipping2_Model_Carrier_OwebiaShipping2</class>
-+                        </owebiashipping2>
-+                        <owebiashipping3>
-+                            <class>Owebia_Shipping2_Model_Carrier_OwebiaShipping3</class>
-+                        </owebiashipping3>
-                     </carriers>
-                 </shipping>
-             </sales>
-         </resources>
-     </global>
--
--    <admin>
--        <routers>
--            <adminhtml>
--                <args>
--                    <modules>
--                        <owebia_shipping2 before="Mage_Adminhtml">Owebia_Shipping2_Adminhtml</owebia_shipping2>
--                    </modules>
--                </args>
--            </adminhtml>
--        </routers>
--    </admin>
-     <adminhtml>
--        <!-- Magento lower than 1.4.0 -->
--        <acl>
--            <resources>
--                <admin>
--                    <children>
--                        <system>
--                            <children>
--                                <config>
--                                    <children>
--                                        <owebia>
--                                            <title>Owebia Section</title>
--                                            <sort_order>100</sort_order>
--                                        </owebia>
--                                    </children>
--                                </config>
--                            </children>
--                        </system>
--                    </children>
--                </admin>
--            </resources>
--        </acl>
-         <translate>
-             <modules>
--                <Mage_Shipping>
-+                <Owebia_Shipping2>
-                     <files>
--                        <owebia_shipping2>Owebia_Shipping2.csv</owebia_shipping2>
-+                        <default>Owebia_Shipping2.csv</default>
-                     </files>
--                </Mage_Shipping>
-+                </Owebia_Shipping2>
-             </modules>
-         </translate>
-     </adminhtml>
--
--    <frontend>
--        <translate>
--            <modules>
--                <Mage_Shipping>
--                    <files>
--                        <owebia_shipping2>Owebia_Shipping2.csv</owebia_shipping2>
--                    </files>
--                </Mage_Shipping>
--            </modules>
--        </translate>
--        <routers>
--            <checkout>
--                <args>
--                    <modules>
--                        <owebia_shipping2 before="Mage_Checkout">Owebia_Shipping2_Checkout</owebia_shipping2>
--                    </modules>
--                </args>
--            </checkout>
--        </routers>
--    </frontend>
--
-     <default>
-         <owebia_shipping2>
-             <general>
-@@ -144,12 +77,11 @@
-         <carriers>
-             <owebiashipping1>
-                 <active>0</active>
--                <title>Advanced Shipping - Mode de livraison 1</title>
-+                <title>Owebia 1</title>
-                 <model>Owebia_Shipping2_Model_Carrier_OwebiaShipping1</model>
--                <tracking_view_url></tracking_view_url>
-                 <config>{
-    "demo": {
--      "label": "Frais de port fixes",
-+      "label": "Example",
-       "fees": 10
-    }
- }</config>
-@@ -159,6 +91,38 @@
-                 <stop_to_first_match>0</stop_to_first_match>
-                 <sort_order>1</sort_order>
-             </owebiashipping1>
-+            <owebiashipping2>
-+                <active>0</active>
-+                <title>Owebia 2</title>
-+                <model>Owebia_Shipping2_Model_Carrier_OwebiaShipping2</model>
-+                <config>{
-+   "demo": {
-+      "label": "Example",
-+      "fees": 10
-+   }
-+}</config>
-+                <debug>0</debug>
-+                <auto_escaping>0</auto_escaping>
-+                <auto_correction>1</auto_correction>
-+                <stop_to_first_match>0</stop_to_first_match>
-+                <sort_order>1</sort_order>
-+            </owebiashipping2>
-+            <owebiashipping3>
-+                <active>0</active>
-+                <title>Owebia 3</title>
-+                <model>Owebia_Shipping2_Model_Carrier_OwebiaShipping3</model>
-+                <config>{
-+   "demo": {
-+      "label": "Example",
-+      "fees": 10
-+   }
-+}</config>
-+                <debug>0</debug>
-+                <auto_escaping>0</auto_escaping>
-+                <auto_correction>1</auto_correction>
-+                <stop_to_first_match>0</stop_to_first_match>
-+                <sort_order>1</sort_order>
-+            </owebiashipping3>
-         </carriers>
-     </default>
- </config>
-\ No newline at end of file
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/etc/system.xml b/etc/system.xml
---- a/etc/system.xml	2021-02-12 16:55:26 +0100
-+++ b/etc/system.xml	2021-01-14 18:46:56 +0100
-@@ -6,31 +6,183 @@
-  */
- -->
- <config>
--    <tabs>
--        <owebia>
--            <label>Owebia</label>
--            <sort_order>300</sort_order>
--        </owebia>
--    </tabs>
-     <sections>
-         <carriers>
-             <show_in_store>1</show_in_store>
-             <groups>
--                <owebiashipping1 translate="label" module="shipping">
--                    <label>Advanced Shipping - Mode de livraison 1</label>
-+                <owebiashipping3>
-+                    <label>Owebia Shipping 3</label>
--                    <sort_order>-19</sort_order>
-+                    <sort_order>-17</sort_order>
-                     <show_in_default>1</show_in_default>
-                     <show_in_website>1</show_in_website>
-                     <show_in_store>1</show_in_store>
-                     <fields>
--                        <informations translate="label">
--                            <label>Informations</label>
--                            <frontend_model>owebia_shipping2/adminhtml_system_config_form_field_informations</frontend_model>
--                            <sort_order>0</sort_order>
-+                        <active translate="label">
-+                            <label>Enabled</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>1</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </active>
-+                        <title translate="label">
-+                            <label>Title</label>
-+                            <sort_order>2</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </title>
-+                        <config translate="label">
-+                            <label>Configuration</label>
-+                            <frontend_type>textarea</frontend_type>
-+                            <sort_order>3</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </config>
-+                        <tracking_view_url translate="label">
-+                            <label>Tracking URL</label>
-+                            <sort_order>4</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </tracking_view_url>
-+                        <debug translate="label">
-+                            <label>Debug</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>5</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </debug>
-+                        <auto_escaping translate="label">
-+                            <label>Auto-escaping</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>7</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-                             <show_in_store>1</show_in_store>
--                        </informations>
-+                        </auto_escaping>
-+                        <auto_correction translate="label">
-+                            <label>Auto-correction</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>8</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </auto_correction>
-+                        <stop_to_first_match translate="label">
-+                            <label>Stop to first match</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>9</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </stop_to_first_match>
-+                        <sort_order translate="label">
-+                            <label>Sort Order</label>
-+                            <sort_order>100</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </sort_order>
-+                    </fields>
-+                </owebiashipping3>
-+                <owebiashipping2>
-+                    <label>Owebia Shipping 2</label>
-+                    <sort_order>-18</sort_order>
-+                    <show_in_default>1</show_in_default>
-+                    <show_in_website>1</show_in_website>
-+                    <show_in_store>1</show_in_store>
-+                    <fields>
-+                        <active translate="label">
-+                            <label>Enabled</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>1</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </active>
-+                        <title translate="label">
-+                            <label>Title</label>
-+                            <sort_order>2</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </title>
-+                        <config translate="label">
-+                            <label>Configuration</label>
-+                            <frontend_type>textarea</frontend_type>
-+                            <sort_order>3</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </config>
-+                        <tracking_view_url translate="label">
-+                            <label>Tracking URL</label>
-+                            <sort_order>4</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </tracking_view_url>
-+                        <debug translate="label">
-+                            <label>Debug</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>5</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </debug>
-+                        <auto_escaping translate="label">
-+                            <label>Auto-escaping</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>7</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </auto_escaping>
-+                        <auto_correction translate="label">
-+                            <label>Auto-correction</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>8</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </auto_correction>
-+                        <stop_to_first_match translate="label">
-+                            <label>Stop to first match</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>9</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </stop_to_first_match>
-+                        <sort_order translate="label">
-+                            <label>Sort Order</label>
-+                            <sort_order>100</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </sort_order>
-+                    </fields>
-+                </owebiashipping2>
-+                <owebiashipping1>
-+                    <label>Owebia Shipping 1</label>
-+                    <sort_order>-19</sort_order>
-+                    <show_in_default>1</show_in_default>
-+                    <show_in_website>1</show_in_website>
-+                    <show_in_store>1</show_in_store>
-+                    <fields>
-                         <active translate="label">
-                             <label>Enabled</label>
-                             <frontend_type>select</frontend_type>
-@@ -51,7 +211,6 @@
-                         </title>
-                         <config translate="label">
-                             <label>Configuration</label>
--                            <frontend_model>owebia_shipping2/adminhtml_system_config_form_field_config</frontend_model>
-                             <frontend_type>textarea</frontend_type>
-                             <sort_order>3</sort_order>
-                             <show_in_default>1</show_in_default>
-@@ -70,7 +229,6 @@
-                             <label>Debug</label>
-                             <frontend_type>select</frontend_type>
-                             <source_model>adminhtml/system_config_source_yesno</source_model>
--                            <comment>{debug_help}</comment>
-                             <sort_order>5</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -80,7 +238,6 @@
-                             <label>Auto-escaping</label>
-                             <frontend_type>select</frontend_type>
-                             <source_model>adminhtml/system_config_source_yesno</source_model>
--                            <comment>{auto_escaping_help}</comment>
-                             <sort_order>7</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -90,7 +247,6 @@
-                             <label>Auto-correction</label>
-                             <frontend_type>select</frontend_type>
-                             <source_model>adminhtml/system_config_source_yesno</source_model>
--                            <comment>{auto_correction_help}</comment>
-                             <sort_order>8</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -106,7 +262,7 @@
-                             <show_in_store>1</show_in_store>
-                         </stop_to_first_match>
-                         <sort_order translate="label">
--                            <label>Sort order</label>
-+                            <label>Sort Order</label>
-                             <sort_order>100</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -119,9 +275,9 @@
-         </carriers>
-     </sections>
-     <sections>
--        <owebia_shipping2 translate="label">
--            <label>Advanced Shipping</label>
--            <tab>owebia</tab>
-+        <owebia_shipping2>
-+            <label>Owebia Shipping</label>
-+            <tab>sales</tab>
-             <sort_order>100</sort_order>
-             <show_in_default>1</show_in_default>
-             <show_in_website>1</show_in_website>
-@@ -129,7 +285,7 @@
-             <show_in_store>1</show_in_store>
-             <groups>
-                 <general translate="label">
--                    <label>General Configuration</label>
-+                    <label>General</label>
-                     <sort_order>2</sort_order>
-                     <show_in_default>1</show_in_default>
-                     <show_in_website>1</show_in_website>
-@@ -156,9 +312,8 @@
-                     <fields>
-                         <process_children translate="label">
-                             <label>Item processing</label>
--                            <comment>If "Self" is selected, options bellow are ignored</comment>
-                             <frontend_type>select</frontend_type>
--                            <source_model>owebia_shipping2/system_config_source_ProcessChildren</source_model>
-+                            <source_model>owebia_shipping2/system_config_source_processChildren</source_model>
-                             <sort_order>10</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -168,7 +323,7 @@
-                             <label>Item options on</label>
-                             <comment>item.option.*</comment>
-                             <frontend_type>select</frontend_type>
--                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
-+                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
-                             <sort_order>20</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -178,7 +333,7 @@
-                             <label>Item data on</label>
-                             <comment>item.*</comment>
-                             <frontend_type>select</frontend_type>
--                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
-+                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
-                             <sort_order>21</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -188,7 +343,7 @@
-                             <label>Product data on</label>
-                             <comment>product.*</comment>
-                             <frontend_type>select</frontend_type>
--                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
-+                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
-                             <sort_order>22</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -208,7 +363,7 @@
-                             <label>Item options on</label>
-                             <comment>item.option.*</comment>
-                             <frontend_type>select</frontend_type>
--                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
-+                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
-                             <sort_order>20</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -218,7 +373,7 @@
-                             <label>Item data on</label>
-                             <comment>item.*</comment>
-                             <frontend_type>select</frontend_type>
--                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
-+                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
-                             <sort_order>21</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-@@ -228,7 +383,7 @@
-                             <label>Product data on</label>
-                             <comment>product.*</comment>
-                             <frontend_type>select</frontend_type>
--                            <source_model>owebia_shipping2/system_config_source_LoadOnParent</source_model>
-+                            <source_model>owebia_shipping2/system_config_source_loadOnParent</source_model>
-                             <sort_order>23</sort_order>
-                             <show_in_default>1</show_in_default>
-                             <show_in_website>1</show_in_website>
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Os2/Data/CustomerGroup.php b/Model/Os2/Data/CustomerGroup.php
---- a/Model/Os2/Data/CustomerGroup.php
-+++ b/Model/Os2/Data/CustomerGroup.php
-@@ -34,7 +34,7 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
+diff -r -u -w Shipping2/Model/Os2/Data/Cart.php Shipping2/Model/Os2/Data/Cart.php
+--- Shipping2/Model/Os2/Data/Cart.php
++++ Shipping2/Model/Os2/Data/Cart.php
+@@ -70,7 +70,7 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
+         foreach ($cartItems as $item) {
+             $type = $item->getProduct()->getTypeId();
+             $parentItemId = $item->getData('parent_item_id');
+-            $parentItem = isset($cartItems[$parentItemId]) ? $cartItems[$parentItemId] : null;
++            $parentItem = $cartItems[$parentItemId] ?? null;
+             $parentType = isset($parentItem) ? $parentItem->getProduct()->getTypeId() : null;
+             if ($type != 'configurable') {
+                 if ($type == 'bundle' && $bundleProcessChildren) {
+@@ -126,8 +126,7 @@ class Owebia_Shipping2_Model_Os2_Data_Cart extends Owebia_Shipping2_Model_Os2_Da
+ 
+     public function __set($name, $value)
+     {
+-        switch ($name) {
+-            case 'items':
++        if ($name == 'items') {
+             return $this->_items = $value;
+         }
+         return parent::__set($name, $value);
+diff -r -u -w Shipping2/Model/Os2/Data/CartItem.php Shipping2/Model/Os2/Data/CartItem.php
+--- Shipping2/Model/Os2/Data/CartItem.php
++++ Shipping2/Model/Os2/Data/CartItem.php
+@@ -18,7 +18,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
+         parent::__construct();
+         $this->_item = $item = $arguments['item'];
+         $this->_parentItem = $parentItem = $arguments['parent_item'];
+-        $this->_getOptions = $options = $arguments['options'];
++        $this->_getOptions = $arguments['options'];
+         $this->_product = null;
+         $this->_type = $parentItem ? $parentItem->getProduct()->getTypeId() : $item->getProduct()->getTypeId();
+         $this->_loadedObject = $this->_getItem('load_item_data_on_parent');
+@@ -79,7 +79,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
+ 
+     protected function _getItem($what)
+     {
+-        if ($this->_type == 'bundle' && $this->_getOptions[$this->_type]['process_children'] == false) {
++        if ($this->_type == 'bundle' && !$this->_getOptions[$this->_type]['process_children']) {
+             $getParent = false;
+         } else {
+             $getParent = isset($this->_getOptions[$this->_type][$what]) && $this->_getOptions[$this->_type][$what] == true;
+@@ -115,7 +115,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
+             }
+         }
+         if ($addOptions = $item->getOptionByCode('additional_options')) {
+-            $options = array_merge($options, unserialize($addOptions->getValue()));
++            $options = array_merge($options, unserialize($addOptions->getValue(), ['allowed_classes' => false]));
+         }
+         $this->_options = $options;
+         return $this->_options;
+diff -r -u -w Shipping2/Model/Os2/Data/Config.php Shipping2/Model/Os2/Data/Config.php
+--- Shipping2/Model/Os2/Data/Config.php
++++ Shipping2/Model/Os2/Data/Config.php
+@@ -10,7 +10,7 @@ class Owebia_Shipping2_Model_Os2_Data_Config extends Owebia_Shipping2_Model_Os2_
+     {
+         $variableArray = Mage::getResourceModel('admin/variable_collection')->getColumnValues('variable_name');
+         return array_map(
+-            function ($item) {
++            static function ($item) {
+                 return str_replace('/', '-', $item);
+             }, $variableArray
+         );
+diff -r -u -w Shipping2/Model/Os2/Data/CustomerGroup.php Shipping2/Model/Os2/Data/CustomerGroup.php
+--- Shipping2/Model/Os2/Data/CustomerGroup.php
++++ Shipping2/Model/Os2/Data/CustomerGroup.php
+@@ -7,7 +7,7 @@
+ 
+ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Model_Os2_Data_Abstract
+ {
+-    protected static $_customerGroups = null;
++    protected static $_customerGroups;
+ 
+     public static function getCollection()
+     {
+@@ -28,14 +28,14 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
+         $elems = preg_split('/\b/', $input);
+         $output = '';
+         foreach ($elems as $elem) {
+-            $output .= isset($customerGroups[$elem]) ? $customerGroups[$elem] : $elem;
++            $output .= $customerGroups[$elem] ?? $elem;
+         }
+         return $output;
+     }
  
      protected $_additionalAttributes = ['*'];
  
@@ -926,71 +1057,74 @@ diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/Os2/Data/
      {
          $customerGroupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
          if ($customerGroupId == 0) { // Pour les commandes depuis Adminhtml
-@@ -43,6 +43,9 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
+@@ -44,6 +44,9 @@ class Owebia_Shipping2_Model_Os2_Data_CustomerGroup extends Owebia_Shipping2_Mod
                  $customerGroupId = $adminCustomerGroupId;
              }
          }
-+        if ($customerGroupId == 0 && isset($arguments['quote'])) { // Pour les commandes depuis l'API
++        if (($customerGroupId == 0) && isset($arguments['quote'])) { // Pour les commandes depuis l'API
 +             $customerGroupId = $arguments['quote']->getData('customer_group_id');
 +        }
          parent::__construct(
              [
                  'id' => $customerGroupId,
-#
-# php 8.1/8.2
-#
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigParser.php b/Model/ConfigParser.php
-index 44c0dcf6c..4a58e806c 100644
---- a/Model/ConfigParser.php
-+++ b/Model/ConfigParser.php
-@@ -752,7 +752,7 @@ class Owebia_Shipping2_Model_ConfigParser
-     protected function _setCache($expression, $value)
+diff -r -u -w Shipping2/Model/Os2/Data/Info.php Shipping2/Model/Os2/Data/Info.php
+--- Shipping2/Model/Os2/Data/Info.php
++++ Shipping2/Model/Os2/Data/Info.php
+@@ -6,5 +6,5 @@
+ 
+ class Owebia_Shipping2_Model_Os2_Data_Info extends Owebia_Shipping2_Model_Os2_Data_Abstract
+ {
+-    const INFO = true;
++    public const INFO = true;
+ }
+\ No newline at end of file
+diff -r -u -w Shipping2/Model/System/Config/Source/LoadOnParent.php Shipping2/Model/System/Config/Source/LoadOnParent.php
+--- Shipping2/Model/System/Config/Source/LoadOnParent.php
++++ Shipping2/Model/System/Config/Source/LoadOnParent.php
+@@ -7,12 +7,9 @@
+ class Owebia_Shipping2_Model_System_Config_Source_LoadOnParent
+     extends Mage_Adminhtml_Model_System_Config_Source_Category
+ {
+-    /**
+-     * {@inheritdoc}
+-     */
+     public function toOptionArray($addEmpty = true)
      {
-         if ($value instanceof Owebia_Shipping2_Model_Os2_Result) {
--            $this->_formulaCache[$expression] = $value;
-+            $this->_formulaCache[str_replace('.', '-', $expression)] = $value;
-             $this->debug(
-                 '      cache <span class=osh-replacement>' . self::esc($expression) . '</span>'
-                 . ' = <span class=osh-formula>' . self::esc(self::toString($value->result)) . '</span>'
-@@ -1030,8 +1030,8 @@ class Owebia_Shipping2_Model_ConfigParser
-                 ->setResult($formulaString);
-         }
- 
--        if ($useCache && isset($this->_formulaCache[$formulaString])) {
--            $result = $this->_formulaCache[$formulaString];
-+        if ($useCache && isset($this->_formulaCache[$formulaStringKey = str_replace('.', '-', $formulaString)])) {
-+            $result = $this->_formulaCache[$formulaStringKey];
-             $this->debug(
-                 '      get cached formula <span class=osh-replacement>' . self::esc($formulaString) . '</span>'
-                 . ' = <span class=osh-formula>' . self::esc(self::toString($result->result)) . '</span>'
-diff -r -u -w --ignore-matching-lines 'Copyright 20[0-9][0-9]' a/Model/ConfigParser.php b/Model/ConfigParser.php
-index 4a58e806c..b46169dd9 100644
---- a/Model/ConfigParser.php
-+++ b/Model/ConfigParser.php
-@@ -13,6 +13,8 @@ class Owebia_Shipping2_Model_ConfigParser
-     const FLOAT_REGEX  = '[-]?\d+(?:[.]\d+)?';
-     const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
- 
-+    protected $constants;
-+    protected $_currencyCodes;
-     public static $debugIndexCounter = 0;
- 
-     public static function esc($input)
-@@ -1198,15 +1200,10 @@ class Owebia_Shipping2_Model_ConfigParser
-         }
+-        $options = [
++        return [
+             [
+                 'label' => Mage::helper('owebia_shipping2')->__('Self'),
+                 'value' => '0'
+@@ -22,6 +19,5 @@ class Owebia_Shipping2_Model_System_Config_Source_LoadOnParent
+                 'value' => '1'
+             ],
+         ];
+-        return $options;
      }
- 
--    protected function getChar($charCode)
--    {
--        return utf8_encode(chr($charCode));
--    }
--
-     protected function _parseInputPrepareInput($input)
+ }
+\ No newline at end of file
+diff -r -u -w Shipping2/Model/System/Config/Source/ProcessChildren.php Shipping2/Model/System/Config/Source/ProcessChildren.php
+--- Shipping2/Model/System/Config/Source/ProcessChildren.php
++++ Shipping2/Model/System/Config/Source/ProcessChildren.php
+@@ -7,12 +7,9 @@
+ class Owebia_Shipping2_Model_System_Config_Source_ProcessChildren
+     extends Mage_Adminhtml_Model_System_Config_Source_Category
+ {
+-    /**
+-     * {@inheritdoc}
+-     */
+     public function toOptionArray($addEmpty = true)
      {
--        $openingQuote = $this->getChar(147);
--        $closingQuote = $this->getChar(148);
-+        $openingQuote = hex2bin('c293'); // bin2hex(utf8_encode(chr(147))) = c293 = var_dump(hex2bin('c293') == utf8_encode(chr(147)));
-+        $closingQuote = hex2bin('c294'); // bin2hex(utf8_encode(chr(148))) = c294 = var_dump(hex2bin('c294') == utf8_encode(chr(148)));
-         $input = str_replace(
-             ['&gt;', '&lt;', '“', '”', $openingQuote, $closingQuote, '&laquo;', '&raquo;', "\r\n", "\t"],
-             ['>', '<', '"', '"', '"', '"', '"', '"', "\n", ' '],
+-        $options = [
++        return [
+             [
+                 'label' => Mage::helper('owebia_shipping2')->__('Self'),
+                 'value' => '0'
+@@ -22,6 +19,5 @@ class Owebia_Shipping2_Model_System_Config_Source_ProcessChildren
+                 'value' => '1'
+             ],
+         ];
+-        return $options;
+     }
+ }
+\ No newline at end of file

@@ -9,7 +9,7 @@ class Owebia_Shipping2_Model_System_Config_Source_ProcessChildren
 {
     public function toOptionArray($addEmpty = true)
     {
-        $options = [
+        return [
             [
                 'label' => Mage::helper('owebia_shipping2')->__('Self'),
                 'value' => '0'
@@ -19,6 +19,5 @@ class Owebia_Shipping2_Model_System_Config_Source_ProcessChildren
                 'value' => '1'
             ],
         ];
-        return $options;
     }
 }

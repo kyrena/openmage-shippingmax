@@ -26,7 +26,7 @@ class Owebia_Shipping2_Model_Os2_Data_AbstractWithAttributes extends Owebia_Ship
         $getValue = false;
         if (substr($attributeName, strlen($attributeName) - 6, 6) == '.value') {
             $getValue = true;
-            $attributeName = substr($attributeName, 0, strlen($attributeName) - 6);
+            $attributeName = substr($attributeName, 0, -6);
         }
 
         $object = $this->_getObject();

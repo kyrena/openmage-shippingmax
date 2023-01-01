@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -281,7 +281,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_TIMEOUT, $this->_full ? 50 : 20);
 		curl_setopt($ch, CURLOPT_ENCODING , ''); // https://stackoverflow.com/q/17744112/2980105
 		curl_setopt($ch, CURLOPT_REFERER, Mage::getBaseUrl());
 
@@ -289,7 +289,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		$result = (($result === false) || (curl_errno($ch) !== 0)) ? trim('CURL_ERROR '.curl_errno($ch).' '.curl_error($ch)) : $result;
 		curl_close($ch);
 
-		if (stripos($result, 'CURL_ERROR') !== false)
+		if (str_contains($result, 'CURL_ERROR'))
 			Mage::throwException($this->_code.' '.$result);
 
 		if ($json)

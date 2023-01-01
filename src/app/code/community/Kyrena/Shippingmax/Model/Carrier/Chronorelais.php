@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/11/07/2019
- * Updated M/11/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -79,14 +79,14 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 
 				$items[$result->identifiant] = [
 					'id'          => $result->identifiant,
-					'lat'         => trim(str_replace(',', '.', $result->coordGeolocalisationLatitude), '0'),
-					'lng'         => trim(str_replace(',', '.', $result->coordGeolocalisationLongitude), '0'),
+					'lat'         => (float) str_replace(',', '.', $result->coordGeolocalisationLatitude),
+					'lng'         => (float) str_replace(',', '.', $result->coordGeolocalisationLongitude),
 					'name'        => $result->nom,
 					'street'      => implode("\n", array_filter([$result->adresse1, $result->adresse2, $result->adresse3])),
 					'postcode'    => $result->codePostal,
 					'city'        => $result->localite,
 					'country_id'  => $result->codePays,
-					'description' => $this->createDesc($result),
+					'description' => $this->getDescription($result),
 					//'max_weight'  => $result->poidsMaxi ?? null, // kg
 				];
 			}
@@ -95,7 +95,7 @@ class Kyrena_Shippingmax_Model_Carrier_Chronorelais extends Kyrena_Shippingmax_M
 		return $items;
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		if (empty($data->listeHoraireOuverture))
 			return '';

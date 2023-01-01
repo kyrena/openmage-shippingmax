@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/28/10/2022
+ * Updated M/15/11/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -81,8 +81,8 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 					$result['id'] = substr(md5($result['id']), 0, 10);
 					$items[$result['id']] = [
 						'id'          => $result['id'],
-						'lat'         => trim(str_replace(',', '.', $result['address']['lat']), '0'),
-						'lng'         => trim(str_replace(',', '.', $result['address']['lng']), '0'),
+						'lat'         => (float) str_replace(',', '.', $result['address']['lat']),
+						'lng'         => (float) str_replace(',', '.', $result['address']['lng']),
 						'name'        => $result['name'],
 						'street'      => '@todo',
 						'postcode'    => $result['address']['zipCode'],
@@ -90,7 +90,7 @@ class Kyrena_Shippingmax_Model_Carrier_Fivepost extends Kyrena_Shippingmax_Model
 						'country_id'  => $mapping[$country],
 						'description' => implode("\n", array_filter([
 							$result['additional'],
-							//$this->createDesc($result['workHours'])
+							//$this->getDescription($result['workHours'])
 						])),
 						//'max_weight'  => $result['cellLimits']['maxWeight'] / 1000, // g
 						'cod'         => !empty($result['cashAllowed']) || !empty($result['cardAllowed']),

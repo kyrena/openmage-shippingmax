@@ -18,7 +18,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
         parent::__construct();
         $this->_item = $item = $arguments['item'];
         $this->_parentItem = $parentItem = $arguments['parent_item'];
-        $this->_getOptions = $options = $arguments['options'];
+        $this->_getOptions = $arguments['options'];
         $this->_product = null;
         $this->_type = $parentItem ? $parentItem->getProduct()->getTypeId() : $item->getProduct()->getTypeId();
         $this->_loadedObject = $this->_getItem('load_item_data_on_parent');
@@ -79,7 +79,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
 
     protected function _getItem($what)
     {
-        if ($this->_type == 'bundle' && $this->_getOptions[$this->_type]['process_children'] == false) {
+        if ($this->_type == 'bundle' && !$this->_getOptions[$this->_type]['process_children']) {
             $getParent = false;
         } else {
             $getParent = isset($this->_getOptions[$this->_type][$what]) && $this->_getOptions[$this->_type][$what] == true;
@@ -115,7 +115,7 @@ class Owebia_Shipping2_Model_Os2_Data_CartItem extends Owebia_Shipping2_Model_Os
             }
         }
         if ($addOptions = $item->getOptionByCode('additional_options')) {
-            $options = array_merge($options, unserialize($addOptions->getValue()));
+            $options = array_merge($options, unserialize($addOptions->getValue(), ['allowed_classes' => false]));
         }
         $this->_options = $options;
         return $this->_options;

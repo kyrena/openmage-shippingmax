@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/08/07/2021
- * Updated V/28/10/2022
+ * Updated J/15/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -71,8 +71,8 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 
 				$items[$result['id']] = [
 					'id'          => $result['id'],
-					'lat'         => trim(str_replace(',', '.', $result['gps_location']['latitude']), '0'),
-					'lng'         => trim(str_replace(',', '.', $result['gps_location']['longitude']), '0'),
+					'lat'         => (float) str_replace(',', '.', $result['gps_location']['latitude']),
+					'lng'         => (float) str_replace(',', '.', $result['gps_location']['longitude']),
 					'name'        => $result['name'],
 					'street'      => $result['prepare_address']['street'],
 					'postcode'    => $result['prepare_address']['postal_code'],
@@ -81,7 +81,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 					'country_id'  => 'RU',
 					'description' => implode("\n", array_filter([
 						$result['trip_description'],
-						$this->createDesc($result)
+						$this->getDescription($result)
 					])),
 					//'max_weight'  => $result['limits']['max_weight']['value'] ?? null, // kg
 					'cod'         => !empty($result['cod']),
@@ -92,7 +92,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 		return $items;
 	}
 
-	protected function createDesc($data) {
+	protected function getDescription($data) {
 
 		if ($data['work_schedule'] == 'Пн,Вт,Ср,Чт,Пт,Сб,Вс: круглосуточно')
 			return '24/7';
@@ -133,7 +133,7 @@ class Kyrena_Shippingmax_Model_Carrier_Shiptor extends Kyrena_Shippingmax_Model_
 			return '';
 
 		// Array ( [0] => 1#09#00#22#00 )
-		$always = array_unique(array_map(static function ($v) { return substr($v, strpos($v, '#')); }, $html));
+		$always = array_unique(array_values(array_map('implode', $days)));
 		if ((count($always) == 1) && in_array($always[0], ['#00#00#23#59', '#00#01#23#59']))
 			return '24/7';
 

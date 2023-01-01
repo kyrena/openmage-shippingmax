@@ -1,7 +1,6 @@
 /*!
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2022 | Mickaël Vang <mickael~cellublue~com>
- * Copyright 2019-2022 | Jérôme Siau <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Mickaël Vang <mickael~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL).

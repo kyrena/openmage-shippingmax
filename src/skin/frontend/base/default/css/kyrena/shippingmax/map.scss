@@ -1,9 +1,9 @@
 /**
  * Created V/12/04/2019
- * Updated V/22/07/2022
+ * Updated L/26/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
- * Copyright 2019-2022 | Mickaël Vang <mickael~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Mickaël Vang <mickael~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
  * This program is free software, you can redistribute it or modify
@@ -90,8 +90,10 @@ body {
 	font-family: $font-text;
 	font-size: 14px;
 	overflow: hidden;
-	//For disable blue highlight when touch/press in mobile (specialy for Chrome browser)
+	// For disable blue highlight when touch/press in mobile (specialy for Chrome browser)
 	-webkit-tap-highlight-color: transparent;
+	// Disable double click
+	touch-action: manipulation;
 }
 
 ul {
@@ -121,7 +123,7 @@ button {
 		flex: 0 0 150px;
 	}
 
-	@media (max-height: 414px) {
+	@media (max-height: 500px) {
 		display: none;
 	}
 }
@@ -569,10 +571,6 @@ button {
 
 		.results-list {
 			margin-bottom: 32px;
-			.screen {
-				width: 100%;
-				margin-top: 10px;
-			}
 		}
 
 		@media #{$small-down} {
@@ -735,7 +733,7 @@ button {
 	}
 
 	.icn {
-		display:none;
+		display: block;
 		float: right;
 		width: 30px;
 		height: 30px;
@@ -744,65 +742,62 @@ button {
 		background-position: center;
 		font-size: 0;
 
-		&.ic-inpospacit,
-		&.ic-inpospaczk,
-		&.ic-inpospacuk {
-			display: inline-block;
-			width: 60px;
-			height: 28px;
-			background-image: url("../../../images/kyrena/shippingmax/ic-logo-inpost.svg");
+		&.ic-boxberry {
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-boxberry2.svg");
+		}
+
+		&.ic-chronorelais {
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-chronopost2.svg");
+		}
+
+		&.ic-colisprivpts {
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-colisprive.svg");
+		}
+
+		&.ic-dpdfrrelais {
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-dpd2.svg");
 		}
 
 		&.ic-fivepost {
-			display: inline-block;
 			width: 40px;
 			height: 30px;
 			background-image: url("../../../images/kyrena/shippingmax/ic-logo-fivepost.svg");
 		}
 
+		&.ic-inpospacit,
+		&.ic-inpospacuk,
+		&.ic-inpospaczk {
+			width: 60px;
+			height: 28px;
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-inpost.svg");
+		}
+
 		&.ic-mondialrelay {
-			display: inline-block;
 			background-image: url("../../../images/kyrena/shippingmax/ic-logo-mondialrelay.svg");
 		}
 
-		&.ic-colisprivpts {
-			display: inline-block;
-			background-image: url("../../../images/kyrena/shippingmax/ic-logo-colisprive.svg");
+		&.ic-pickpoint {
+			background-image: url("../../../images/kyrena/shippingmax/ic-logo-pickpoint2.svg");
 		}
 
 		&.ic-pocztk48Op {
-			display: inline-block;
 			background-image: url("../../../images/kyrena/shippingmax/ic-logo-pocztex2.svg");
 		}
 
 		&.ic-przesodbpk {
-			display: inline-block;
 			background-image: url("../../../images/kyrena/shippingmax/ic-logo-packeta.svg");
 		}
 
-		&.ic-chronorelais {
-			display: inline-block;
-			background-image: url("../../../images/kyrena/shippingmax/ic-logo-chronopost2.svg");
-		}
-
-		&.ic-dpdfrrelais {
-			display: inline-block;
-			background-image: url("../../../images/kyrena/shippingmax/ic-logo-dpd2.svg");
-		}
-
-		&.ic-boxberry {
-			display: inline-block;
-			background-image: url("../../../images/kyrena/shippingmax/ic-logo-boxberry2.svg");
-		}
-
-		&.ic-pickpoint {
-			display: inline-block;
-			background-image: url("../../../images/kyrena/shippingmax/ic-logo-pickpoint2.svg");
-		}
-
 		&.ic-shiptor {
-			display: inline-block;
 			background-image: url("../../../images/kyrena/shippingmax/ic-logo-shiptor2.svg");
+		}
+
+		&.ic-storelocator {
+			display: none;
+		}
+
+		&.ic-storepts {
+			display: none;
 		}
 	}
 
@@ -895,7 +890,7 @@ div.leaflet-container {
 	position: relative;
 	display: inline-flex;
 	height: 40px;
-	margin-left: 15px;
+	margin-right: 15px;
 
 	user-select: none;
 	-moz-user-select: none;
@@ -915,6 +910,8 @@ div.leaflet-container {
 		height: 38px;
 		transform: translate(0, -50%);
 		-webkit-transform: translate(0, -50%);
+		transition: all 0.2s ease-in-out;
+		cursor: pointer;
 
 		&_btn {
 			position: absolute;
@@ -949,7 +946,7 @@ div.leaflet-container {
 
 	@media #{$extra-small-only} {
 		.country-choice {
-			margin-left: 8px;
+			margin-right: 8px;
 		}
 	}
 
@@ -995,7 +992,7 @@ div.leaflet-container {
 		}
 
 		.toggle-list {
-			right: 0;
+			right: -99px;
 			width: 36px;
 
 			&_btn {
@@ -1013,11 +1010,10 @@ div.leaflet-container {
 	}
 }
 
-
 .country-list {
 	position: absolute;
 	top: 0;
-	right: 0;
+	left: 0;
 	display: inline-flex;
 	z-index: 1;
 	align-items: center;
@@ -1031,7 +1027,6 @@ div.leaflet-container {
 	border-radius: 5px;
 	font-size: 0;
 	transition: all 0.2s ease-in-out;
-	pointer-events: none;
 
 	&.multi {
 		flex-direction: column;
@@ -1041,10 +1036,6 @@ div.leaflet-container {
 		.small {
 			display: inline;
 		}
-	}
-
-	&.multi + .toggle-list {
-		cursor: pointer;
 	}
 
 	&.single label {

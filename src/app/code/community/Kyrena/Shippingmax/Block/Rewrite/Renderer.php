@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/04/06/2020
- * Updated D/11/09/2022
+ * Updated J/29/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -21,74 +21,107 @@
 class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Address_Renderer_Default {
 
 	protected $_translate;
-	protected $_formatter;
+	protected $_formatter = [];
+	protected $_countryNames = [];
 
 	protected function _construct() {
 		$this->setModuleName('Mage_Customer');
-		$this->_translate = Mage::getSingleton('core/locale');
-		$this->_formatter = [];
+	}
+
+	protected function getCountryName($code) {
+
+		if (empty($this->_countryNames[$code]))
+			$this->_countryNames[$code] = $this->_translate->getCountryTranslation($code);
+
+		return $this->_countryNames[$code];
 	}
 
 	public function render(Mage_Customer_Model_Address_Abstract $address, $output = null) {
 
 		// traitement spécial pour France + DROM/COM + Monaco
 		$code     = strtoupper($address->getData('country_id'));
-		$country  = $this->_translate->getCountryTranslation($code);
 		$postcode = $address->getData('postcode');
+		$edit     = false;
 
 		if (!empty($postcode) && in_array($code, $this->helper('shippingmax')->getFranceDromCom())) {
 
+			$code  = 'FR';
 			$post4 = mb_substr($postcode, 0, 4);
 			$post3 = mb_substr($post4, 0, 3);
 			$post2 = mb_substr($post4, 0, 2);
 
 			if ($post2 == '97') {
-				$france = $this->_translate->getCountryTranslation($code = 'FR');
 				// BL 97133 Saint-Barthélemy (977 Antilles)
-				if ($postcode == '97133')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'BL').')';
+				if ($postcode == '97133') {
+					$code = 'BL';
+					$edit = true;
+				}
 				// MF 97150 Saint-Martin (978 Antilles)
-				else if ($post4 == '9715')
-					$country = $france.' ('.str_replace(' (partie française)', '', $this->_translate->getCountryTranslation($code = 'MF')).')';
+				else if ($post4 == '9715') {
+					$code = 'MF';
+					$edit = true;
+				}
 				// GP 971XX Guadeloupe
-				else if ($post3 == '971')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'GP').')';
+				else if ($post3 == '971') {
+					$code = 'GP';
+					$edit = true;
+				}
 				// MQ 972XX Martinique
-				else if ($post3 == '972')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'MQ').')';
+				else if ($post3 == '972') {
+					$code = 'MQ';
+					$edit = true;
+				}
 				// GF 973XX Guyane
-				else if ($post3 == '973')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'GF').')';
+				else if ($post3 == '973') {
+					$code = 'GF';
+					$edit = true;
+				}
 				// RE 974XX La Réunion
-				else if ($post3 == '974')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'RE').')';
+				else if ($post3 == '974') {
+					$code = 'RE';
+					$edit = true;
+				}
 				// PM 975XX Saint-Pierre-et-Miquelon
-				else if ($post3 == '975')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'PM').')';
+				else if ($post3 == '975') {
+					$code = 'PM';
+					$edit = true;
+				}
 				// YT 976XX Mayotte
-				else if ($post3 == '976')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'YT').')';
+				else if ($post3 == '976') {
+					$code = 'YT';
+					$edit = true;
+				}
 			}
 			else if ($post2 == '98') {
-				$france = $this->_translate->getCountryTranslation($code = 'FR');
 				// WF 986XX Wallis-et-Futuna
-				if ($post3 == '986')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'WF').')';
+				if ($post3 == '986') {
+					$code = 'WF';
+					$edit = true;
+				}
 				// PF 987XX Polynésie Française
-				else if ($post3 == '987')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'PF').')';
+				else if ($post3 == '987') {
+					$code = 'PF';
+					$edit = true;
+				}
 				// NC 988XX Nouvelle-Calédonie
-				else if ($post3 == '988')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'NC').')';
+				else if ($post3 == '988') {
+					$code = 'NC';
+					$edit = true;
+				}
 				// TF 984XX Terres australes françaises
-				else if ($post3 == '984')
-					$country = $france.' ('.$this->_translate->getCountryTranslation($code = 'TF').')';
+				else if ($post3 == '984') {
+					$code = 'TF';
+					$edit = true;
+				}
 				// MC 980XX Monaco
-				else if ($post3 == '980')
-					$country = $this->_translate->getCountryTranslation($code = 'MC');
+				else if ($post3 == '980') {
+					$code = 'MC';
+					$edit = true;
+				}
 			}
 		}
 
+		// final simple
 		if ($output == 'country')
 			return $code;
 
@@ -103,6 +136,7 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 			return parent::render($address, $output);
 		}
 
+		// pour la suite s'assure du code pays
 		$code = empty($code) ? Mage::getStoreConfig('general/country/default') : $code;
 
 		// formatage du numéro de téléphone
@@ -119,11 +153,13 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 				}
 				else if ($phoneUtil->getRegionCodeForNumber($phoneNumb) == $code) {
 					$telephone = $phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::NATIONAL);
-					if (in_array($output, [null, 'html']) && Mage::app()->getStore()->isAdmin())
-						$telephone .= ' ['.$phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::INTERNATIONAL).']';
+					if ((($this->getType() ? $this->getType()->getCode() : $output) == 'html') && Mage::app()->getStore()->isAdmin())
+						$telephone = '<a href="tel://'.$phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::E164).'">'.$telephone.'</a> ['.$phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::INTERNATIONAL).']';
 				}
 				else {
 					$telephone = $phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
+					if ((($this->getType() ? $this->getType()->getCode() : $output) == 'html') && Mage::app()->getStore()->isAdmin())
+						$telephone = '<a href="tel://'.$phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::E164).'">'.$phoneUtil->format($phoneNumb, \libphonenumber\PhoneNumberFormat::NATIONAL).'</a> ['.$telephone.']';
 				}
 			}
 			catch (Throwable $t) {
@@ -164,6 +200,14 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 		if ($output == 'js_template')
 			return str_replace(['#{name}', '#{street}'], ['#{prefix} #{firstname} #{middlename} #{lastname} #{suffix}', "#{street0}\n#{street1}\n#{street2}\n#{street3}"], $template);
 
+		// formatage
+		if (empty($this->_translate))
+			$this->_translate = Mage::getSingleton('core/locale');
+
+		$country = $edit ? $this->getCountryName('FR').' ('.$this->getCountryName($code).')' : $this->getCountryName($code);
+		if ($code == 'MF')
+			$country = str_replace(' (partie française)', '', $country);
+
 		$result = trim(str_replace([
 			'#{company}',
 			'#{name}',
@@ -188,7 +232,7 @@ class Kyrena_Shippingmax_Block_Rewrite_Renderer extends Mage_Customer_Block_Addr
 			$address->getData('vat_id')
 		], $template));
 
-		// final
+		// final complexe
 		if ($output == 'html')
 			return preg_replace("#\s*\n\s*#", "\n<br />", $result);
 		if ($output == 'pdf')

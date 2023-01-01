@@ -1,9 +1,9 @@
 <?php
 /**
  * Created J/04/02/2021
- * Updated J/04/11/2021
+ * Updated J/29/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -21,7 +21,7 @@
 class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Block_System_Config_Form_Field {
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
-		$element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue();
+		$element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue()->unsPath();
 		return parent::render($element);
 	}
 
@@ -29,7 +29,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Blo
 
 		// cron fichiers
 		$lastjob = Mage::getResourceModel('cron/schedule_collection')
-			->addFieldToFilter('job_code', 'shippingmax_update_fullfiles')
+			->addFieldToFilter('job_code', 'shippingmax_update_files')
 			->addFieldToFilter('status', 'success')
 			->setOrder('finished_at', 'desc')
 			->setPageSize(1)
@@ -47,17 +47,22 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Blo
 		}
 
 		// fichiers
-		$files = glob(Mage::getBaseDir('var').'/shippingmax_*.dat');
+		$files = glob(Mage::getBaseDir('var').'/shippingmax/*.dat');
 		foreach ($files as $file) {
 			try {
-				$model = Mage::getModel('shippingmax/carrier_'.substr($file, strrpos($file, '_') + 1, -4));
-				$summary[] = sprintf('%s<br />&nbsp; <em>%s = %s k<br />&nbsp; file lifetime: %d hours, %d day(s)</em>',
-					basename($file),
-					$this->formatDate(date('Y-m-d H:i:s', filemtime($file)), Mage_Core_Model_Locale::FORMAT_TYPE_SHORT, true),
-					$this->helper('shippingmax')->getNumber(filesize($file) / 1024, ['precision' => 2]),
-					$model->getFullCacheLifetime() / 60 / 60,
-					$model->getFullCacheLifetime() / 60 / 60 / 24
-				);
+				$name   = basename($file);
+				$pos    = str_contains($name, '_') ? strrpos($file, '_') : false;
+				$module = empty($pos) ? 'shippingmax' : substr($file, 0, $pos);
+				$model  = Mage::getSingleton('shipping/config')->getCarrierInstance($module.'_'.substr($name, 0, -4));
+				if ($model) {
+					$summary[] = sprintf('%s<br />&nbsp; <em>%s = %s k<br />&nbsp; file lifetime: %d hours, %d day(s)</em>',
+						$name,
+						$this->formatDate(date('Y-m-d H:i:s', filemtime($file)), Mage_Core_Model_Locale::FORMAT_TYPE_SHORT, true),
+						$this->helper('shippingmax')->getNumber(filesize($file) / 1024, ['precision' => 2]),
+						$model->getFullCacheLifetime() / 60 / 60,
+						$model->getFullCacheLifetime() / 60 / 60 / 24
+					);
+				}
 			}
 			catch (Throwable $t) {
 				Mage::logException($t);

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/30/09/2022
+ * Updated J/29/12/2022
  *
- * Copyright 2019-2022 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
  * https://github.com/kyrena/openmage-shippingmax
  *
@@ -52,7 +52,7 @@ class Kyrena_Shippingmax_Model_Observer {
 			}
 
 			// modifie l'adresse de livraison du client
-			// marque l'adresse du point relais avec deux caractères invisibles
+			// marque l'adresse du point de livraison avec deux caractères invisibles
 			$region = $this->searchRegionId($item->getData('country_id'), $item->getData('postcode'), $item->getData('region'));
 
 			$address->setData('company', $item->getData('name')."\0\0");
@@ -95,43 +95,44 @@ class Kyrena_Shippingmax_Model_Observer {
 		$fullcode = $address->getShippingMethod();
 
 		if (!empty($fullcode)) {
+
 			$order->setData('orig_shipping_code', $fullcode); // pour les délais de livraison
 			$help = Mage::helper('shippingmax');
 			$code = $help->getCarrierCode($fullcode);
 			$item = $help->getSession()->getData($code);
-		}
 
-		if (!empty($item) && !empty($item['item']) && ($address->getAddressType() == 'shipping')) {
+			if (!empty($item) && !empty($item['item']) && ($address->getAddressType() == 'shipping')) {
 
-			// modifie l'adresse de livraison du client
-			$item   = new Varien_Object($item['item']);
-			$region = $this->searchRegionId($item->getData('country_id'), $item->getData('postcode'), $item->getData('region'));
+				// modifie l'adresse de livraison du client
+				$item   = new Varien_Object($item['item']);
+				$region = $this->searchRegionId($item->getData('country_id'), $item->getData('postcode'), $item->getData('region'));
 
-			$address->setData('company', $item->getData('name').' ('.$item->getData('id').')');
-			$address->setStreet($item->getData('street'));
-			$address->setData('postcode', $item->getData('postcode'));
-			$address->setData('city', $item->getData('city'));
-			$address->setData('region', empty($region) ? $item->getData('region') : null);
-			$address->setData('region_id', empty($region) ? null : $region);
-			$address->setData('country_id', $item->getData('country_id'));
-			$address->setData('customer_address_id', 0);
-			$address->setData('save_in_address_book', 0);
+				$address->setData('company', $item->getData('name').' ('.$item->getData('id').')');
+				$address->setStreet($item->getData('street'));
+				$address->setData('postcode', $item->getData('postcode'));
+				$address->setData('city', $item->getData('city'));
+				$address->setData('region', empty($region) ? $item->getData('region') : null);
+				$address->setData('region_id', empty($region) ? null : $region);
+				$address->setData('country_id', $item->getData('country_id'));
+				$address->setData('customer_address_id', 0);
+				$address->setData('save_in_address_book', 0);
 
-			if (mb_stripos($fullcode, '_'.$item->getData('id')) === false)
-				$fullcode .= '_'.$item->getData('id');
+				if (mb_stripos($fullcode, '_'.$item->getData('id')) === false)
+					$fullcode .= '_'.$item->getData('id');
 
-			// modifie le code du mode de livraison (en cas de mix)
-			$order->setOrigShippingMethod($fullcode);
-			if (!empty($item->getData('carrier')))
-				$fullcode = preg_replace('#^[^_]+_[^_]+#', $item->getData('carrier'), $fullcode);
+				// modifie le code du mode de livraison (en cas de mix)
+				$order->setOrigShippingMethod($fullcode);
+				if (!empty($item->getData('carrier')))
+					$fullcode = preg_replace('#^[^_]+_[^_]+#', $item->getData('carrier'), $fullcode);
 
-			$address->setShippingMethod($fullcode);
-			$order->setShippingMethod($fullcode);
+				$address->setShippingMethod($fullcode);
+				$order->setShippingMethod($fullcode);
 
-			// s'assure qu'il y a une description
-			$desc = $order->getData('shipping_description');
-			if (empty($desc) && !empty($desc = Mage::getStoreConfig('carriers/'.$code.'/title', $order->getStoreId())))
-				$order->setData('shipping_description', '!'.$desc);
+				// s'assure qu'il y a une description
+				$desc = $order->getData('shipping_description');
+				if (empty($desc) && !empty($desc = Mage::getStoreConfig('carriers/'.$code.'/title', $order->getStoreId())))
+					$order->setData('shipping_description', '!'.$desc);
+			}
 		}
 	}
 
@@ -169,7 +170,7 @@ class Kyrena_Shippingmax_Model_Observer {
 				if (empty($item['item']['carrier']))
 					$item['item']['carrier'] = $code;
 
-				// mémorise les informations du point relais à vie
+				// mémorise les informations du point de livraison à vie
 				$details = Mage::getModel('shippingmax/details');
 				$details->setData('order_id', $order->getId());
 				$details->setData('customer_id', $order->getData('customer_id'));
@@ -200,7 +201,7 @@ class Kyrena_Shippingmax_Model_Observer {
 		$writer   = $database->getConnection('core_write');
 		$table    = $database->getTableName('core_config_data');
 
-		$carriers = Mage::getModel('shipping/config')->getAllCarriers();
+		$carriers = Mage::getSingleton('shipping/config')->getAllCarriers();
 		foreach ($carriers as $code => $carrier) {
 
 			if (Mage::getStoreConfigFlag('carriers/shippingmax/remove_'.$code)) {
@@ -223,10 +224,11 @@ class Kyrena_Shippingmax_Model_Observer {
 	// EVENT adminhtml_init_system_config (adminhtml)
 	public function hideConfig(Varien_Event_Observer $observer) {
 
-		$section = Mage::app()->getRequest()->getParam('section');
-		if ($section == 'carriers') {
+		if (Mage::app()->getRequest()->getParam('section') == 'carriers') {
+
 			$nodes    = $observer->getData('config')->getNode('sections/carriers/groups')->children();
-			$carriers = Mage::getModel('shipping/config')->getAllCarriers();
+			$carriers = Mage::getSingleton('shipping/config')->getAllCarriers();
+
 			foreach ($carriers as $code => $carrier) {
 				if (!empty($nodes->{$code}) && Mage::getStoreConfigFlag('carriers/shippingmax/remove_'.$code)) {
 					$nodes->{$code}->show_in_default = 0;
@@ -238,14 +240,14 @@ class Kyrena_Shippingmax_Model_Observer {
 	}
 
 	// CRON shippingmax_update_files
-	public function updateFullFiles($cron = null) {
+	public function updateFullFiles($cron = null, $force = false) {
 
 		$app = Mage::app();
 		$msg = [];
 
 		$help     = Mage::helper('shippingmax');
 		$storeIds = Mage::getResourceModel('core/store_collection')->getAllIds();
-		$carriers = Mage::getModel('shipping/config')->getAllCarriers();
+		$carriers = Mage::getSingleton('shipping/config')->getAllCarriers();
 		$address  = new Varien_Object(['lat' => -1, 'lng' => -1]);
 		$hasError = false;
 
@@ -261,13 +263,14 @@ class Kyrena_Shippingmax_Model_Observer {
 						else
 							$active = Mage::getStoreConfigFlag('carriers/'.$help->getEnabledCarrierCode($code, $storeId).'/active', $storeId);
 
+						// vue magasin (passe à la vue suivante)
 						if (!$active)
 							continue;
 
 						$cache = $carrier->getCacheFile();
-						$life  = $carrier->getFullCacheLifetime() - 600; // 10 minutes en secondes
+						$life  = $carrier->getFullCacheLifetime() - 600; // 10 minutes
 
-						if (!is_file($cache) || (filemtime($cache) < (time() - $life))) {
+						if ($force || !is_file($cache) || (filemtime($cache) < (time() - $life))) {
 
 							$dir = dirname($cache);
 							if (!is_dir($dir))
@@ -278,7 +281,7 @@ class Kyrena_Shippingmax_Model_Observer {
 							$time  = microtime(true) - $start;
 
 							// sauvegarde dans le cache fichier et dans le cache openmage
-							// voir aussi Kyrena_Shippingmax_Model_Carrier::loadItemsFromCache
+							// @see Kyrena_Shippingmax_Model_Carrier::loadItemsFromCache
 							if (!empty($items) && is_array($items)) {
 
 								// met à jour le fichier et le cache
