@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/15/11/2022
+ * Updated S/14/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -20,16 +20,19 @@
 
 abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_Carrier_Abstract implements Mage_Shipping_Model_Carrier_Interface {
 
-	protected $_dstSearch = 30;
-	protected $_maxPoints = 50;             // map.phtml self.maxpts
+	protected $_allowedCountries  = false; // checkAvailableShipCountries
+	protected $_allowedCurrencies = false; // checkAvailableShipCountries
+
+	protected $_dstSearch = 99;
+	protected $_maxPoints = 50;
 	protected $_cacheLifetime = 3600;       // 1 heure en secondes
 	protected $_fullCacheLifetime = 432000; // 5 jours en secondes
-	protected $_postcodesOnly = false;
+	protected $_zipOnly = false;
 
 	// openmage
 	public function getTrackingInfo($trackingNumber, $order = null) {
 
-		// Kyrena_Shippingmax_Model_Rewrite_Track
+		// @see Kyrena_Shippingmax_Model_Rewrite_Track
 		$storeId  = is_object($order) ? $order->getStoreId() : null;
 		$postcode = is_object($order) ? $order->getShippingAddress()->getData('postcode') : '';
 
@@ -46,6 +49,17 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 	public function checkAvailableShipCountries(Mage_Shipping_Model_Rate_Request $request) {
 
+		if (is_bool($this->_allowedCountries)) {
+			$this->_allowedCountries = array_filter(explode(',', (string) $this->getConfigData('allowedcountry')));
+			if (empty($this->_allowedCountries))
+				$this->_allowedCountries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $this->getStore())));
+		}
+
+		// allowedcountry
+		if (!in_array($request->getDestCountryId(), $this->_allowedCountries))
+			return false;
+
+		// sallowspecific + specificcountry
 		$result = parent::checkAvailableShipCountries($request);
 
 		if (is_object($result) && (get_class($result) == get_class(Mage::getModel('shipping/rate_result_error'))))
@@ -97,16 +111,19 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 	public function loadItemsFromCache(object $address, bool $dataOnly = false) {
 
-		if (empty($address->getData('postcode')) && !$this->getConfigFlag('can_show_all'))
+		if (($this->_code != 'shippingmax_storelocator') && empty($address->getData('postcode')))
 			return [];
 
+		// remplace Monaco par France (MC = FR)
+		$country = ($address->getData('country_id') == 'MC') ? 'FR' : $address->getData('country_id');
+
 		$app = Mage::app();
-		$str = mb_strtolower(trim($address->getData('postcode').' '.$address->getData('city').', '.$address->getData('country_id')));
+		$str = mb_strtolower(trim($address->getData('postcode').' '.$address->getData('city').', '.$country));
 		if (!empty($address->getData('lat')) && (mb_strlen($str) < 6)) // géolocalisation
 			$str = trim(round($address->getData('lat'), 6).'/'.round($address->getData('lng'), 6));
 
 		$skey = $this->_code.'_'.md5($str); // clef pour le cache des résultats de la recherche actuelle
-		if ($this->_postcodesOnly)
+		if ($this->_zipOnly)
 			$skey = $this->_code;
 
 		$cache = $this->getCacheFile();
@@ -126,7 +143,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		}
 
 		// CHARGE LES DONNÉES DEPUIS LE FICHIER
-		// s'il y a un fichier avec tous les points relais
+		// s'il y a un fichier avec tous les points de livraison
 		if ($full) {
 
 			// charge les données depuis le cache openmage
@@ -149,7 +166,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		}
 
 		// CHARGE LES DONNÉES DEPUIS INTERNET
-		// s'il fait charger les points relais depuis internet
+		// s'il faut charger les points de livraison depuis internet
 		if (empty($items) || !is_array($items)) {
 
 			try {
@@ -163,7 +180,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 					});
 
 					// sauvegarde dans le cache fichier et dans le cache openmage
-					// voir aussi Kyrena_Shippingmax_Model_Observer::updateFullFiles
+					// @see Kyrena_Shippingmax_Model_Observer::updateFullFiles
 					if ($full) {
 
 						$dir = dirname($cache);
@@ -191,55 +208,55 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		}
 
 		// en cas de mix, recommence et fusionne
-		// par exemple shippingmax_mondialrelay et shippingmax_colisprivpts
-		$mixmaps = Mage::getConfig()->getNode('global/shippingmax/mixmaps')->asArray();
-		if (array_key_exists($this->_code, $mixmaps)) {
+		$config = $this->getConfigData('mix');
+		if (!empty($config)) {
 
-			foreach (array_keys($mixmaps[$this->_code]) as $mixmap) {
+			$config = explode(',', $config);
+			foreach ($config as $candidate) {
 
-				$split = explode('_', $mixmap);
-				if ($this->getConfigFlag('mix_'.$split[1])) {
+				try {
+					$subitems = Mage::getSingleton('shipping/config')->getCarrierInstance($candidate)->loadItemsFromCache($address, true);
+					if (!empty($subitems) && is_array($subitems)) {
 
-					try {
-						$subitems = Mage::getSingleton($split[0].'/carrier_'.$split[1])->loadItemsFromCache($address, true);
+						// marque
+						foreach ($subitems as $subkey => $subitem) {
+							$subitems[$subkey]['carrier'] = $candidate;
+						}
 
-						if (!empty($subitems) && is_array($subitems)) {
-							// marque
+						// remplace
+						foreach ($items as $key => $item) {
 							foreach ($subitems as $subkey => $subitem) {
-								$subitems[$subkey]['carrier'] = $mixmap;
-							}
-							// remplace
-							foreach ($items as $key => $item) {
-								foreach ($subitems as $subkey => $subitem) {
-									if (
-										($item['name'] == $subitem['name']) &&
-										($item['postcode'] == $subitem['postcode']) &&
-										($item['country_id'] == $subitem['country_id'])
-									) {
-										$items[$subkey] = $subitem;
-										unset($items[$key], $subitems[$subkey]);
-										continue 2;
-									}
+								if (
+									($item['name'] == $subitem['name']) &&
+									($item['postcode'] == $subitem['postcode']) &&
+									($item['country_id'] == $subitem['country_id'])
+								) {
+									$items[$subkey] = $subitem;
+									unset($items[$key], $subitems[$subkey]);
+									continue 2;
 								}
 							}
-							// ajoute
-							$items = empty($items) ? $subitems : $items + $subitems;
 						}
+
+						// ajoute
+						$items = empty($items) ? $subitems : $items + $subitems;
 					}
-					catch (Throwable $t) {
-						Mage::logException($t);
-						$error = $t;
-					}
+				}
+				catch (Throwable $t) {
+					Mage::logException($t);
+					$error = $t;
 				}
 			}
 		}
 
 		// PRÉPARE LES RÉSULTATS
-		// filtre les points relais
-		if (!empty($items) && !$this->_postcodesOnly) {
+		// filtre les points de livraison
+		if (!empty($items) && !$this->_zipOnly) {
 			foreach ($items as $key => &$item) {
-				// conserve uniquement les relais du même pays que l'adresse
-				if (empty($item['id']) || (($this->_code != 'shippingmax_storelocator') && ($item['country_id'] != $address->getData('country_id'))) || !$this->checkItem($address, $item))
+				// conserve uniquement les points de livraison du même pays que l'adresse
+				if (empty($item['id']) ||
+				    (($this->_code != 'shippingmax_storelocator') && ($item['country_id'] != $country)) ||
+				    !$this->checkItem($address, $item))
 					unset($items[$key]);
 			}
 			unset($item);
@@ -262,7 +279,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 			}
 
 			$maxPoints = $this->getConfigData('max_points');
-			if (!$this->_postcodesOnly && ($this->_code != 'shippingmax_storelocator') && (count($items) > $maxPoints))
+			if (!$this->_zipOnly && ($this->_code != 'shippingmax_storelocator') && (count($items) > $maxPoints))
 				$items = array_slice($items, 0, max(10, $maxPoints), true);
 
 			// sauvegarde dans le cache openmage

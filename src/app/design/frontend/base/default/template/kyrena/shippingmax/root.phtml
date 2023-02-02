@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/26/11/2021
+ * Updated V/13/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -39,7 +39,5 @@ $code   = $this->getData('code'); // code du mode de livraison ou id de la comma
 	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/kyrena/shippingmax/map.min.js') ?>"></script>
 	<?php echo $this->getChildHtml('maphead') ?>
 </head>
-<body class="<?php echo is_numeric($code) ? 'id-'.$code : str_replace('shippingmax_', '', $code) ?>">
-	<?php echo $this->getChildHtml('mapbody') ?>
-</body>
+<?php echo $this->getChildHtml('mapbody') ?>
 </html>

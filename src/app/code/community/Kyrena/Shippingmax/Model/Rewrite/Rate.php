@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated M/26/07/2022
+ * Updated J/29/12/2022
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -31,7 +31,7 @@ class Kyrena_Shippingmax_Model_Rewrite_Rate extends Mage_Sales_Model_Resource_Qu
 		}
 
 		if (PHP_SAPI != 'cli')
-			$group = Mage::getSingleton('checkout/session')->getQuote()->getData('customer_group_id');
+			$group = Mage::helper('shippingmax')->getSession()->getQuote()->getData('customer_group_id');
 
 		foreach ($this->_items as $item) {
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/26/07/2021
- * Updated M/15/11/2022
+ * Updated V/30/12/2022
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -43,7 +43,7 @@ class Kyrena_Shippingmax_Model_Carrier_Dpdfrrelais extends Kyrena_Shippingmax_Mo
 				'city'                => $address->getData('city'),
 				'latitude'            => round($address->getData('lat'), 11),
 				'longitude'           => round($address->getData('lng'), 11),
-				'max_distance_search' => $this->getConfigData('dst_search'),
+				'max_distance_search' => min(50, $this->getConfigData('dst_search')),
 				'max_pudo_number'     => min(25, $this->getConfigData('max_points')),
                     'date_from'           => date('d/m/Y'),
 				'requestID'           => '1234', // toujours à 1234, cf module dpdfrance 5.2.0 pour magento 1.9 (ligne 79)

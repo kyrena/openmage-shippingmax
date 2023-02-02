@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/04/2019
- * Updated J/29/12/2022
+ * Updated S/14/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -86,7 +86,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Rewrite_Info extends Mage_Adminhtml_Blo
 				$lnk2 = 'https://www.google.eu/maps/dir//'.$point['lat'].','.$point['lng'];
 				$html[] = '<div class="info" style="margin-top:10px;">'.
 					(empty($point['description']) ? '' : $help->formatDesc($point['description']).'<br />').
-					'<button type="button" class="slink" onclick="shippingmax.open(\''.$lnk1.'\');">'.$this->__('Show map').'</button> / <button type="button" class="slink" onclick="window.open(\''.$lnk2.'\');">'.$this->__('Go to the pick up station').'</button>'.
+					'<button type="button" class="slink" onclick="shippingmax.open(\''.$lnk1.'\');">'.$this->__('Show map').'</button> / <button type="button" class="slink" onclick="self.open(\''.$lnk2.'\');">'.$this->__('Go to the pick up station').'</button>'.
 				'</div>';
 			}
 			else {

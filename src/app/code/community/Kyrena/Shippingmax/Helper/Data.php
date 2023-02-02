@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/20/12/2022
+ * Updated S/14/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -73,7 +73,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 	}
 
 	public function getNumber($value, array $options = []) {
-		$options['locale'] = Mage::getSingleton('core/translate')->getLocale();
+		$options['locale'] = Mage::getSingleton('core/locale')->getLocaleCode();
 		return Zend_Locale_Format::toNumber($value, $options);
 	}
 
@@ -309,15 +309,15 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 	public function getCarrierCountries(string $code, $storeId = null) {
 
-		// tous les pays
 		if ($code == 'shippingmax_storelocator')
-			$countries = Mage::getResourceModel('directory/country_collection')->getColumnValues('country_id');
-		else
-			$countries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
+			return array_filter(explode(',', Mage::getStoreConfig('carriers/'.$code.'/specificcountry', $storeId)));
+
+		// liste des pays autorisés
+		$countries = array_filter(explode(',', Mage::getStoreConfig('general/country/allow', $storeId)));
 
 		// filtre sur la config des pays possibles sur le mode de livraison
 		$selCountries = Mage::getStoreConfig('carriers/'.$code.'/allowedcountry');
-		$selCountries = empty($selCountries) ? [] : array_filter(explode(',', $selCountries)); // config.xml
+		$selCountries = empty($selCountries) ? [] : array_filter(explode(',', $selCountries));
 		if (!empty($selCountries))
 			$countries = array_intersect($countries, $selCountries);
 
@@ -331,69 +331,65 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		$config = Mage::getStoreConfig('carriers/'.$code.(str_contains($code, 'owebiashipping') ? '/config' : '/owebia_config'), $storeId);
 		if (mb_stripos($config, '"shipto"') !== false) {
 			$config = Mage::getSingleton('shippingmax/addressfilter')->substitute($config);
-			return Mage::getModel('shippingmax/configparser')->init($config, true)->filterCountries($countries);
+			$countries = Mage::getModel('shippingmax/configparser')->init($config, true)->filterCountries($countries);
 		}
 
-		return $countries;
+		return array_values($countries);
 	}
 
-	public function getItemFromLastOrder(string $code, string $country, object $rate) {
+	public function getItemFromLastOrder(object $address, object $rate, string $code) {
 
-		if (!empty($customer = $this->getSession()->getQuote()->getCustomer()) && !empty($cid = $customer->getId())) {
-
-			$result = ['from_orders' => $country];
+		$cid = $address->getData('customer_id');
+		if (!empty($cid)) {
 
 			try {
-				$details = Mage::getResourceModel('shippingmax/details_collection')
+				// remplace Monaco par France (MC = FR)
+				$country = ($address->getData('country_id') == 'MC') ? 'FR' : $address->getData('country_id');
+				$candidates = Mage::getResourceModel('shippingmax/details_collection')
 					->addFieldToFilter('customer_id', $cid)
 					->addFieldToFilter('details', ['like' => '%"country_id":"'.$country.'"%'])
 					->addFieldToFilter('details', ['like' => '%"carrier":"'.$code.'"%'])
 					->setOrder('order_id', 'desc')
 					->setPageSize(10);
 
-				// cherche d'abord par rapport à l'adresse de livraison
-				$address = $this->getSession()->getQuote()->getShippingAddress();
 				Mage::getModel('shippingmax/coords')->setAddressCoords($address);
 				$items = $rate->getCarrierInstance()->loadItemsFromCache($address);
-				foreach ($details as $detail) {
-					$detail = @json_decode($detail->getData('details'), true);
-					if (array_key_exists($detail['id'], $items)) {
-						$result = ['item' => $items[$detail['id']]];
-						$result['lat'] = $result['item']['lat'];
-						$result['lng'] = $result['item']['lng'];
-						$result['country_id']  = $result['item']['country_id'];
-						$result['selected']    = $detail['id'];
-						$result['from_orders'] = $country;
-						$result['item']['from_orders'] = $country;
-						break;
-					}
-				}
+				$cache = [];
 
-				// cherche ensuite par rapport à l'adresse des points relais précédemment sélectionnés
-				if (empty($result['selected'])) {
-					foreach ($details as $detail) {
-						$detail = @json_decode($detail->getData('details'), true);
-						$items  = $rate->getCarrierInstance()->loadItemsFromCache(new Varien_Object($detail));
-						if (array_key_exists($detail['id'], $items)) {
-							$result = ['item' => $items[$detail['id']]];
-							$result['lat'] = $result['item']['lat'];
-							$result['lng'] = $result['item']['lng'];
-							$result['country_id']  = $result['item']['country_id'];
-							$result['selected']    = $detail['id'];
-							$result['from_orders'] = $country;
-							$result['item']['from_orders'] = $country;
-							break;
+				foreach ($candidates as $candidate) {
+
+					$candidate = @json_decode($candidate->getData('details'), true);
+
+					// cherche le point de livraison d'abord par rapport à l'adresse de livraison
+					if (array_key_exists($candidate['id'], $items)) {
+						$item = $items[$candidate['id']];
+						return [
+							'country_id' => $item['country_id'],
+							'item'       => $item,
+							'lat'        => $address->getData('lat'),
+							'lng'        => $address->getData('lng'),
+							'selected'   => $item['id'],
+						];
+					}
+
+					// cherche ensuite le point de livraison par rapport à l'adresse du point de livraison de la commande
+					if (!in_array($candidate['id'], $cache)) {
+						$subItems = $rate->getCarrierInstance()->loadItemsFromCache(new Varien_Object($candidate));
+						if (array_key_exists($candidate['id'], $subItems)) {
+							$item = $subItems[$candidate['id']];
+							return [
+								'country_id' => $item['country_id'],
+								'item'       => $item,
+								'selected'   => $item['id'],
+							];
 						}
+						$cache[] = $candidate['id'];
 					}
 				}
 			}
 			catch (Throwable $t) {
 				Mage::logException($t);
-				$result = ['from_orders' => $country];
 			}
-
-			$this->getSession()->setData($code, $result);
-			return $result;
 		}
 
 		return [];
@@ -409,8 +405,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 	public function getMapUrl(string $code) {
 
 		return Mage::app()->getStore()->isAdmin() ?
-			Mage::app()->getStore()->getUrl('*/shippingmax_map/index', ['code' => $code]) :
-			Mage::app()->getStore()->getUrl('shippingmax/map/index', ['code' => $code]);
+			Mage::getUrl('*/shippingmax_map/index', ['code' => str_replace('shippingmax_', '', $code)]) :
+			Mage::getUrl('shippingmax/map/index', ['code' => str_replace('shippingmax_', '', $code)]);
 	}
 
 	public function getCarrierCode(string $code) {
@@ -427,12 +423,12 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 		$code = $this->getCarrierCode($code);
 
-		// en cas de mix (par exemple si colisprivpts est désactivé et que mondialrelay est activé)
-		$mixmaps = Mage::getConfig()->getNode('global/shippingmax/mixmaps')->asArray();
-		foreach ($mixmaps as $key => $candidates) {
-			if (array_key_exists($code, $candidates) && Mage::getStoreConfigFlag('carriers/'.$key.'/active', $storeId) &&
-			    Mage::getStoreConfigFlag('carriers/'.$key.'/mix_'.str_replace('shippingmax_', '', $code), $storeId))
-				return $key;
+		// en cas de mix (par exemple si $code=colisprivpts est désactivé, et que mondialrelay est activé avec colisprivpts)
+		$maps = array_keys(Mage::getConfig()->getNode('global/shippingmax/maps')->asArray());
+		foreach ($maps as $candidate) {
+			$config = Mage::getStoreConfig('carriers/'.$candidate.'/mix', $storeId);
+			if (!empty($config) && str_contains($config, $code) && Mage::getStoreConfigFlag('carriers/'.$candidate.'/active', $storeId))
+				return $candidate;
 		}
 
 		return $code;

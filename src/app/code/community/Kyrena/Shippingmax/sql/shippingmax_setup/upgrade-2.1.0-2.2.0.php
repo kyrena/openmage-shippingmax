@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/28/10/2021
- * Updated V/28/10/2022
+ * Updated L/26/12/2022
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -18,7 +18,7 @@
  * GNU General Public License (GPL) for more details.
  */
 
-// de manière à empécher de lancer cette procédure plusieurs fois
+// prevent multiple execution
 $lock = Mage::getModel('index/process')->setId('shippingmax_setup');
 if ($lock->isLocked())
 	Mage::throwException('Please wait, upgrade is already in progress...');
@@ -26,7 +26,7 @@ if ($lock->isLocked())
 $lock->lockAndBlock();
 $this->startSetup();
 
-// de manière à continuer quoi qu'il arrive
+// ignore user abort and time limit
 ignore_user_abort(true);
 set_time_limit(0);
 

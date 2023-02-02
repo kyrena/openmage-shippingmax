@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated M/15/11/2022
+ * Updated M/31/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -39,7 +39,7 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 		$results = $this->runCurl($ch);
 
 		//echo '<pre>';print_r(array_slice($results['_embedded']['machines'], 0, 20));exit;
-		// https://api-pl.easypack24.net/v4/machines
+		// https://api-pl.easypack24.net/v4/machines (/!\ max 10000?)
 		// https://api-uk.easypack24.net/v4/machines
 		// https://api-it.easypack24.net/v4/machines
 		if (!empty($results['_embedded']['machines']) && is_array($results['_embedded']['machines'])) {
@@ -69,12 +69,17 @@ class Kyrena_Shippingmax_Model_Carrier_Inpospaczk extends Kyrena_Shippingmax_Mod
 		// https://api-pl-points.easypack24.net/v1/points?per_page=50000 (https://geowidget.easypack24.net/pl/)
 		// https://api-uk-points.easypack24.net/v1/points?per_page=50000 (https://geowidget.easypack24.net/uk/)
 		// https://api-it-points.easypack24.net/v1/points?per_page=50000 (https://geowidget.easypack24.net/it/)
+		// https://api-pl-points.easypack24.net/v1/points/POP-GLO15 (partner_id:30)
+		//   0: Parcel Locker
+		//  33: ParcelPoint with parcel locker and parcel pick-up function
+		//  30: ParcelPoint without parcel locker and parcel pick-up function, has only parcel post function
 		else if (!empty($results['items']) && is_array($results['items'])) {
 
 			foreach ($results['items'] as $result) {
 
 				if (empty($result['name']) || empty($result['location_description']) || empty($result['location']) ||
-				    empty($result['status']) || ($result['status'] != 'Operating'))
+				    empty($result['status']) || ($result['status'] != 'Operating') ||
+				    (isset($result['partner_id']) && ($result['partner_id'] == 30)))
 					continue;
 
 				$items[$result['name']] = [

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated L/14/11/2022
+ * Updated L/23/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Kyrena_Shippingmax>
-			<version>2.7.0</version>
+			<version>3.0.0</version>
 		</Kyrena_Shippingmax>
 	</modules>
 	<global>
@@ -151,56 +151,9 @@
 				<shippingmax_przesodbpkcash />
 				<shippingmax_shiptor />
 				<shippingmax_shiptorcash />
+				<shippingmax_storelocator />
 				<shippingmax_storepts />
 			</maps>
-			<mixmaps>
-				<shippingmax_boxberry>
-					<shippingmax_fivepost />
-					<shippingmax_pickpoint />
-					<shippingmax_shiptor />
-				</shippingmax_boxberry>
-				<shippingmax_boxberrycash>
-					<shippingmax_fivepostcash />
-					<shippingmax_pickpointcash />
-					<shippingmax_shiptorcash />
-				</shippingmax_boxberrycash>
-				<shippingmax_dpdfrrelais>
-					<shippingmax_colisprivpts />
-				</shippingmax_dpdfrrelais>
-				<shippingmax_fivepost>
-					<shippingmax_boxberry />
-					<shippingmax_pickpoint />
-					<shippingmax_shiptor />
-				</shippingmax_fivepost>
-				<shippingmax_fivepostcash>
-					<shippingmax_boxberrycash />
-					<shippingmax_pickpointcash />
-					<shippingmax_shiptorcash />
-				</shippingmax_fivepostcash>
-				<shippingmax_mondialrelay>
-					<shippingmax_colisprivpts />
-				</shippingmax_mondialrelay>
-				<shippingmax_pickpoint>
-					<shippingmax_boxberry />
-					<shippingmax_fivepost />
-					<shippingmax_shiptor />
-				</shippingmax_pickpoint>
-				<shippingmax_pickpointcash>
-					<shippingmax_boxberrycash />
-					<shippingmax_fivepostcash />
-					<shippingmax_shiptorcash />
-				</shippingmax_pickpointcash>
-				<shippingmax_shiptor>
-					<shippingmax_boxberry />
-					<shippingmax_fivepost />
-					<shippingmax_pickpoint />
-				</shippingmax_shiptor>
-				<shippingmax_shiptorcash>
-					<shippingmax_boxberrycash />
-					<shippingmax_fivepostcash />
-					<shippingmax_pickpointcash />
-				</shippingmax_shiptorcash>
-			</mixmaps>
 			<dadata>
 				<shippingmax_boxberry />
 				<shippingmax_boxberrycash />
@@ -323,6 +276,8 @@
 				<cutoff>12</cutoff>
 			</general>
 		</shippingmax_times>
+		<!-- list of countries of shipping method with config.xml allowedcountry -->
+		<!-- admin can set countries with system.xml sallowspecific/specificcountry -->
 		<carriers>
 			<shippingmax>
 				<default_map>osm</default_map>
@@ -332,9 +287,7 @@
 				<model>shippingmax/carrier_storelocator</model>
 				<active>0</active>
 				<sallowspecific>1</sallowspecific>
-				<can_show_all>1</can_show_all>
 				<owebia_config><![CDATA[{ "std": { "label": "All", "fees": 0 } }]]></owebia_config>
-				<dst_search>80</dst_search>
 			</shippingmax_storelocator>
 			<shippingmax_storepts>
 				<model>shippingmax/carrier_storepts</model>
@@ -352,7 +305,6 @@
         "fees": 0
     }
 }]]></owebia_config>
-				<dst_search>80</dst_search>
 			</shippingmax_storepts>
 			<shippingmax_chronorelais>
 				<model>shippingmax/carrier_chronorelais</model>
@@ -361,9 +313,7 @@
 				<img_backend>ic-logo-chronopost.svg</img_backend>
 				<api_url><![CDATA[https://www.chronopost.fr/recherchebt-ws-cxf/PointRelaisServiceWS?wsdl]]></api_url>
 				<tracking><![CDATA[https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GF,GP,GR,HU,IE,IT,LT,LU,LV,MQ,MT,NL,PL,PT,RE,RO,SE,SI,SK,YT</allowedcountry>
-				<specificcountry>AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GF,GP,GR,HU,IE,IT,LT,LU,LV,MQ,MT,NL,PL,PT,RE,RO,SE,SI,SK,YT</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example chronorelais",
@@ -385,9 +335,7 @@
 				<api_url><![CDATA[https://www.colisprive.com/cpls/ws/v1/search.svc/relais]]></api_url>
 				<api_username>DEMO</api_username>
 				<tracking><![CDATA[https://www.colisprive.com/moncolis/pages/detailColis.aspx?numColis={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>FR</allowedcountry>
-				<specificcountry>FR</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example colisprivé",
@@ -408,9 +356,7 @@
 				<img_backend>ic-logo-mondialrelay.svg</img_backend>
 				<api_url><![CDATA[https://www.mondialrelay.fr/WebService/Web_Services.asmx?WSDL]]></api_url>
 				<tracking><![CDATA[https://www.mondialrelay.fr/suivi-de-colis?numeroExpedition={{num}}&codePostal={{postcode}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BE,ES,FR,LU,MC</allowedcountry>
-				<specificcountry>BE,ES,FR,LU,MC</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example mondialrelay",
@@ -431,9 +377,7 @@
 				<img_backend>ic-logo-dpd.svg</img_backend>
 				<api_url><![CDATA[https://mypudo.pickup-services.com/mypudo/mypudo.asmx?WSDL]]></api_url>
 				<tracking><![CDATA[https://www.dpd.fr/tracex_{num}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>FR</allowedcountry>
-				<specificcountry>FR</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example dpdfrrelais",
@@ -455,9 +399,7 @@
 				<img_backend>ic-logo-inpost.svg</img_backend>
 				<api_url><![CDATA[https://api-it.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://inpost.it/trova-il-tuo-pacco?number={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>IT</allowedcountry>
-				<specificcountry>IT</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example inpospacit",
@@ -480,9 +422,7 @@
 				<img_backend>ic-logo-inpost.svg</img_backend>
 				<api_url><![CDATA[https://api-uk.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://tracking.inpost.co.uk/?number={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>GB</allowedcountry>
-				<specificcountry>GB</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example inpospacuk",
@@ -505,9 +445,7 @@
 				<img_backend>ic-logo-inpost.svg</img_backend>
 				<api_url><![CDATA[https://api-pl.easypack24.net/v4/machines]]></api_url>
 				<tracking><![CDATA[https://inpost.pl/sledzenie-przesylek?number={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>PL</allowedcountry>
-				<specificcountry>PL</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example inpospaczk",
@@ -530,9 +468,7 @@
 				<img_backend>ic-logo-pocztex.svg</img_backend>
 				<api_url><![CDATA[https://mapa.ecommerce.poczta-polska.pl/widget/pickuppoints/json/getByLatLng/]]></api_url>
 				<tracking><![CDATA[https://emonitoring.poczta-polska.pl/?numer={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>PL</allowedcountry>
-				<specificcountry>PL</specificcountry>
 				<allowed_methods>POCZTA,ORLEN,AUTOMAT_POCZTOWY,RUCH,ZABKA,FRESHMARKET</allowed_methods>
 				<owebia_config><![CDATA[{
     "std": {
@@ -554,9 +490,7 @@
 				<img_title>Zásilkovna</img_title>
 				<img_backend>ic-logo-packeta.svg</img_backend>
 				<api_url><![CDATA[https://www.zasilkovna.cz/api/v4/__API_KEY__/branch.json]]></api_url>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BE,BG,CZ,DE,DK,EE,ES,FI,FR,GR,HR,HU,LT,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA</allowedcountry>
-				<specificcountry>BE,BG,CZ,DE,DK,EE,ES,FI,FR,GR,HR,HU,LT,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example przesodbpk",
@@ -577,9 +511,7 @@
 				<img_title>Zásilkovna</img_title>
 				<img_backend>ic-logo-packeta.svg</img_backend>
 				<api_url><![CDATA[https://www.zasilkovna.cz/api/v4/__API_KEY__/branch.json]]></api_url>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BG,CZ,DE,EE,ES,GR,HR,HU,LT,LV,PL,PT,RO,RU,SI,SK,UA</allowedcountry>
-				<specificcountry>BG,CZ,DE,EE,ES,GR,HR,HU,LT,LV,PL,PT,RO,RU,SI,SK,UA</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example przesodbpkcash",
@@ -671,9 +603,7 @@
 				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListPoints]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
-				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example boxberry",
@@ -694,9 +624,7 @@
 				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListPoints]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
-				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example boxberrycash",
@@ -739,9 +667,7 @@
 				<img_backend>ic-logo-fivepost.svg</img_backend>
 				<api_url><![CDATA[https://api-preprod-omni.x5.ru/]]></api_url>
 				<tracking><![CDATA[https://fivepost.ru/tracking?id={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>RU</allowedcountry>
-				<specificcountry>RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example fivepost",
@@ -763,9 +689,7 @@
 				<img_backend>ic-logo-fivepost.svg</img_backend>
 				<api_url><![CDATA[https://api-preprod-omni.x5.ru/]]></api_url>
 				<tracking><![CDATA[https://fivepost.ru/tracking?id={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>RU</allowedcountry>
-				<specificcountry>RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example fivepostcash",
@@ -792,9 +716,7 @@
 				<img_title>PickPoint</img_title>
 				<img_backend>ic-logo-pickpoint.svg</img_backend>
 				<api_url><![CDATA[https://e-solution.pickpoint.ru/apitest/]]></api_url>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,RU</allowedcountry>
-				<specificcountry>BY,RU</specificcountry>
 				<allowed_methods>PickPoint</allowed_methods>
 				<owebia_config><![CDATA[{
     "std": {
@@ -815,9 +737,7 @@
 				<img_title>PickPoint</img_title>
 				<img_backend>ic-logo-pickpoint.svg</img_backend>
 				<api_url><![CDATA[https://e-solution.pickpoint.ru/apitest/]]></api_url>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>RU</allowedcountry>
-				<specificcountry>RU</specificcountry>
 				<allowed_methods>PickPoint</allowed_methods>
 				<owebia_config><![CDATA[{
     "std": {
@@ -845,9 +765,7 @@
 				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<api_url><![CDATA[https://api.shiptor.ru/public/v1]]></api_url>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,KZ,RU</allowedcountry>
-				<specificcountry>BY,KZ,RU</specificcountry>
 				<allowed_methods>shiptor</allowed_methods>
 				<owebia_config><![CDATA[{
     "std": {
@@ -870,9 +788,7 @@
 				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<api_url><![CDATA[https://api.shiptor.ru/public/v1]]></api_url>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,KZ,RU</allowedcountry>
-				<specificcountry>BY,KZ,RU</specificcountry>
 				<allowed_methods>shiptor</allowed_methods>
 				<owebia_config><![CDATA[{
     "std": {
@@ -908,9 +824,7 @@
 				<active>0</active>
 				<img_backend>ic-logo-colisprive.svg</img_backend>
 				<tracking><![CDATA[https://www.colisprive.com/moncolis/pages/detailColis.aspx?numColis={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>FR</allowedcountry>
-				<specificcountry>FR</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example colisprivé",
@@ -1036,9 +950,7 @@
 				<model>shippingmax/carrier_przesstand</model>
 				<active>0</active>
 				<img_backend>ic-logo-packeta.svg</img_backend>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AE,AT,BE,BG,CH,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,HU,IE,IT,LT,LU,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA,US</allowedcountry>
-				<specificcountry>AE,AT,BE,BG,CH,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,HU,IE,IT,LT,LU,LV,NL,PL,PT,RO,RU,SE,SI,SK,UA,US</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example przesstand",
@@ -1056,9 +968,7 @@
 				<model>shippingmax/carrier_przesstandcash</model>
 				<active>0</active>
 				<img_backend>ic-logo-packeta.svg</img_backend>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AT,BG,CZ,DE,EE,ES,GR,HR,HU,IT,LT,LV,PL,PT,RO,RU,SI,SK,UA</allowedcountry>
-				<specificcountry>AT,BG,CZ,DE,EE,ES,GR,HR,HU,IT,LT,LV,PL,PT,RO,RU,SI,SK,UA</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example przesstandcash Cash On Delivery",
@@ -1156,9 +1066,7 @@
 				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListZips]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
-				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example boxberryhome",
@@ -1178,9 +1086,7 @@
 				<img_backend>ic-logo-boxberry.svg</img_backend>
 				<api_url><![CDATA[https://api.boxberry.ru/json.php?token=d6f33e419c16131e5325cbd84d5d6000&method=ListZips]]></api_url>
 				<tracking><![CDATA[https://boxberry.ru/tracking-page?id={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>AM,BY,KG,KZ,RU</allowedcountry>
-				<specificcountry>AM,BY,KG,KZ,RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example boxberryhomecash",
@@ -1221,9 +1127,7 @@
 				<active>0</active>
 				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,KZ,RU</allowedcountry>
-				<specificcountry>BY,KZ,RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example shiptorhome",
@@ -1242,9 +1146,7 @@
 				<active>0</active>
 				<img_backend>ic-logo-shiptor.svg</img_backend>
 				<tracking><![CDATA[https://shiptor.ru/tracking?tracking={{num}}]]></tracking>
-				<sallowspecific>1</sallowspecific>
 				<allowedcountry>BY,KZ,RU</allowedcountry>
-				<specificcountry>BY,KZ,RU</specificcountry>
 				<owebia_config><![CDATA[{
     "std": {
         "label": "Example shiptorhomecash",

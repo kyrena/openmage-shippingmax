@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/19/07/2021
- * Updated J/17/11/2022
+ * Updated L/02/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -23,7 +23,7 @@ class Kyrena_Shippingmax_Model_Carrier_Boxberryhome extends Kyrena_Shippingmax_M
 	protected $_code = 'shippingmax_boxberryhome';
 	protected $_full = true;
 	protected $_api  = true;
-	protected $_postcodesOnly = true;
+	protected $_zipOnly = true;
 	protected $_fullCacheLifetime = 86400; // 24 heure en secondes
 
 	public function loadItemsFromApi(object $address) {

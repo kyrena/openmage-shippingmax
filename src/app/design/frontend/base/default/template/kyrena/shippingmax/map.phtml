@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/14/11/2022
+ * Updated M/24/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -18,13 +18,19 @@
  * GNU General Public License (GPL) for more details.
  */
 
-$help    = $this->helper('shippingmax');
-$code    = $this->getData('code');    // code du mode de livraison ou id de la commande
-$items   = $this->getData('items');   // liste des points de livraison
-$address = $this->getData('address'); // adresse de livraison
-$options = $this->getData('options'); // liste des pays autorisés
-$showAll = Mage::getStoreConfigFlag('carriers/'.$code.'/can_show_all');
-$isMulti = count($options) > 1;
+// root (root.phtml)
+//  maphead
+//  mapbody (map.phtml) <= here
+//   maplist (list.phtml)
+//    messages
+
+$help      = $this->helper('shippingmax'); // (object) Kyrena_Shippingmax_Helper_Data
+$address   = $this->getData('address');    // (object) adresse de livraison
+$code      = $this->getData('code');       // (string) code du mode de livraison ou id de la commande
+$items     = $this->getData('items');      // (array) liste des points de livraison
+$options   = $this->getData('options');    // (array) liste des pays autorisés
+$isShowAll = $this->getData('showAll');    // (bool)
+$isMulti   = count($options) > 1;          // (bool)
 
 // pays sélectionné (le premier)
 $country = array_keys($options);
@@ -46,93 +52,94 @@ self.ignkey  = "<?php echo addslashes(Mage::getStoreConfig('carriers/shippingmax
 self.browser = "<?php echo addslashes($this->getData('browser')) ?>";
 self.marklat =  <?php echo (float) $address->getData('lat') ?>;
 self.marklng =  <?php echo (float) $address->getData('lng') ?>;
-self.maxpts  =  <?php echo max(50, (int) Mage::getStoreConfig('carriers/'.$code.'/max_points')) ?>;
 self.tel     =  <?php echo json_encode($countries) ?>;
 self.data    =  <?php echo json_encode($items) ?>;
 //]]></script>
 
-<div id="loader"></div>
-<div class="top">
-	<div class="search">
-		<?php if (!is_numeric($code)): ?>
+<body class="<?php echo (is_numeric($code) ? 'full-map alone ' : (empty($items) ? 'empty ' : '')),str_replace('shippingmax_', '', $code) ?>">
+	<div class="loader" id="loader">⌛</div>
+	<div class="<?php echo is_numeric($code) ? 'top alone' : 'top' ?>">
+		<?php if (is_numeric($code)): ?>
+			<div class="search title">
+				<?php $item = new Varien_Object(array_pop($items)) // (array) to (object) ?>
+				<?php if (!empty($item->getData('carrier'))): ?>
+					<span class="icn ic-<?php echo str_replace(['shippingmax_', 'cash'], '', $item->getData('carrier')) ?>" title="<?php echo $help->escapeEntities(Mage::getStoreConfig('carriers/'.$item->getData('carrier').'/img_title')) ?>"></span>
+				<?php endif ?>
+				<span class="pname"><?php echo $item->getData('name') ?></span> <span class="pid">(<?php echo $item->getId() ?>)</span>
+			</div>
+		<?php else: ?>
 			<form action="<?php echo $this->getUrl('*/*/update', [
-				'code' => $code,
-				'q'    => ($code == 'shippingmax_storelocator') ? $this->getRequest()->getParam('q', null) : null,
-			]) ?>" method="post" class="address" onsubmit="return shippingmax.submitFormAjax(this);">
-				<div class="search-elements">
+				'code'    => $code,
+				'q'       => $isShowAll ? $this->getRequest()->getParam('q', null) : null,
+				'showall' => empty($this->getRequest()->getParam('showall')) ? null : 1, // copy
+			]) ?>" method="post" class="search" onsubmit="return shippingmax.submitFormAjax(this);">
 
-					<div class="country-choice">
-						<ul class="<?php echo $isMulti ? 'country-list multi' : 'country-list single' ?>">
-							<?php $first = true; foreach ($options as $key => $value): ?>
-								<?php if (!$isMulti): ?>
-									<li title="<?php echo $value ?>">
-										<label>
-											<input type="radio" name="country" value="<?php echo $key ?>" checked="checked" />
-											<span class="country-item single"><?php echo $key ?> <span class="small">(<?php echo $value ?>)</span></span>
-										</label>
-									</li>
-								<?php elseif ($first): ?>
-									<li onclick="shippingmax.showSelect(false);">
-										<label>
-											<input type="radio" name="country" value="<?php echo $key ?>" checked="checked" onchange="shippingmax.updatePostcode(this);" />
-											<span class="country-item"><?php echo $key ?> <span class="small">(<?php echo $value ?>)</span></span>
-										</label>
-									</li>
-									<?php $first = false ?>
-								<?php else: ?>
-									<li onclick="shippingmax.showSelect(false);">
-										<label>
-											<input type="radio" name="country" value="<?php echo $key ?>" onchange="shippingmax.updatePostcode(this);" />
-											<span class="country-item"><?php echo $key ?> <span class="small">(<?php echo $value ?>)</span></span>
-										</label>
-									</li>
-								<?php endif ?>
-							<?php endforeach ?>
-						</ul>
-						<?php if ($isMulti): ?>
-							<div class="toggle-list" id="select-country" title="<?php echo $this->__('Country') ?>" onclick="shippingmax.showSelect();">
-								<span class="toggle-list_btn"><?php echo $this->__('Country') ?></span>
-							</div>
-						<?php endif ?>
-					</div>
-
-					<?php if ($useStreet): ?>
-						<input type="text" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('Street') ?>" title="<?php echo $this->__('Street') ?>" autocorrect="off" autocomplete="address-line1" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
-					<?php else: ?>
-						<input type="<?php echo in_array($country, $countries) ? 'tel' : 'text' ?>" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('ZIP/Postal Code') ?>" title="<?php echo $this->__('ZIP/Postal Code') ?>" autocorrect="off" autocomplete="postal-code" spellcheck="false" id="postcode" <?php echo (!$showAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
+				<div class="country-choice <?php echo $isMulti ? 'multi' : 'single' ?>">
+					<input type="hidden" name="form_key" value="<?php echo $this->getFormKey() ?>" />
+					<ul class="country-list <?php echo $isMulti ? 'multi' : 'single' ?>">
+						<?php $first = true; foreach ($options as $key => $value): ?>
+							<?php if (!$isMulti): ?>
+								<li title="<?php echo $value ?>">
+									<label>
+										<input type="radio" name="country" value="<?php echo $key ?>" checked="checked" />
+										<span class="country-item single"><?php echo $key ?> <span class="name"><?php echo $value ?></span></span>
+									</label>
+								</li>
+							<?php elseif ($first): ?>
+								<li onclick="shippingmax.showSelect(false);">
+									<label>
+										<input type="radio" name="country" value="<?php echo $key ?>" checked="checked" onchange="shippingmax.updateZipFromCountry(this);" />
+										<span class="country-item"><?php echo $key ?> <span class="name"><?php echo $value ?></span></span>
+									</label>
+								</li>
+								<?php $first = false ?>
+							<?php else: ?>
+								<li onclick="shippingmax.showSelect(false);">
+									<label>
+										<input type="radio" name="country" value="<?php echo $key ?>" onchange="shippingmax.updateZipFromCountry(this);" />
+										<span class="country-item"><?php echo $key ?> <span class="name"><?php echo $value ?></span></span>
+									</label>
+								</li>
+							<?php endif ?>
+						<?php endforeach ?>
+					</ul>
+					<?php if ($isMulti): ?>
+						<div class="toggle-list" id="select-country" title="<?php echo $this->__('Country') ?>" onclick="shippingmax.showSelect();">
+							<span class="btn-toggle-list"><?php echo $this->__('Country') ?></span>
+						</div>
 					<?php endif ?>
+				</div>
 
-					<input type="text" name="city" value="<?php echo $help->escapeEntities($address->getData('city'), true) ?>" placeholder="<?php echo $this->__('City') ?>" title="<?php echo $this->__('City') ?>" autocorrect="off" spellcheck="false" id="city" <?php echo (!$showAll && !empty($address->getData('postcode')) && empty($address->getData('city'))) ? 'autofocus="autofocus"' : '' ?> />
+				<?php if ($useStreet): ?>
+					<input type="text" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('Street') ?>" title="<?php echo $this->__('Street') ?>" autocorrect="off" autocomplete="address-line1" spellcheck="false" id="postcode" <?php echo (!$isShowAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
+				<?php else: ?>
+					<input type="<?php echo in_array($country, $countries) ? 'tel' : 'text' ?>" name="postcode" value="<?php echo $help->escapeEntities($address->getData('postcode'), true) ?>" placeholder="<?php echo $this->__('ZIP/Postal Code') ?>" title="<?php echo $this->__('ZIP/Postal Code') ?>" autocorrect="off" autocomplete="postal-code" spellcheck="false" id="postcode" <?php echo (!$isShowAll && empty($address->getData('postcode'))) ? 'autofocus="autofocus"' : '' ?> />
+				<?php endif ?>
 
-					<button type="submit" class="btn-search">
-						<span class="ic-search"><?php echo $this->__('Search') ?></span>
+				<input type="text" name="city" value="<?php echo $help->escapeEntities($address->getData('city'), true) ?>" placeholder="<?php echo $this->__('City') ?>" title="<?php echo $this->__('City') ?>" autocorrect="off" spellcheck="false" id="city" <?php echo (!$isShowAll && !empty($address->getData('postcode')) && empty($address->getData('city'))) ? 'autofocus="autofocus"' : '' ?> />
+
+				<button type="submit" class="btn-search">
+					<span class="ic-search"><?php echo $this->__('Search') ?></span>
+				</button>
+
+				<div class="btns">
+					<button type="button" class="btn-geoloc" onclick="shippingmax.askGeoloc();">
+						<span class="ic-geoloc"><?php echo $this->__('Use my location') ?></span>
 					</button>
-
-					<?php if ($showAll): ?>
-						<button type="button" class="double btn-geoloc hide" onclick="shippingmax.geoloc();">
-							<span class="ic-geoloc"><?php echo $this->__('Use my location') ?></span>
-						</button>
-						<button type="submit" class="double btn-show-all" onclick="shippingmax.showAll = true;">
-							<?php echo $this->__('Show all') ?>
-						</button>
-					<?php else: ?>
-						<button type="button" class="btn-geoloc hide" onclick="shippingmax.geoloc();">
-							<span class="ic-geoloc"><?php echo $this->__('Use my location') ?></span>
+					<?php if ($code == 'shippingmax_storelocator'): ?>
+						<button type="submit" class="btn-show-all" onclick="shippingmax.showAll = true;">
+							<span class="ic-all"><?php echo $this->__('Show all') ?></span>
 						</button>
 					<?php endif ?>
 				</div>
 			</form>
 		<?php endif ?>
+		<div class="close">
+			<button type="button" onclick="shippingmax.closeMap();"><?php echo $this->__('Close') ?></button>
+		</div>
 	</div>
-	<div class="close">
-		<button type="button" onclick="if (typeof self.parent.shippingmax.close == 'function') { self.parent.shippingmax.close(true); } else { self.close(); }"><?php echo $this->__('Close') ?></button>
-	</div>
-</div>
-<div class="<?php echo is_numeric($code) ? 'main full-map alone' : 'main '.(empty($items) ? ' empty' : '') ?>">
-	<div class="map">
-		<div id="map"></div>
-	</div>
+	<div class="map" id="map"></div>
 	<form action="<?php echo $this->getUrl('*/*/save', ['code' => $code]) ?>" method="post" class="results" onsubmit="return shippingmax.submitFormAjax(this);">
 		<?php echo $this->getChildHtml('maplist') ?>
 	</form>
-</div>
+</body>

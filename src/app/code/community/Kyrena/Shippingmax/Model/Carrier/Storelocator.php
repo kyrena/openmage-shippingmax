@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/23/04/2020
- * Updated M/15/11/2022
+ * Updated L/02/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -57,7 +57,7 @@ class Kyrena_Shippingmax_Model_Carrier_Storelocator extends Kyrena_Shippingmax_M
 						'lat'        => (float) str_replace(',', '.', $data['LATITUDE']),
 						'lng'        => (float) str_replace(',', '.', $data['LONGITUDE']),
 						'name'       => $data['NOM DU MAGASIN'],
-						'street'     => implode("\n", array_filter([$data['ADRESSE']])),
+						'street'     => $data['ADRESSE'],
 						'postcode'   => $data['CODE POSTAL'],
 						'city'       => $data['VILLE'],
 						'country_id' => $data['PAYS'],

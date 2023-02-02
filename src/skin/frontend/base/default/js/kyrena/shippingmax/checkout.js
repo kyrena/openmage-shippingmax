@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated M/22/03/2022
+ * Updated S/14/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -44,30 +44,21 @@ var shippingmax = new (function () {
 
 	this.open = function (src) {
 
-		if (document.getElementById('shippingmaxDialog'))
-			return;
+		if (!document.getElementById('shippingmaxDialog')) {
 
-		this.scroll = window.scrollY;
-		var data = document.createElement('div');
-		data.innerHTML =
-			'<div id="shippingmaxDialog" onclick="shippingmax.close(event);">' +
-				'<div id="shippingmaxBox">' +
-					'<iframe type="text/html" src="' + src + '" class="loader" onload="this.removeAttribute(\'class\');"></iframe>' +
-					'<div class="loader"></div>' +
-				'</div>' +
-			'</div>';
+			this.scroll = self.scrollY;
+			var data = document.createElement('div');
 
-		document.querySelector('body').appendChild(data.firstChild);
-		document.querySelector('body').classList.add('no-scroll');
-		document.addEventListener('keydown', shippingmax.keyClose);
-	};
+			data.innerHTML =
+				'<div id="shippingmaxDialog" onclick="shippingmax.close(event);">' +
+					'<div id="shippingmaxBox">' +
+						'<object type="text/html" data="' + src + '" class="loader" onload="this.removeAttribute(\'class\');"></object>' +
+						'<div class="loader">⌛</div>' +
+					'</div>' +
+				'</div>';
 
-	this.keyClose = function (ev) {
-
-		if (ev.keyCode === 27) {
-			console.log('shippingmax.map - esc/keyClose');
-			ev.preventDefault();
-			shippingmax.close(true);
+			document.querySelector('body').appendChild(data.firstChild);
+			document.addEventListener('keydown', shippingmax.keyClose);
 		}
 	};
 
@@ -82,14 +73,17 @@ var shippingmax = new (function () {
 
 		if (ev === true) {
 			document.getElementById('shippingmaxDialog').remove();
-			document.querySelector('body').classList.remove('no-scroll');
 			document.removeEventListener('keydown', shippingmax.keyClose);
-			window.scrollTo(0, shippingmax.scroll);
+			self.scroll(0, shippingmax.scroll);
 		}
 	};
 
-	this.click = function (id) {
-		document.getElementById(id).parentNode.querySelector('label').click();
+	this.keyClose = function (ev) {
+
+		if (ev.keyCode === 27) {
+			ev.preventDefault();
+			shippingmax.close(true);
+		}
 	};
 
 	this.show = function (data) {
@@ -98,11 +92,15 @@ var shippingmax = new (function () {
 
 		var elem = document.getElementById(data.code);
 		if (elem) {
-			elem.innerHTML = data.html.slice(data.html.indexOf('>') + 1, -6); // supprime la <div id></div>
+			elem.innerHTML = data.html.slice(data.html.indexOf('>') + 1, -6); // remove <div id></div>
 			elem.parentNode.querySelector('input').checked = true;
 			document.dispatchEvent(new CustomEvent('shippingmax_update'));
 			elem.parentNode.querySelector('label').click();
 		}
+	};
+
+	this.click = function (id) {
+		document.getElementById(id).parentNode.querySelector('label').click();
 	};
 
 })();

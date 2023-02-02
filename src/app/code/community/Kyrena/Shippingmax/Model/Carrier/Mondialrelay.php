@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/02/12/2022
+ * Updated L/02/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -35,7 +35,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 			$client = new SoapClient($this->getConfigData('api_url'), ['trace' => 1]);
 			$params = [
 				'Enseigne'       => $this->getConfigData('api_username'),
-				'Pays'           => ($address->getData('country_id') == 'MC') ? 'FR' : $address->getData('country_id'),
+				'Pays'           => ($address->getData('country_id') == 'MC') ? 'FR' : $address->getData('country_id'), // MC = FR
 				'CP'             => trim(is_numeric($address->getData('city')) ? $address->getData('city') : $address->getData('postcode')),
 				'Latitude'       => number_format($address->getData('lat') ?? 0, 6),
 				'Longitude'      => number_format($address->getData('lng') ?? 0, 6),
@@ -82,7 +82,7 @@ class Kyrena_Shippingmax_Model_Carrier_Mondialrelay extends Kyrena_Shippingmax_M
 					'lat'         => (float) str_replace(',', '.', $result->Latitude),
 					'lng'         => (float) str_replace(',', '.', $result->Longitude),
 					'name'        => $result->LgAdr1,
-					'street'      => implode("\n", array_filter([$result->LgAdr2, $result->LgAdr3, $result->LgAdr4])),
+					'street'      => implode("\n", array_map('trim', array_filter([$result->LgAdr2, $result->LgAdr3, $result->LgAdr4]))),
 					'postcode'    => $result->CP,
 					'city'        => $result->Ville,
 					'country_id'  => $result->Pays,

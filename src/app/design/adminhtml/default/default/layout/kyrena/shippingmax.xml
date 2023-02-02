@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created M/23/04/2019
- * Updated V/19/02/2021
+ * Updated J/29/12/2022
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -57,9 +57,7 @@
 				<name>form</name>
 			</action>
 			<block type="adminhtml/sales_order_create_shipping_method_form" template="kyrena/shippingmax/form.phtml" name="form">
-				<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml">
-					<block type="core/messages" name="messages" as="messages" />
-				</block>
+				<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml" />
 			</block>
 		</reference>
 	</adminhtml_sales_order_create_index>
@@ -70,9 +68,7 @@
 				<name>form</name>
 			</action>
 			<block type="adminhtml/sales_order_create_shipping_method_form" template="kyrena/shippingmax/form.phtml" name="form">
-				<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml">
-					<block type="core/messages" name="messages" as="messages" />
-				</block>
+				<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml" />
 			</block>
 		</reference>
 	</adminhtml_sales_order_create_load_block_shipping_method>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated M/12/10/2021
+ * Updated J/29/12/2022
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -45,6 +45,32 @@
 		</reference>
 	</sales_order_invoice>
 
+	<sales_order_shipment>
+		<reference name="head">
+			<action method="addItem">
+				<type>skin_css</type>
+				<name>css/kyrena/shippingmax/styles.min.css</name>
+			</action>
+			<action method="addItem">
+				<type>skin_js</type>
+				<name>js/kyrena/shippingmax/checkout.min.js</name>
+			</action>
+		</reference>
+	</sales_order_shipment>
+
+	<sales_order_creditmemo>
+		<reference name="head">
+			<action method="addItem">
+				<type>skin_css</type>
+				<name>css/kyrena/shippingmax/styles.min.css</name>
+			</action>
+			<action method="addItem">
+				<type>skin_js</type>
+				<name>js/kyrena/shippingmax/checkout.min.js</name>
+			</action>
+		</reference>
+	</sales_order_creditmemo>
+
 	<onestepcheckout_index_index>
 		<reference name="head">
 			<action method="addItem">
@@ -73,9 +99,7 @@
 			<action method="setTemplate">
 				<template>kyrena/shippingmax/available.phtml</template>
 			</action>
-			<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml">
-				<block type="core/messages" name="messages" as="messages" />
-			</block>
+			<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml" />
 		</reference>
 	</checkout_onepage_index>
 
@@ -84,9 +108,7 @@
 			<action method="setTemplate">
 				<template>kyrena/shippingmax/available.phtml</template>
 			</action>
-			<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml">
-				<block type="core/messages" name="messages" as="messages" />
-			</block>
+			<block type="shippingmax/selected" name="shippingmax_selected" template="kyrena/shippingmax/selected.phtml" />
 		</reference>
 	</checkout_onepage_shippingmethod>
 
@@ -95,24 +117,18 @@
 		<block type="shippingmax/map" name="maproot" output="toHtml" template="kyrena/shippingmax/root.phtml">
 			<block type="core/text_list" name="maphead" />
 			<block type="shippingmax/map" name="mapbody" template="kyrena/shippingmax/map.phtml">
-				<block type="shippingmax/map" name="maplist" template="kyrena/shippingmax/list.phtml">
-					<block type="core/messages" name="messages" as="messages" />
-				</block>
+				<block type="shippingmax/map" name="maplist" template="kyrena/shippingmax/list.phtml" />
 			</block>
 		</block>
 	</shippingmax_map_index>
 
 	<shippingmax_map_update>
 		<remove name="root" />
-		<block type="shippingmax/map" name="maplist" template="kyrena/shippingmax/list.phtml">
-			<block type="core/messages" name="messages" as="messages" />
-		</block>
+		<block type="shippingmax/map" name="maplist" template="kyrena/shippingmax/list.phtml" />
 	</shippingmax_map_update>
 
 	<shippingmax_map_save>
 		<remove name="root" />
-		<block type="shippingmax/selected" name="shippingmax_selected" output="toHtml" template="kyrena/shippingmax/selected.phtml">
-			<block type="core/messages" name="messages" as="messages" />
-		</block>
+		<block type="shippingmax/selected" name="shippingmax_selected" output="toHtml" template="kyrena/shippingmax/selected.phtml" />
 	</shippingmax_map_save>
 </layout>

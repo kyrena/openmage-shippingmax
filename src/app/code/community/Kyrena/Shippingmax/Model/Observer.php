@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/29/12/2022
+ * Updated J/05/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -145,9 +145,11 @@ class Kyrena_Shippingmax_Model_Observer {
 		if (!empty($method) && ($address->getAddressType() == 'shipping')) {
 
 			$code = Mage::helper('shippingmax')->getCarrierCode($method);
-			if (!empty($code)) {
-				$desc = preg_replace('#\s{2,}#', ' ', $address->getData('shipping_description'));
+			if (!empty($code) && !empty($desc = $address->getData('shipping_description'))) {
+
+				$desc = preg_replace('#\s{2,}#', ' ', $desc);
 				$desc = [trim(mb_substr($desc, 0, mb_stripos($desc, ' - '))), trim(mb_substr($desc, mb_stripos($desc, ' - ') + 3))];
+
 				if (!empty($desc[1]) && ($desc[0] == $desc[1]))
 					$address->setData('shipping_description', $desc[0]);
 			}
@@ -169,6 +171,8 @@ class Kyrena_Shippingmax_Model_Observer {
 
 				if (empty($item['item']['carrier']))
 					$item['item']['carrier'] = $code;
+
+				unset($item['item']['from_orders']);
 
 				// mémorise les informations du point de livraison à vie
 				$details = Mage::getModel('shippingmax/details');

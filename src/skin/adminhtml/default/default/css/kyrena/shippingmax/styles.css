@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated J/29/09/2022
+ * Updated S/14/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -30,15 +30,12 @@
 	border-radius:0; background-color:#FFF; box-shadow:0 0 2.5em #111; opacity:1;
 }
 
-#shippingmaxBox iframe { width:100%; height:100%; border:0; }
-#shippingmaxBox iframe.loader + div.loader { display:block; }
+#shippingmaxBox object, #shippingmaxBox div.loader { position:absolute; top:0; right:0; bottom:0; left:0; width:100%; height:100%; }
+#shippingmaxBox object.loader + div.loader { display:flex; align-items:center; justify-content:center; }
 
-#shippingmaxBox div.loader {
-	display:none; position:absolute; top:0; right:0; bottom:0; left:0;
-	border:5px solid white; background-color:rgba(0, 0, 0, 0.5); cursor:wait;
-}
+#shippingmaxBox div.loader { display:none; font-size:80px; opacity:0.5; background-color:black; cursor:wait; }
 
-@media screen and (max-width:991px) {
+@media (max-width:991px) {
 	#shippingmaxBox { top:0; width:100vw; height:100%; }
 }
 
@@ -51,7 +48,11 @@ img.logo.shippingmax {
 div.comment.shippingmax { padding-bottom:1em; }
 div.comment.shippingmax + table { clear:both; }
 
-textarea.shippingmax { margin-left:-206px; width:480px !important; }
+div.comment.shippingmax .countries { margin-top:0.5em; width:calc(100% - 160px); }
+div.comment.shippingmax .countries p span { text-decoration:underline; }
+div.comment.shippingmax .countries ul { margin:-2px 0 10px; font-size:0; line-height:9px; }
+div.comment.shippingmax .countries li { display:inline-block; width:33%; font-size:12px; }
+div.comment.shippingmax .countries em { font-size:10px; }
 
 .grid table.shippingmax thead tr.headings th {
 	position:sticky; top:37px; padding:2px 5px;
@@ -67,6 +68,8 @@ textarea.shippingmax { margin-left:-206px; width:480px !important; }
 
 .grid table.shippingmax input, .grid table.shippingmax select { width:45px; height:2em; text-align:center; border:0; background:white !important; }
 .grid table.shippingmax input:hover, .grid table.shippingmax select:hover { outline:1px solid #AAA; background:white !important; }
+
+textarea.shippingmax, textarea.shippingmax + div.field-tooltip + p.note { margin-left:-206px; width:480px !important; }
 
 /* &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& order new &&& */
 body.adminhtml-sales-order-create-index .shipment-methods dd + dt { margin-top:8px; padding-top:8px; border-top:1px solid #CCC; }

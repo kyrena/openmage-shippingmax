@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/13/09/2021
- * Updated L/13/09/2021
+ * Updated L/02/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -23,9 +23,21 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Tooltip extends Mage_Adminhtml_B
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
 		if (!empty(Mage::getConfig()->getNode('modules/Owebia_Shipping2/lite')))
-			$element->setTooltip((empty($text = $element->getTooltip()) ? '' : $text.'<br /><br />').'<u>Only with Owebia/Shipping 2.6.10-<b>lite</b>:</u><br />label is optional<br />{config.x-y-z}<br />fees (default)<br />fees_eur (for stores in EUR)<br />conditons (default)<br />conditons_pln (for stores in PLN)');
+			$element->setTooltip(
+				(empty($text = $element->getTooltip()) ? '' : $text.'<br /><br />').
+				'<u>Only with Owebia/Shipping 2.6.10-<b>lite</b>:</u>'.
+				'<br />label is optional'.
+				'<br />{config.x-y-z}'.
+				'<br />fees (default)'.
+				'<br />fees_eur (for stores in EUR)'.
+				'<br />conditons (default)'.
+				'<br />conditons_pln (for stores in PLN)');
 
-		$element->setComment('<a href="https://owebia.com/os2/en/doc">owebia.com/os2/en/doc</a>'.(empty($text = $element->getComment()) ? '' : '<br />'.$text));
+		$element->setComment(
+			'<strong>'.str_replace('"eval"', '<a href="https://www.php.net/eval">eval</a>', $this->__('Never copy/paste unreliable data, because they are "eval" and they can destroy your website!')).'</strong>'.
+			'<br /><a href="https://owebia.com/os2/en/doc">owebia.com/os2/en/doc</a>'.
+			(empty($text = $element->getComment()) ? '' : '<br />'.$text)
+		);
 
 		return parent::render($element);
 	}

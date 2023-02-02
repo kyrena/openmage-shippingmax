@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/14/11/2022
+ * Updated L/26/12/2022
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -31,6 +31,7 @@ class Kyrena_Shippingmax_Shippingmax_MapController extends Kyrena_Shippingmax_Ma
 		Mage_Core_Controller_Varien_Action::preDispatch();
 
 		if (Mage::getSingleton('admin/session')->isLoggedIn()) {
+			$this->customDispatch();
 			$this->getLayout()->getUpdate()->addHandle(str_replace('adminhtml_', '', $this->getFullActionName()));
 			$this->loadLayoutUpdates(); // lol
 		}

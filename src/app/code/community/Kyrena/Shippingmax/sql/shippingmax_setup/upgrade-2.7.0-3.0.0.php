@@ -1,7 +1,7 @@
 <?php
 /**
- * Created M/14/09/2021
- * Updated L/26/12/2022
+ * Created J/29/12/2022
+ * Updated W/11/01/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -31,8 +31,8 @@ ignore_user_abort(true);
 set_time_limit(0);
 
 try {
-	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("KZ","RU");');
-	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("FR","MC") AND postcode LIKE "98000";');
+	$this->run('DELETE FROM '.$this->getTable('core_config_data').' WHERE path LIKE "carriers/shippingmax%/mix_%";');
+	$this->run('ALTER TABLE '.$this->getTable('shippingmax_order_details').' ADD INDEX `customer_id` (`customer_id`);');
 }
 catch (Throwable $t) {
 	$lock->unlock();

@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated L/26/12/2022
+ * Updated J/02/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2023 | Mickaël Vang <mickael~cellublue~com>
@@ -28,16 +28,18 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 var shippingmax = new (function () {
 
 	"use strict";
-	this.show    = false; // select country
-	this.showAll = false; // shippingmax_storelocator
+	this.showList = false; // select country
+	this.showAll  = false; // storelocator
+
+	// base
 
 	this.init = function () {
 
 		console.info('shippingmax.map - hello');
 
+		// crée les fonds de carte
 		// @see Kyrena_Shippingmax_Model_Source_Maps
-		// pour self.defmap et pour les codes des cartes
-		var mkr, nb, elem, maps = {},
+		var elem, maps = {},
 		    igncopy = '<a href="https://www.ign.fr/" target="_blank">IGN France<\/a>',
 		    osmcopy = '<a href="https://www.openstreetmap.org/copyright" target="_blank">Open Street Map<\/a>',
 		    ggmcopy = '<a href="https://www.google.com/maps" target="_blank">Google<\/a>',
@@ -150,37 +152,39 @@ var shippingmax = new (function () {
 			})
 		};
 
-		if (!config[self.defmap] || (self.defmap === 'ggm') && (['yes', '1', 1].indexOf(navigator.doNotTrack) > -1))
-			self.defmap = 'osm';
-
-		// charge les marqueurs
-		self.grp = new L.featureGroup();
-		this.createMarkers(self.data);
-
-		// charge les fonds de carte
 		for (elem in config) if (config.hasOwnProperty(elem)) {
 			if (config[elem] && config[elem].options.name) {
 				config[elem].options.attribution += ' ' + self.browser;
-				maps['<i class="hide">' + elem + '<\/i> ' + config[elem].options.name] = config[elem];
+				maps[config[elem].options.name] = config[elem];
 			}
 		}
 
-		// charge la carte
-		nb = Object.keys(self.data).length;
+		if (!config[self.defmap] || (self.defmap === 'ggm') && (['yes', '1', 1].indexOf(navigator.doNotTrack) > -1))
+			self.defmap = 'osm';
+
+		// pour IOS pour autoriser le scroll dans l'object (ex-iframe)
+		if (navigator.userAgent.match(/iPhone/i))
+			this.qs('html').classList.add('iphone');
+
+		// pour Edge 14 qui laisse le loader affiché (ajoute une classe sans css)
+		// ajoute aussi une classe à html pour faire la différence entre un onglet et une popin
+		elem = self.parent.document.getElementById('shippingmaxBox');
+		if (elem) {
+			elem.classList.add('hack');
+			this.qs('html').classList.add('popin');
+		}
+
+		// crée la carte avec les marqueurs
+		self.grp = new L.featureGroup();
 		self.map = L.map('map', { layers: [config[self.defmap], self.grp], scrollWheelZoom: true, doubleRightClickZoom: true });
+		L.control.layers(maps).addTo(self.map);
+		L.control.scale({ imperial: false }).addTo(self.map);
+		this.createMarkers();
 
-		if (nb < 1) {
-			this.qs('div.main').classList.add('empty');
-		}
-		else if (nb > self.maxpts) {
-			self.map.setView([46.76, 2.42], 6); // @todo France
-		}
-		else {
-			self.map.fitBounds(self.grp.getBounds(), { maxZoom: 15 });
-		}
-
-		// pseudo plein écran
+		// boutons plein écran @todo
+		// sauf pour la carte d'une commande (.alone)
 		if (!this.qs('.alone')) {
+
 			L.Control.Bigmap = L.Control.extend({
 				options: { position: 'topleft' },
 				onAdd: function (map) {
@@ -195,155 +199,233 @@ var shippingmax = new (function () {
 				action: function (ev) {
 					L.DomEvent.stop(ev);
 					if (ev.detail == 1) {
-						var that = shippingmax, btn = this.getContainer().classList, div = that.qs('.main').classList;
+						var btn = this.getContainer().classList, that = shippingmax, div = that.qs('body').classList;
 						if (btn.contains('leaflet-fullscreen-on')) {
 							btn.remove('leaflet-fullscreen-on');
 							div.remove('full-map');
-							if (div = that.qs('.item.clicked, .item.active'))
-								that.scrollToDetails(that.qs('form.results'), div);
+							this._map.invalidateSize();
+							if (div = that.qs('.item.clicked, .item.selected')) {
+								that.goToMarkerFromDetails({ target: { nodeName: 'fullscreenquit' } }, div);
+								that.scrollToDetails(div);
+							}
 						}
 						else {
 							btn.add('leaflet-fullscreen-on');
 							div.add('full-map');
+							this._map.invalidateSize();
 						}
-						this._map.invalidateSize();
 					}
 				}
 			});
 			self.map.addControl(new L.Control.Bigmap());
+
+			L.Control.Hidemap = L.Control.extend({
+				options: { position: 'topright' },
+				onAdd: function (map) {
+					var elem  = L.DomUtil.create('div', 'leaflet-control-hidemap leaflet-bar leaflet-control close hide');
+					this.link = L.DomUtil.create('a', 'leaflet-control-hidemap-button leaflet-bar-part', elem);
+					this.link.href = '';
+					this._map = map;
+					L.DomEvent.disableClickPropagation(this.link);
+					L.DomEvent.on(this.link, 'click', this.action, this);
+					return elem;
+				},
+				action: function (ev) {
+					L.DomEvent.stop(ev);
+					if (ev.detail == 1) {
+						var btn = this.getContainer().classList, that = shippingmax, div = that.qs('body').classList;
+						if (btn.contains('leaflet-hidemap-on')) {
+							btn.remove('leaflet-hidemap-on');
+							div.remove('hide-map');
+							that.qs('.leaflet-top.leaflet-right').appendChild(this.getContainer());
+						}
+						else {
+							btn.add('leaflet-hidemap-on');
+							div.add('hide-map');
+							that.qs('body').appendChild(this.getContainer());
+						}
+					}
+				}
+			});
+			self.map.addControl(new L.Control.Hidemap());
 		}
 
-		L.control.scale({ imperial: false }).addTo(self.map);
-		L.control.layers(maps).addTo(self.map);
-		self.grp.addTo(self.map);
-
-		// marque l'éventuel point de livraison sélectionné
-		elem = this.qs('.item.active');
-		if (elem) {
-			mkr = self.mkrs[elem.getAttribute('id').slice(2)];
-			mkr.getElement().classList.add('active');
-			this.goToDetailsFromMarker({ target: mkr, move: false });
-		}
-
-		// géoloc
-		elem = this.qs('.btn-geoloc');
-		if (elem && navigator.geolocation)
-			elem.classList.remove('hide');
-
-		// pour Edge 14 qui laisse le loader affiché
-		elem = self.parent.document.getElementById('shippingmaxBox');
-		if (elem)
-			elem.classList.add('hack');
-
-		// ferme avec échap
+		// ferme la carte avec la touche échap
 		if ((self != self.parent) && (typeof self.parent.shippingmax == 'object') && (typeof self.parent.shippingmax.keyClose == 'function'))
 			document.addEventListener('keydown', self.parent.shippingmax.keyClose);
 	};
 
-	this.geoloc = function () {
+	this.createMarkers = function () {
 
-		if (navigator.geolocation) {
-			var that = shippingmax, elem = that.qs('.btn-geoloc span'), text = elem.textContent;
-			elem.textContent = '...';
-			navigator.geolocation.getCurrentPosition(function (position) {
-				that.submitFormAjax(that.qs('form.address'), position.coords.latitude, position.coords.longitude);
-				elem.textContent = text;
-			}, function (err) {
-				elem.textContent = text;
-				console.warn(err);
-			});
-		}
-	};
+		var elem, mkr, key, nb = Object.keys(self.data).length;
+		self.grp.clearLayers();
 
-	this.createMarkers = function (mkrs) {
+		if (nb > 0) {
 
-		var mkr, id;
-		self.mkrs = {};
+			this.qs('body').classList.remove('empty');
 
-		for (mkr in mkrs) if (mkrs.hasOwnProperty(mkr)) {
+			// crée les marqueurs des lieux de livraison
+			// traitement spécial pour la carte d'une commande (.alone)
+			for (key in self.data) if (self.data.hasOwnProperty(key)) {
 
-			mkr = mkrs[mkr];
-			id  = mkr.id;
-
-			mkr = L.marker([mkr.lat, mkr.lng], {
-				title: mkr.name,
-				shadowUrl: null,
-				shadowRetinaUrl: null,
-				shadowSize: null,
-				shadowAnchor: null
-			}).addTo(self.grp); //.bindPopup(mkr.name)
-			mkr.on('click', shippingmax.goToDetailsFromMarker);
-			mkr.on('dblclick', L.DomEvent.stop);
-			mkr.superId = id;
-
-			self.mkrs[id] = mkr;
-		}
-
-		if ((self.marklat != 0) && (self.marklng != 0)) {
-			L.marker([self.marklat, self.marklng], {
-				icon: L.icon({
-					iconUrl: L.Icon.Default.prototype._getIconUrl().replace('undefined', 'ic-user-map.svg'),
-					iconSize: [26, 40],
-					iconAnchor: [13, 25],
+				mkr = self.data[key];
+				mkr = L.marker([mkr.lat, mkr.lng], {
+					title: mkr.name,
 					shadowUrl: null,
 					shadowRetinaUrl: null,
 					shadowSize: null,
-					shadowAnchor: null,
-					className: 'userpos'
-				})
-			}).addTo(self.grp);
+					shadowAnchor: null
+				}).addTo(self.grp);
+
+				mkr.on('click', (nb > 1) ? shippingmax.goToDetailsFromMarker : L.DomEvent.stop);
+				mkr.on('dblclick', L.DomEvent.stop);
+				mkr.htmlId = key;
+
+				self.data[key].leaflet = mkr;
+			}
+
+			// crée le marqueur position
+			// si les coordonnées sont définies
+			if ((self.marklat != 0) && (self.marklng != 0)) {
+
+				L.marker([self.marklat, self.marklng], {
+					icon: L.icon({
+						iconUrl: L.Icon.Default.prototype._getIconUrl().replace('undefined', 'ic-user-map.svg'),
+						iconSize: [26, 40],
+						iconAnchor: [13, 25],
+						shadowUrl: null,
+						shadowRetinaUrl: null,
+						shadowSize: null,
+						shadowAnchor: null,
+						className: 'userpos'
+					})
+				}).addTo(self.grp);
+			}
+
+			// centre la carte
+			// traitement spécial pour la carte d'une commande (.alone) et le storelocator
+			elem = this.qs('#postcode');
+			if (!elem || (elem.value.length > 0))
+				self.map.fitBounds(self.grp.getBounds(), { maxZoom: 15 });
+			else
+				self.map.setView([46.76, 2.42], 6); // France @todo
+
+			// marque l'éventuel point de livraison sélectionné
+			elem = this.qs('.item.selected');
+			if (elem) {
+				mkr = self.data[elem.getAttribute('id').slice(2)].leaflet;
+				mkr.getElement().classList.add('selected');
+				this.goToDetailsFromMarker({ target: mkr, move: false });
+			}
+		}
+		else {
+			this.qs('body').classList.add('empty');
+		}
+
+		return nb;
+	};
+
+	this.stopScrollFromFixed = function (ev) {
+
+		var elem = ev.target;
+		while (elem.parentNode && (elem.nodeName !== 'BODY')) {
+			if (elem.classList.contains('leaflet-control-layers-scrollbar')) {
+				return;
+			}
+			if (elem.classList.contains('map') || elem.classList.contains('top')) {
+				ev.preventDefault();
+				ev.stopPropagation();
+				return;
+			}
+			elem = elem.parentNode;
 		}
 	};
 
-	this.submitFormAjax = function (form, lat, lng) {
+	this.closeMap = function () {
 
-		var data, xhr, that = shippingmax, wasAll = that.showAll, loader = document.getElementById('loader').classList;
-		if (loader.contains('show'))
+		if (typeof self.parent.shippingmax.close == 'function')
+			self.parent.shippingmax.close(true);
+		else
+			self.close();
+	};
+
+	this.qs = function (selector) {
+		return document.querySelector(selector);
+	};
+
+	// méthodes inutiles pour la carte d'une commande (.alone)
+
+	this.askGeoloc = function () {
+
+		if (navigator.geolocation) {
+
+			var that = shippingmax, loader = document.getElementById('loader').classList;
+			loader.add('show');
+
+			navigator.geolocation.getCurrentPosition(function (pos) {
+				that.submitFormAjax(that.qs('form.search'), pos.coords.latitude, pos.coords.longitude, true);
+			}, function (err) {
+				loader.remove('show');
+				console.warn(err);
+			});
+		}
+		else {
+			this.qs('.btn-geoloc').classList.add('hide');
+		}
+	};
+
+	this.submitFormAjax = function (form, lat, lng, ignore) {
+
+		var data, xhr, that = shippingmax, showAll = that.showAll, loader = document.getElementById('loader').classList;
+
+		// n'est pas un button en mobile
+		// ce qui fait qu'on est obligé d'utiliser showAll pour déterminer quel bouton submit est utilisé
+		document.activeElement.blur();
+
+		if ((ignore !== true) && loader.contains('show'))
 			return false;
 
 		try {
 			loader.add('show');
-
-			if (that.showAll)
-				that.showAll = false; // true onload and onclick btn-show-all
-			else if ((typeof lat == 'number') && (typeof lng == 'number'))
-				data = that.serializeForm(form) + '&lat=' + lat + '&lng=' + lng + '&geoloc=1';
-			else
-				data = that.serializeForm(form);
-
-			// form update ou form save
-			if (form.action.indexOf('update') > -1) {
-				that.qs('form.results').innerHTML = '';
-				document.activeElement.blur();
-			}
-
-			// post ou get
 			xhr = new XMLHttpRequest();
-			if (data) {
-				xhr.open('POST', (data.indexOf('id=') > -1) ? form.action + '?isAjax=true&' + data : form.action + '?isAjax=true', true);
-				xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+			// soit l'utilisateur a cliqué sur le bouton afficher tout (btn-show-all), donc en get
+			// soit l'utilisateur a cliqué sur le bouton géolocalisation (btn-geoloc), donc transmet les coordonnées
+			// soit l'utilisateur a fait une recherche ou a sélectionné un lieu, donc transmet les données du bon formulaire
+			if (showAll) {
+				that.showAll = false;
+				xhr.open('GET', form.action + '?isAjax=true', true);
 			}
 			else {
-				xhr.open('GET', form.action + '?isAjax=true', true);
+				data = that.serializeForm(form);
+				if ((typeof lat == 'number') && (typeof lng == 'number'))
+					data += '&lat=' + lat + '&lng=' + lng + '&geoloc=1';
+
+				xhr.open('POST', (data.indexOf('id=') > -1) ? form.action + '?isAjax=true&' + data : form.action + '?isAjax=true', true);
+				xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 			}
 
 			xhr.onreadystatechange = function () {
 
 				if ((xhr.readyState === 4) && ((xhr.status === 200) || (xhr.status === 0))) {
 
-					var mkr, elem, subelem, json, nb;
+					var elem, subelem, json, mkr;
 					try {
 						json = JSON.parse(xhr.responseText);
 
 						if (json.status && json.maplist) {
 
-							// update
-							that.qs('form.results').innerHTML = json.maplist;
-							self.data    = json.items;
-							self.marklat = json.lat;
-							self.marklng = json.lng;
+							self.scroll(0, 0);
 
-							if (json.country && (elem = that.qs('input[value="' + json.country.toUpperCase() + '"]'))) {
+							// update list
+							that.qs('form.results').innerHTML = json.maplist;
+
+							self.data    = json.items; // (array)
+							self.marklat = json.lat;   // (float)
+							self.marklng = json.lng;   // (float)
+
+							// sélectionne le bon pays
+							if (json.country && (elem = that.qs('.country-choice input[value="' + json.country.toUpperCase() + '"]'))) {
 								if (subelem = that.qs('.country-choice input[checked]'))
 									subelem.removeAttribute('checked');
 								if (subelem = that.qs('.country-choice input:checked'))
@@ -352,53 +434,46 @@ var shippingmax = new (function () {
 								elem.setAttribute('checked', 'checked');
 							}
 
-							if (wasAll || json.postcode)
+							if (showAll || json.postcode)
 								document.getElementById('postcode').value = json.postcode || '';
-							if (wasAll || json.city)
+							if (showAll || json.city)
 								document.getElementById('city').value = json.city || '';
 
-							self.grp.clearLayers();
-							nb = Object.keys(self.data).length;
-							if (nb > 0) {
-								that.qs('div.main').classList.remove('empty');
-								self.map.invalidateSize();
-								that.createMarkers(self.data);
-								if (nb > self.maxpts) {
-									self.map.setView([46.76, 2.42], 6); // @todo France
-								}
-								else {
-									self.map.fitBounds(self.grp.getBounds(), { maxZoom: 15 });
-								}
-							}
-							else {
-								that.qs('div.main').classList.add('empty');
-							}
+							that.createMarkers();
+							loader.remove('show');
 						}
 						else if (json.status) {
-
-							// save
+							// parent save qui va fermer la carte
+							// lorsque la carte est ouverte dans un object
 							if (typeof self.parent.shippingmax.show == 'function') {
 								self.parent.shippingmax.show(json);
 							}
+							// marque et centre le point de livraison sélectionné
+							// lorsque la carte est ouverte dans un nouvel onglet
 							else {
 								that.resetMarkers(true);
-								mkr = self.mkrs[json.id];
-								mkr.getElement().classList.add('active');
-								self.map.setView(mkr.getLatLng());
-								document.getElementById('pt' + json.id).classList.add('active', 'clicked');
+								mkr = self.data[json.id].leaflet;
+								mkr.getElement().classList.add('selected');
+								self.map.setView(mkr.getLatLng(), 15);
+								document.getElementById('pt' + json.id).classList.add('selected', 'clicked');
+								loader.remove('show');
 							}
 						}
 						else if (json.error) {
-							if (json.error === 'refresh')
+							// error
+							if (json.error === 'refresh') {
 								self.location.reload();
-							else
+							}
+							else {
 								alert(json.error);
+								loader.remove('show');
+							}
 						}
 						else {
+							// error
 							alert(json);
+							loader.remove('show');
 						}
-
-						loader.remove('show');
 					}
 					catch (e) {
 						console.error(e, xhr.responseText); // SyntaxError: Unexpected end of JSON input
@@ -443,103 +518,100 @@ var shippingmax = new (function () {
 
 	this.goToDetailsFromMarker = function (ev) {
 
+		// activeElement n'est pas un button en mobile
 		// ne fait rien si submitFormAjax est en cours ou s'il va commencer
-		if (document.getElementById('loader').classList.contains('show') || (document.activeElement && (document.activeElement.nodeName === 'BUTTON')))
+		if ((ev.target.nodeName === 'BUTTON') || (document.activeElement && (document.activeElement.nodeName === 'BUTTON')))
 			return;
 
+		// elem = li.item, css = mkr
 		var that = shippingmax, mkr = ev.target, css = mkr.getElement().classList, already = css.contains('clicked');
 		that.resetMarkers();
 
-		// désélectionne ou sélectionne
+		// désélectionne, ou sélectionne et centre la carte et centre la liste
 		if (already) {
 			css.remove('clicked');
 		}
 		else {
-			var elem = document.getElementById('pt' + mkr.superId), form = that.qs('form.results');
-
+			var elem = document.getElementById('pt' + mkr.htmlId);
 			if (ev.move !== false) {
 				css.add('clicked');
 				elem.classList.add('clicked');
 				self.map.setView(mkr.getLatLng());
 			}
-			else if (that.qs('.alone')) {
-				// pour la carte d'une commande
-				css.add('clicked');
-				elem.classList.add('clicked');
-			}
-
-			that.scrollToDetails(form, elem);
+			that.scrollToDetails(elem);
 		}
 	};
 
-	this.goToMarkerFromDetails = function (elem) {
+	this.goToMarkerFromDetails = function (ev, elem) {
 
+		// activeElement n'est pas un button en mobile
 		// ne fait rien si submitFormAjax est en cours ou s'il va commencer
-		if (document.getElementById('loader').classList.contains('show') || (document.activeElement && (document.activeElement.nodeName === 'BUTTON')))
+		if ((ev.target.nodeName === 'BUTTON') || (document.activeElement && (document.activeElement.nodeName === 'BUTTON')))
 			return;
 
+		// css et elem = li.item
 		var css = elem.classList, already = css.contains('clicked');
 		this.resetMarkers();
 
-		// désélectionne ou sélectionne
-		if (already) {
+		// désélectionne, ou sélectionne et centre la carte
+		if (already && !css.contains('selected') && (ev.target.nodeName !== 'fullscreenquit')) {
 			css.remove('clicked');
 		}
 		else {
 			css.add('clicked');
-			var mkr = self.mkrs[elem.getAttribute('id').slice(2)];
+			var mkr = self.data[elem.getAttribute('id').slice(2)].leaflet;
 			mkr.getElement().classList.add('clicked');
 			self.map.setView(mkr.getLatLng(), 15);
 		}
 	};
 
-	this.scrollToDetails = function (form, elem) {
+	this.scrollToDetails = function (elem) {
 
-		if (form.scrollHeight > form.offsetHeight) {
-			if (window.innerWidth < 992) {
-				form.scrollTop = elem.offsetTop;
-			}
-			else {
-				form.scrollTop = elem.offsetTop - form.offsetHeight / 2 + 80;
-				var rect = elem.getBoundingClientRect();
-				if ((rect.top < 0) && (rect.bottom <= window.innerHeight))
-					form.scrollTop = elem.offsetTop;
-			}
+		// pour IOS qui refuse de faire un scroll
+		if (this.qs('html.iphone.popin')) {
+			var val = this.qs('.map').getBoundingClientRect().bottom + 5;
+			this.qs('.results-list').setAttribute('style', 'margin:-' + val + 'px 0 ' + val + 'px;');
+			elem.scrollIntoView({ block: 'start' });
+			this.qs('.results-list').removeAttribute('style');
+		}
+		else {
+			self.scroll(0, (self.innerWidth < 768) ?
+				elem.offsetTop - parseInt(self.getComputedStyle(this.qs('.results')).paddingTop) - 5 :
+				elem.offsetTop - self.innerHeight / 2 + this.qs('.top').offsetHeight / 2 + elem.offsetHeight / 2
+			);
 		}
 	};
 
-	this.resetMarkers = function (active) {
-		document.querySelectorAll('.clicked').forEach(function (elem) { elem.classList.remove('clicked'); });
-		if (active)
-			document.querySelectorAll('.active').forEach(function (elem) { elem.classList.remove('active'); });
+	this.resetMarkers = function (selected) {
+		document.querySelectorAll('.clicked, .selected').forEach(function (elem) {
+			elem.classList.remove('clicked', selected ? 'selected' : 'nothing');
+		});
+	};
+
+	this.updateZipFromCountry = function (elem) {
+		document.getElementById('postcode').setAttribute('type', (self.tel.indexOf(elem.value) < 0) ? 'text' : 'tel');
+		if (elem.value == 'MC') {
+			document.getElementById('postcode').value = '98000';
+			document.getElementById('city').value = 'Monaco';
+		}
 	};
 
 	this.showSelect = function (action) {
-		action = (action === false) ? 'remove' : ((this.show = !this.show) ? 'add' : 'remove');
-		this.qs('.search-elements').classList[action]('country-select');
-		this.show = action === 'add';
-	};
-
-	this.updatePostcode = function (elem) {
-		document.getElementById('postcode').setAttribute('type', (self.tel.indexOf(elem.value) > -1) ? 'tel' : 'text');
-	};
-
-	this.qs = function (selector) {
-		return document.querySelector(selector);
+		action = (action === false) ? 'remove' : ((this.showList = !this.showList) ? 'add' : 'remove');
+		this.qs('.search').classList[action]('country-select');
+		this.showList = action === 'add';
 	};
 
 })();
 
 if (typeof self.addEventListener == 'function') {
 	self.addEventListener('load', shippingmax.init.bind(shippingmax));
-	document.addEventListener('touchmove', function (ev) {
-		// no zoom
-		if ((ev.scale != 1) || (ev.touches && (ev.touches.length > 1)))
-			ev.preventDefault();
-	}, { passive: false });
+	self.addEventListener('DOMMouseScroll', shippingmax.stopScrollFromFixed, { passive: false });
+	self.addEventListener('mousewheel', shippingmax.stopScrollFromFixed, { passive: false });
+	self.addEventListener('touchmove', shippingmax.stopScrollFromFixed, { passive: false });
 }
 
 // instarelou
 function _AutofillCallbackHandler() { }
 function _pcmBridgeCallbackHandler() { }
-var PaymentAutofillConfig = {};
+var PaymentAutofillConfig = { };

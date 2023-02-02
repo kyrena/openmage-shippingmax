@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/17/11/2022
+ * Updated J/02/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -20,50 +20,83 @@
 
 class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action {
 
-	protected $_countries;
+	protected $_session;
+	protected $_isShowAll;
+	protected $_isStoreLocator;
+	protected $_carrierCountries;
 
-	protected function loadItems(object $address, string $code, $session = null) {
 
-		Mage::register('address_ignore_name', true, true);
-		$this->_countries = Mage::helper('shippingmax')->getCarrierCountries($code);
+	protected function isAjax() {
+		return ($this->getRequest()->isXmlHttpRequest() || !empty($this->getRequest()->getParam('isAjax')));
+	}
 
-		// récupère l'adresse mémorisée et met à jour l'adresse de livraison
-		// mais s'assure que le pays ne change pas
-		if (is_object($session)) {
+	protected function customDispatch() {
 
-			$data = $session->getData($code);
+		if (stripos($this->getFullActionName(), 'debug') === false) {
 
-			// n'autorise pas le changement de pays
-			if ($code != 'shippingmax_storelocator') {
-				// pas de pays mémorisé
-				if (empty($data['country_id']))
-					$data = [];
-				// pays mémorisé non autorisé
-				else if (!in_array($data['country_id'], $this->_countries))
-					$data = [];
-				// pays mémorisé différent du pays de l'adresse (uniquement le pays de l'adresse est autorisé)
-				// pas de vérification des pays en mode test (lorsque le mode de livraison est désactivé)
-				else if (($data['country_id'] != $address->getData('country_id')) && Mage::getStoreConfigFlag('carriers/'.$code.'/active') && in_array($address->getData('country_id'), $this->_countries))
-					$data = [];
+			$code = $this->getRequest()->getParam('code');
+			if (empty($code)) {
+				$this->setFlag('', 'no-dispatch', true);
+				return $this->getResponse()
+					->setHttpResponseCode(404)
+					->setHeader('X-Shippingmax', 'code-is-required', true);
 			}
 
-			if (!empty($data['city']))
-				$address->setData('city', $data['city']);
-			if (!empty($data['postcode']))
-				$address->setData('postcode', $data['postcode']);
-			if (!empty($data['country_id']))
-				$address->setData('country_id', $data['country_id']);
+			// autorise uniquement les codes des modes de livraison des points de livraison
+			// même s'ils ne sont pas activés
+			if (empty(Mage::getStoreConfig('carriers/'.$code.'/title')) || !Mage::helper('shippingmax')->isSpecial($code)) {
+
+				// autorise aussi les ids des commandes
+				if (!is_numeric($code)) {
+
+					if (str_contains($code, 'shippingmax_')) {
+						$this->setFlag('', 'no-dispatch', true);
+						return $this->getResponse()
+							->setHttpResponseCode(404)
+							->setHeader('X-Shippingmax', 'code-unknown', true);
+					}
+
+					// autorise un code court
+					$code = 'shippingmax_'.$code;
+					if (empty(Mage::getStoreConfig('carriers/'.$code.'/title')) || !Mage::helper('shippingmax')->isSpecial($code)) {
+						$this->setFlag('', 'no-dispatch', true);
+						return $this->getResponse()
+							->setHttpResponseCode(404)
+							->setHeader('X-Shippingmax', 'short-code-unknown', true);
+					}
+
+					$this->getRequest()->setParam('code', $code);
+				}
+			}
+
+			if ($code == 'shippingmax_storelocator') {
+				$this->_isShowAll = true;
+				$this->_isStoreLocator = true;
+			}
+			else {
+				$this->_isShowAll = !empty($this->getRequest()->getParam('showall'));
+			}
 		}
 
-		// récupère les points relais
-		if (!empty($data['geoloc']) && !empty($data['lat']) && !empty($data['lng'])) {
+		$this->_session = Mage::helper('shippingmax')->getSession();
+
+		return $this;
+	}
+
+	protected function getCarrierItemsByAddress(object $address, string $code) {
+
+		Mage::register('address_ignore_name', true, true);
+		$this->_carrierCountries = Mage::helper('shippingmax')->getCarrierCountries($code);
+
+		$model = Mage::getSingleton('shipping/config')->getCarrierInstance($code);
+
+		// récupère les points de livraison
+		// depuis la géolocalisation du navigateur ou depuis l'adresse
+		if (!empty($address->getData('geoloc')) && !empty($address->getData('lat')) && !empty($address->getData('lng'))) {
 
 			// n'autorise pas le changement de pays
 			// donc cherche le pays par rapport aux coordonnées avant de mettre à jour la véritable adresse
-			$check = clone $address;
-			$check->setData('lat', $data['lat']);
-			$check->setData('lng', $data['lng']);
-
+			$check  = clone $address;
 			$dadata = Mage::helper('shippingmax')->withDaData($code);
 			Mage::getModel('shippingmax/coords')->setReverseAddressCoords($check, $dadata);
 
@@ -72,15 +105,13 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			$address->setData('geo_country_id', $check->getData('country_id'));
 
 			// n'autorise pas le changement de pays
-			// sauf pour le storelocator si le pays géolocalisé est autorisé
+			// oui mais sauf si showAll et si le pays géolocalisé est autorisé
 			if (
-				(($code == 'shippingmax_storelocator') && in_array($check->getData('country_id'), $this->_countries)) ||
-				($check->getData('country_id') == $address->getData('country_id'))
+				($check->getData('country_id') == $address->getData('country_id')) ||
+				($this->_isShowAll && in_array($check->getData('country_id'), $this->_carrierCountries))
 			) {
-				$address->setData('lat', $data['lat']);
-				$address->setData('lng', $data['lng']);
 				Mage::getModel('shippingmax/coords')->setReverseAddressCoords($address, $dadata);
-				$items = Mage::getModel('shippingmax/carrier_'.lcfirst(str_replace('shippingmax_', '', $code)))->loadItemsFromCache($address);
+				$items = $model->loadItemsFromCache($address);
 			}
 			else {
 				$items = [];
@@ -88,31 +119,16 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		}
 		else {
 			Mage::getModel('shippingmax/coords')->setAddressCoords($address);
-			$items = Mage::getModel('shippingmax/carrier_'.lcfirst(str_replace('shippingmax_', '', $code)))->loadItemsFromCache($address);
-
-			if (is_object($session) && !empty($address->getData('lat')) && !empty($address->getData('lng'))) {
-				$data['lat'] = $address->getData('lat');
-				$data['lng'] = $address->getData('lng');
-				$data['country_id'] = $address->getData('country_id');
-				$session->setData($code, $data);
-			}
+			$items = $model->loadItemsFromCache($address);
 		}
 
 		$items = (!empty($items) && is_array($items)) ? $items : [];
 
-		// admin
-		if (!Mage::getStoreConfigFlag('carriers/'.$code.'/active') && Mage::app()->getStore()->isAdmin()) {
-			Mage::app()->getStore()->setConfig('carriers/'.$code.'/active', 1);
-			if (method_exists($address, 'collectShippingRates'))
-				$address->setCollectShippingRates(true)->collectShippingRates(); //->getGroupedAllShippingRates();
-		}
-
-		// filtrage storelocator
-		$search = $this->getRequest()->getParam('q');
-		if (!empty($search) && ($code == 'shippingmax_storelocator') && !empty($items)) {
+		// filtrage à l'affichage
+		if ($this->_isShowAll && !empty($items) && !empty($search = $this->getRequest()->getParam('q'))) {
 			$newItems = [];
 			foreach ($items as $key => $item) {
-				if (stripos($item['name'], $search) !== false)
+				if (mb_stripos($item['name'], $search) !== false)
 					$newItems[$key] = $item;
 			}
 			if (!empty($newItems))
@@ -122,68 +138,92 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		return $items;
 	}
 
-	protected function isAjax() {
-		return ($this->getRequest()->isXmlHttpRequest() || !empty($this->getRequest()->getParam('isAjax')));
-	}
+	protected function getCustomerAddressByCarrier(string $code) {
 
-	protected function initOurLayoutMessages() {
-		$this->_initLayoutMessages(Mage::helper('shippingmax')->getSession(true));
-	}
+		// chaque mode de livraison
+		$code = ($this->_isShowAll && !$this->_isStoreLocator) ? $code.'_isShowAll' : $code;
+		$shippingAddress = $this->getQuoteShippingAddress();
 
-	protected function getSession() {
-		return Mage::helper('shippingmax')->getSession();
-	}
+		$address = Mage::getModel('customer/address');
+		$address->setData('country_id', $shippingAddress->getData('country_id'));
 
-	protected function getShippingAddress() {
-
-		$address = Mage::helper('shippingmax')->getSession()->getQuote()->getShippingAddress();
-		$session = Mage::getSingleton('customer/session');
-
-		if (empty($address->getData('postcode')) && empty($address->getData('city')) && $session->isLoggedIn()) {
-			$defaultShipping = $session->getCustomer()->getDefaultShippingAddress();
-			if (is_object($defaultShipping)) {
-				$address->setData('city', $defaultShipping->getData('city'));
-				$address->setData('postcode', $defaultShipping->getData('postcode'));
-				$address->setData('country_id', $defaultShipping->getData('country_id'));
-			}
+		if ($this->_isShowAll) {
+			// autorise le changement de pays
+			if (!empty($data = $this->_session->getData($code)))
+				$address->addData($data);
+		}
+		else if (!empty($data = $this->_session->getData($code))) {
+			// n'autorise pas le changement de pays
+			if (empty($shippingAddress->getId()) || (!empty($data['country_id']) && ($data['country_id'] == $shippingAddress->getData('country_id'))))
+				$address->addData($data);
 		}
 
-		if (empty($address->getData('country_id')))
-			$address->setData('country_id', Mage::getStoreConfig('general/country/default'));
-		else if ($address->getData('country_id') == 'MC')
-			$address->setData('country_id', 'FR');
+		if ($this->_isStoreLocator)
+			return $address;
+
+		// si l'adresse du mode de livraison est vide ou incomplète
+		// alors on utilise les données de l'adresse de livraison du panier
+		if (empty($address->getData('city')) || empty($address->getData('postcode')) || empty($address->getData('country_id'))) {
+			$address->setData('country_id', $shippingAddress->getData('country_id'));
+			$address->setData('postcode', $shippingAddress->getData('postcode'));
+			$address->setData('city', $shippingAddress->getData('city'));
+		}
 
 		return $address;
 	}
 
+	protected function updateSessionObject(object $address, string $code, string $from) {
 
-	public function preDispatch() {
+		$code = ($this->_isShowAll && !$this->_isStoreLocator) ? $code.'_isShowAll' : $code;
 
-		Mage::register('turpentine_nocache_flag', true, true);
-		parent::preDispatch();
+		$address->setData('saved_at', date('c'));
+		$address->setData('saved_from', $from);
 
-		if (stripos($this->getFullActionName(), 'debug') === false) {
-			$code = $this->getRequest()->getParam('code');
-			if (empty($code) || (stripos($code, 'shippingmax_') === false) || empty(Mage::getStoreConfig('carriers/'.$code.'/title'))) {
-				if (!is_numeric($code))
-					$this->setFlag('', 'no-dispatch', true);
+		$this->_session->setData($code, $address->getData());
+	}
+
+	protected function getQuoteShippingAddress() {
+
+		// récupère l'adresse de livraison du panier
+		$shippingAddress = $this->_session->getQuote()->getShippingAddress();
+		$customerSession = Mage::getSingleton('customer/session');
+
+		if (empty($shippingAddress->getData('postcode')) && empty($shippingAddress->getData('city')) && $customerSession->isLoggedIn()) {
+			$defaultShipping = $customerSession->getCustomer()->getDefaultShippingAddress();
+			if (is_object($defaultShipping)) {
+				$shippingAddress->setData('country_id', $defaultShipping->getData('country_id'));
+				$shippingAddress->setData('postcode', $defaultShipping->getData('postcode'));
+				$shippingAddress->setData('city', $defaultShipping->getData('city'));
 			}
 		}
+
+		if (empty($shippingAddress->getData('country_id')))
+			$shippingAddress->setData('country_id', Mage::getStoreConfig('general/country/default'));
+
+		return $shippingAddress;
 	}
 
 
+	public function preDispatch() {
+		Mage::register('turpentine_nocache_flag', true, true);
+		parent::preDispatch();
+		$this->customDispatch();
+	}
+
 	public function indexAction() {
 
-		$session = $this->getSession();
-		$address = $this->getShippingAddress();
-		$code    = $this->getRequest()->getParam('code');
 		$options = [];
+		$code    = $this->getRequest()->getParam('code');
+		$address = $this->getCustomerAddressByCarrier($code);
 
 		// récupère le point de livraison
+		// à partir de l'id de la commande
 		if (is_numeric($code)) {
 
-			$items   = [];
-			$details = Mage::getModel('shippingmax/details')->load($code);
+			$details  = Mage::getModel('shippingmax/details')->load($code);
+			$items    = [];
+			$isGeoloc = false;
+			$selected = false;
 
 			if (!empty($details->getId())) {
 				$customerId = Mage::getSingleton('customer/session')->getCustomerId();
@@ -195,81 +235,74 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 					}
 				}
 			}
-
-			$geoloc = false;
-			if (empty($selected))
-				return;
 		}
 		// récupère la liste des points de livraison
-		else if (Mage::getStoreConfigFlag('carriers/'.$code.'/can_show_all')) {
-			$address  = new Varien_Object();
-			$items    = $this->loadItems($address, $code);
-			$geoloc   = false;
-			$selected = false;
-		}
+		// et construit la liste des pays autorisés
 		else {
-			$items    = $this->loadItems($address, $code, $session);
-			$selected = $session->getData($code);
-			$geoloc   = !empty($selected['geoloc']);
-			$selected = empty($selected['selected']) ? false : $selected['selected'];
-		}
+			$items    = $this->getCarrierItemsByAddress($address, $code);
+			$isGeoloc = !empty($address->getData('geoloc'));
+			$selected = empty($address->getData('selected')) ? false : $address->getData('selected');
+			$this->updateSessionObject($address, $code, 'indexAction');
 
-		// construit la liste des pays autorisés
-		if (!is_numeric($code)) {
+			// tout les pays ou uniquement le pays de l'adresse
+			// passe le pays sélectionné en premier
+			$default     = Mage::getStoreConfig('general/country/default');
+			$addrCountry = $address->getData('country_id');
 
-			$default = Mage::getStoreConfig('general/country/default');
-
-			// tout les pays
-			// le pays sélectionné toujours en premier
-			if ($code == 'shippingmax_storelocator') {
-
-				foreach ($this->_countries as $country) {
-					if ($country == $address->getData('country_id'))
+			if ($this->_isShowAll) {
+				foreach ($this->_carrierCountries as $country) {
+					if ($country == $addrCountry) {
 						$options[$country] = Mage::getModel('directory/country')->loadByCode($country)->getName();
+						break;
+					}
 				}
-
-				foreach ($this->_countries as $country) {
-					if ($country == $default)
+				foreach ($this->_carrierCountries as $country) {
+					if ($country == $default) {
 						$options[$country] = Mage::getModel('directory/country')->loadByCode($country)->getName();
+						break;
+					}
 				}
-
-				foreach ($this->_countries as $country) {
-					if ($country != $address->getData('country_id'))
+				foreach ($this->_carrierCountries as $country) {
+					if ($country != $addrCountry)
 						$options[$country] = Mage::getModel('directory/country')->loadByCode($country)->getName();
 				}
 			}
-			// uniquement le pays de l'adresse
 			else {
-				$country = $address->getData('country_id');
-				$country = (empty($country) || !in_array($country, $this->_countries)) ? $default : $country;
-
+				$country = (empty($addrCountry) || !in_array($addrCountry, $this->_carrierCountries)) ? $default : $addrCountry;
 				$options[$country] = Mage::getModel('directory/country')->loadByCode($country)->getName();
 			}
 		}
 
-		// rendu html
-		$this->loadLayout();
-		$this->initOurLayoutMessages();
-		$this->getLayout()->getBlock('maproot')
-			->setData('code', $code);
-		$this->getLayout()->getBlock('mapbody')
-			->setData('address', $address)
-			->setData('code', $code)
-			->setData('items', $items)
-			->setData('options', $options);
-		$this->getLayout()->getBlock('maplist')
-			->setData('address', $address)
-			->setData('code', $code)
-			->setData('items', $items)
-			->setData('selected', $selected)
-			->setData('geoloc', $geoloc);
-		$this->renderLayout();
+		// réponse
+		if (is_numeric($code) && empty($items)) {
+			$this->getResponse()
+				->setHttpResponseCode(404)
+				->setHeader('X-Shippingmax', 'order-not-found', true);
+		}
+		else {
+			$this->loadLayout();
+			$this->_initLayoutMessages(Mage::helper('shippingmax')->getSession(true));
+			$this->getLayout()->getBlock('maproot')
+				->setData('code', $code);
+			$this->getLayout()->getBlock('mapbody')
+				->setData('address', $address)
+				->setData('code', $code)
+				->setData('items', $items)
+				->setData('options', $options)
+				->setData('showAll', $this->_isShowAll);
+			$this->getLayout()->getBlock('maplist')
+				->setData('address', $address)
+				->setData('code', $code)
+				->setData('items', $items)
+				->setData('selected', $selected)
+				->setData('geoloc', $isGeoloc)
+				->setData('showAll', $this->_isShowAll);
+			$this->renderLayout();
+		}
 	}
 
 	public function updateAction() {
 
-		$session  = $this->getSession();
-		$address  = $this->getShippingAddress();
 		$request  = $this->getRequest();
 		$code     = $request->getParam('code');
 		$city     = $request->getPost('city');
@@ -277,10 +310,11 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		$country  = $request->getPost('country');
 		$lat      = $request->getPost('lat');
 		$lng      = $request->getPost('lng');
+		$isGeoloc = !empty($request->getPost('geoloc')) && !empty($lat) && !empty($lng);
 
 		if (($country == 'RU') && Mage::getStoreConfigFlag('carriers/shippingmax/search_by_street')) {
-			$message = $this->__('Please enter your street (or your postal code) and city.');
 			// ici le code postal contient une rue, tout va bien
+			$message = $this->__('Please enter your street (or your postal code) and city.');
 		}
 		else {
 			$message = $this->__('Please enter your postal code and city.');
@@ -289,42 +323,42 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		}
 
 		// action
-		if (!empty($city) || !empty($postcode) || (!empty($lat) && !empty($lng)) || Mage::getStoreConfigFlag('carriers/'.$code.'/can_show_all')) {
+		if ($this->_isShowAll || $this->_isStoreLocator || !empty($postcode) || !empty($city) || $isGeoloc) {
 
 			// mémorise la recherche
-			$data = $session->getData($code);
-			if (!is_array($data)) $data = [];
-			$data['city']       = $city;
-			$data['postcode']   = $postcode;
-			$data['country_id'] = $country;
-			$data['geoloc']     = !empty($request->getPost('geoloc'));
-			if (!empty($lat)) $data['lat'] = $lat;
-			if (!empty($lng)) $data['lng'] = $lng;
-			$session->setData($code, $data);
-
-			// récupère la liste des points de livraison
-			if (empty($postcode) && empty($city) && empty($lat) && empty($lng)) {
-				$address->setData('lat', null);
-				$address->setData('lng', null);
-				$address->setData('city', null);
-				$address->setData('postcode', null);
-				$items = $this->loadItems($address, $code);
+			$address = $this->getCustomerAddressByCarrier($code);
+			$address->setData('country_id', $country);
+			if ($isGeoloc) {
+				//$address->unsetData('postcode');
+				//$address->unsetData('city');
+				$address->setData('geoloc', 1);
+				$address->setData('lat', (float) $lat);
+				$address->setData('lng', (float) $lng);
 			}
 			else {
-				$items = $this->loadItems($address, $code, $session);
+				$address->setData('postcode', $postcode);
+				$address->setData('city', $city);
+				$address->unsetData('geoloc');
+				$address->unsetData('lat');
+				$address->unsetData('lng');
 			}
+			$this->updateSessionObject($address, $code, 'updateAction');
 
 			// réponse
 			if ($this->isAjax()) {
 
+				// récupère la liste des points de livraison
+				$items = $this->getCarrierItemsByAddress($address, $code);
+
 				$this->loadLayout();
-				$this->initOurLayoutMessages();
+				$this->_initLayoutMessages(Mage::helper('shippingmax')->getSession(true));
 				$html = $this->getLayout()->getBlock('maplist')
 					->setData('address', $address)
 					->setData('code', $code)
 					->setData('items', $items)
-					->setData('selected', empty($data['selected']) ? false : $data['selected'])
-					->setData('geoloc', $data['geoloc'])
+					->setData('selected', empty($address->getData('selected')) ? false : $address->getData('selected'))
+					->setData('geoloc', !empty($address->getData('geoloc')))
+					->setData('showAll', $this->_isShowAll)
 					->toHtml();
 
 				$this->getResponse()
@@ -333,17 +367,18 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 					->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
 					->setBody(json_encode([
 						'status'   => true,
-						'city'     => $address->getData('city'),
-						'postcode' => $address->getData('postcode'),
 						'country'  => $address->getData('country_id'),
-						'lat'      => (float) $address->getData('lat'),
-						'lng'      => (float) $address->getData('lng'),
+						'postcode' => $address->getData('postcode'),
+						'city'     => $address->getData('city'),
+						'lat'      => (float) $address->getData('lat'), // doit être un nombre
+						'lng'      => (float) $address->getData('lng'), // doit être un nombre
 						'maplist'  => trim(preg_replace("#\s{2,}#", ' ', $html)), // pour le html
-						'items'    => $items, // pour le JavaScript
+						'count'    => count($items), // pour debug
+						'items'    => $items,        // pour le JavaScript
 					]));
 			}
 			else {
-				$this->_redirect('*/*/index', ['code' => $code]);
+				$this->_redirect('*/*/index', ['code' => $code, 'showall' => empty($request->getParam('showall')) ? null : 1]);
 			}
 		}
 		else if ($this->isAjax()) {
@@ -354,37 +389,41 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 				->setBody(json_encode(['status' => false, 'error' => $message]));
 		}
 		else {
-			$session->addError($message);
-			$this->_redirect('*/*/index', ['code' => $code]);
+			$this->_session->addError($message);
+			$this->_redirect('*/*/index', ['code' => $code, 'showall' => empty($request->getParam('showall')) ? null : 1]);
 		}
 	}
 
 	public function saveAction() {
 
-		$session = $this->getSession();
-		$address = $this->getShippingAddress();
-		$code    = $this->getRequest()->getParam('code');
-		$id      = $this->getRequest()->getPost('id');
+		$code = $this->getRequest()->getParam('code');
+		$id   = $this->getRequest()->getPost('id');
 
+		// showAll n'est pas acceptable ici
 		// récupère la liste des points de livraison
-		$items = $this->loadItems($address, $code, $session);
+		if (!empty($id)) {
+			$address = $this->getCustomerAddressByCarrier($code);
+			$items   = $this->getCarrierItemsByAddress($address, $code);
+		}
 
 		// action
+		// vérifie que le point de livraison sélectionné existe bien
 		if (!empty($id) && !empty($items[$id])) {
 
 			// mémorise le choix
-			$data = $session->getData($code);
-			if (!is_array($data)) $data = [];
-			$data['selected'] = $id;
-			$data['item']     = $items[$id];
-			$session->setData($code, $data);
+			$address->setData('selected', $id);
+			$address->setData('item', $items[$id]);
+			$this->updateSessionObject($address, $code, 'saveAction');
 
 			// réponse
-			$this->loadLayout();
-			$this->initOurLayoutMessages();
-			$html = trim(preg_replace("#\s{2,}#", ' ', $this->getLayout()->getBlock('shippingmax_selected')->setData('code', $code)->toHtml()));
-
 			if ($this->isAjax()) {
+
+				$this->loadLayout();
+				$this->_initLayoutMessages(Mage::helper('shippingmax')->getSession(true));
+				$html = $this->getLayout()->getBlock('shippingmax_selected')
+					->setData('code', $code)
+					->toHtml();
+
 				$this->getResponse()
 					->setHttpResponseCode(200)
 					->setHeader('Content-Type', 'application/json', true)
@@ -393,7 +432,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 						'status' => true,
 						'code'   => $code,
 						'id'     => $id,
-						'html'   => $html,
+						'html'   => trim(preg_replace("#\s{2,}#", ' ', $html)),
 					]));
 			}
 			else {
@@ -408,7 +447,6 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 							'status' => true,
 							'code'   => $code,
 							'id'     => $id,
-							'html'   => $html,
 						]).')</script></body></html>'
 					);
 			}
@@ -438,15 +476,29 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			$text = 'invalid pass';
 		}
 		else {
-			$ids = $this->getSession()->getData();
+			$coords = Mage::getModel('shippingmax/coords');
+			$shippingAddress = $this->getQuoteShippingAddress();
+
+			// commande
+			if (!empty($oid = $this->getRequest()->getParam('oid')) || !empty($oid = Mage::getSingleton('checkout/session')->getLastOrderId())) {
+				$details = Mage::getModel('shippingmax/details')->load($oid);
+				if (!empty($details->getData('details'))) {
+					$json = json_decode($details->getData('details'), true);
+					if (!empty($json['street']))
+						$json['street'] = str_replace("\n", ' \n ', $json['street']);
+					$details->setData('details', $json);
+				}
+			}
+
+			// données de session (liste des adresses utilisées)
+			$ids = $this->_session->getData();
 			ksort($ids);
 
 			$session = [];
-			$coords  = Mage::getModel('shippingmax/coords');
 			foreach ($ids as $id => $value) {
 				if (mb_stripos($id, 'shippingmax') !== false) {
 					unset($value['item']['description']);
-					$value['shippingmax'] = '<a href="'.Mage::getUrl('*/*/index', ['code' => $id]).'">map</a>';
+					$value['shippingmax'] = '<a href="'.Mage::helper('shippingmax')->getMapUrl($id).'">map</a>';
 					if (isset($value['city'], $value['postcode'], $value['country_id'])) {
 						$value['nominatim1'] = '<a href="'.$coords->getApiUrl($value['city'], $value['postcode'], $value['country_id']).'">search</a>';
 					}
@@ -454,10 +506,14 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 						$value['nominatim2'] = '<a href="'.$coords->getReverseApiUrl($value['lat'], $value['lng']).'">reverse</a>';
 						$value['osm'] = '<a href="https://www.openstreetmap.org/?mlat='.$value['lat'].'&mlon='.$value['lng'].'">osm</a>';
 					}
+					if (!empty($value['item']['street'])) {
+						$value['item']['street'] = str_replace("\n", ' \n ', $value['item']['street']);
+					}
 					$session[$id] = $value;
 				}
 			}
 
+			// données du cache (liste des points de livraison)
 			$app = Mage::app();
 			$ids = $app->getCache()->getIds();
 
@@ -471,17 +527,19 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 			}
 			ksort($cache);
 
-			$link  = ' - <a href="'.Mage::getUrl('*/*/debugsetaddress', ['pass' => $pass]).'">set address</a>';
+			// html
+			$link  = ' - <a href="'.Mage::getUrl('*/*/debugsetaddress', ['pass' => $pass]).'">set addresses</a>';
 			$link .= ' - <a href="'.Mage::getUrl('*/*/debugclearsession', ['pass' => $pass]).'"'.(empty($session) ? ' style="color:#666;"' : '').'>clear session</a>';
 			$link .= ' - <a href="'.Mage::getUrl('*/*/debugclearcache', ['pass' => $pass]).'"'.(empty($cache) ? ' style="color:#666;"' : '').'>clear cache</a>';
-
-			$text =
-				'<b>shippingAdress:</b>'."\n".trim($this->getShippingAddress()->format('text'))."\n\n".
+			$text  =
+				(empty($details) ? '' : '<b>pickup details (oid or lastOrderId):</b> '.print_r($details->getData(), true)."\n\n").
+				'<b>shippingAdress:</b>'."\n".'id: '.$shippingAddress->getId()."\n".trim($shippingAddress->format('text'))."\n\n".
 				'<b>session:keys:</b> '.print_r(array_keys($session), true).
 				'<br><b>session:data:</b> '.print_r($session, true).
 				'<br><b>cache:keys/count:</b> '.print_r($cache, true);
 		}
 
+		$name = Mage::app()->getStore()->isAdmin() ? 'backend - ' : 'frontend - ';
 		$this->getResponse()
 			->setHttpResponseCode(200)
 			->setHeader('Content-Type', 'text/html; charset=utf-8', true)
@@ -490,7 +548,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 				'<html lang="en"><head><title>shippingmax</title>'.
 				'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.
 				'<meta name="robots" content="noindex,nofollow"></head>'.
-				'<body><pre style="white-space:pre-wrap;">'.date('c').$link.'<br><br>'.$text.'</pre></body></html>'
+				'<body><pre style="white-space:pre-wrap;">'.$name.date('c').$link.'<br><br>'.$text.'</pre></body></html>'
 			);
 	}
 
@@ -518,10 +576,10 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		$pass = Mage::getStoreConfig('carriers/shippingmax/debug_password');
 		if (Mage::getStoreConfigFlag('carriers/shippingmax/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 
-			$session = $this->getSession();
-			foreach ($session->getData() as $key => $value) {
+			$values = $this->_session->getData();
+			foreach ($values as $key => $value) {
 				if (mb_stripos($key, 'shippingmax') !== false)
-					$session->unsetData($key);
+					$this->_session->unsetData($key);
 			}
 
 			$this->_redirect('*/*/debug', ['pass' => $pass]);
@@ -536,7 +594,7 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		$pass = Mage::getStoreConfig('carriers/shippingmax/debug_password');
 		if (Mage::getStoreConfigFlag('carriers/shippingmax/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 
-			$session = $this->getSession()
+			$this->_session
 				->setData('shippingmax_boxberry',       ['city' => 'Иркутск', 'postcode' => '664003', 'country_id' => 'RU'])
 				->setData('shippingmax_boxberrycash',   ['city' => 'Иркутск', 'postcode' => '664003', 'country_id' => 'RU'])
 				->setData('shippingmax_chronorelais',   ['city' => 'Saint-Étienne', 'postcode' => '42100', 'country_id' => 'FR'])
