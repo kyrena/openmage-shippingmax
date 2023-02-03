@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/28/10/2021
- * Updated L/26/12/2022
+ * Updated V/03/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -35,7 +35,7 @@ try {
 	if (empty($config->getData('value')))
 		$this->run('TRUNCATE '.$this->getTable('shippingmax_coords'));
 	else
-		$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id NOT IN ("KZ","RU");');
+		$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id NOT IN ("KZ","RU")');
 }
 catch (Throwable $t) {
 	$lock->unlock();

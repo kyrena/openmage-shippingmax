@@ -1,6 +1,6 @@
 <?php
 /**
- * Created M/14/09/2021
+ * Created V/03/02/2023
  * Updated V/03/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
@@ -31,8 +31,26 @@ ignore_user_abort(true);
 set_time_limit(0);
 
 try {
-	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("KZ","RU")');
-	$this->run('DELETE FROM '.$this->getTable('shippingmax_coords').' WHERE country_id IN ("FR","MC") AND postcode LIKE "98000"');
+	$values = $this->_conn->fetchAll('SELECT path, value FROM '.$this->getTable('core_config_data').' WHERE path LIKE "shippingmax_times/%/cnf%"');
+	$config = [];
+
+	foreach ($values as $value) {
+
+		$code = substr($value['path'], strlen('shippingmax_times/'), 2);
+		$key  = substr($value['path'], strlen('shippingmax_times/') + 3);
+
+		if (strtolower($code) == $code)
+			continue;
+
+		$config[$code][$key] = (string) $value['value'];
+	}
+
+	foreach ($config as $code => $values) {
+		$this->setConfigData('shippingmax_times/'.$code.'/config', serialize($values));
+	}
+
+	$this->run('DELETE FROM '.$this->getTable('core_config_data').' WHERE path LIKE "shippingmax_times/%/cnf%"');
+	Mage::getConfig()->reinit();
 }
 catch (Throwable $t) {
 	$lock->unlock();

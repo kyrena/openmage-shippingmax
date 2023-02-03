@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated M/31/01/2023
+ * Updated V/03/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -6124,7 +6124,6 @@
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
 					<fields>
 						<enabled translate="label comment">
 							<label>Enable</label>
@@ -6158,1729 +6157,3450 @@
 						</cutoff>
 					</fields>
 				</general>
-				<!-- all openmage countries -->
 				<AD>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AD>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AD>
 				<AE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AE>
 				<AF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AF>
 				<AG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AG>
 				<AI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AI>
 				<AL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AL>
 				<AM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AM>
 				<AN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AN>
 				<AO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AO>
 				<AQ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AQ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AQ>
 				<AR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AR>
 				<AS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AS>
 				<AT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AT>
 				<AU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AU>
 				<AW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AW>
 				<AX>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AX>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AX>
 				<AZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</AZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</AZ>
 				<BA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BA>
 				<BB>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BB>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BB>
 				<BD>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BD>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BD>
 				<BE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BE>
 				<BF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BF>
 				<BG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BG>
 				<BH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BH>
 				<BI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BI>
 				<BJ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BJ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BJ>
 				<BM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BM>
 				<BN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BN>
 				<BO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BO>
 				<BR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BR>
 				<BS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BS>
 				<BT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BT>
 				<BV>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BV>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BV>
 				<BW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BW>
 				<BY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BY>
 				<BZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BZ>
 				<CA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CA>
 				<CC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CC>
 				<CD>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CD>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CD>
 				<CF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CF>
 				<CG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CG>
 				<CH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CH>
 				<CI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CI>
 				<CK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CK>
 				<CL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CL>
 				<CM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CM>
 				<CN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CN>
 				<CO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CO>
 				<CR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CR>
 				<CU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CU>
 				<CV>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CV>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CV>
 				<CX>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CX>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CX>
 				<CY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CY>
 				<CZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</CZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</CZ>
 				<DE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</DE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</DE>
 				<DJ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</DJ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</DJ>
 				<DK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</DK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</DK>
 				<DM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</DM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</DM>
 				<DO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</DO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</DO>
 				<DZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</DZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</DZ>
 				<EC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</EC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</EC>
 				<EE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</EE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</EE>
 				<EG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</EG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</EG>
 				<EH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</EH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</EH>
 				<ER>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ER>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ER>
 				<ES>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ES>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ES>
 				<ET>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ET>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ET>
 				<FI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</FI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</FI>
 				<FJ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</FJ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</FJ>
 				<FK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</FK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</FK>
 				<FM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</FM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</FM>
 				<FO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</FO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</FO>
 				<FR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</FR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</FR>
 				<BL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</BL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</BL>
 				<GF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GF>
 				<GP>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GP>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GP>
 				<MF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MF>
 				<MQ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MQ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MQ>
 				<NC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NC>
 				<PF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PF>
 				<PM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PM>
 				<RE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</RE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</RE>
 				<TF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TF>
 				<WF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</WF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</WF>
 				<YT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</YT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</YT>
 				<MC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MC>
 				<GA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GA>
 				<GB>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GB>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GB>
 				<GD>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GD>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GD>
 				<GE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GE>
 				<GG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GG>
 				<GH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GH>
 				<GI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GI>
 				<GL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GL>
 				<GM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GM>
 				<GN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GN>
 				<GQ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GQ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GQ>
 				<GR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GR>
 				<GS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GS>
 				<GT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GT>
 				<GU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GU>
 				<GW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GW>
 				<GY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</GY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</GY>
 				<HK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</HK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</HK>
 				<HM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</HM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</HM>
 				<HN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</HN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</HN>
 				<HR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</HR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</HR>
 				<HT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</HT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</HT>
 				<HU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</HU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</HU>
 				<ID>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ID>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ID>
 				<IE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IE>
 				<IL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IL>
 				<IM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IM>
 				<IN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IN>
 				<IO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IO>
 				<IQ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IQ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IQ>
 				<IR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IR>
 				<IS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IS>
 				<IT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</IT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</IT>
 				<JE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</JE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</JE>
 				<JM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</JM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</JM>
 				<JO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</JO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</JO>
 				<JP>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</JP>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</JP>
 				<KE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KE>
 				<KG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KG>
 				<KH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KH>
 				<KI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KI>
 				<KM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KM>
 				<KN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KN>
 				<KP>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KP>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KP>
 				<KR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KR>
 				<KW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KW>
 				<KY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KY>
 				<KZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</KZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</KZ>
 				<LA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LA>
 				<LB>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LB>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LB>
 				<LC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LC>
 				<LI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LI>
 				<LK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LK>
 				<LR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LR>
 				<LS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LS>
 				<LT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LT>
 				<LU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LU>
 				<LV>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LV>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LV>
 				<LY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</LY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</LY>
 				<MA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MA>
 				<MD>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MD>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MD>
 				<ME>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ME>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ME>
 				<MG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MG>
 				<MH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MH>
 				<MK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MK>
 				<ML>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ML>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ML>
 				<MM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MM>
 				<MN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MN>
 				<MO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MO>
 				<MP>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MP>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MP>
 				<MR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MR>
 				<MS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MS>
 				<MT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MT>
 				<MU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MU>
 				<MV>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MV>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MV>
 				<MW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MW>
 				<MX>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MX>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MX>
 				<MY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MY>
 				<MZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</MZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</MZ>
 				<NA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NA>
 				<NE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NE>
 				<NF>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NF>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NF>
 				<NG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NG>
 				<NI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NI>
 				<NL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NL>
 				<NO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NO>
 				<NP>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NP>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NP>
 				<NR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NR>
 				<NU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NU>
 				<NZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</NZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</NZ>
 				<OM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</OM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</OM>
 				<PA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PA>
 				<PE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PE>
 				<PG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PG>
 				<PH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PH>
 				<PK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PK>
 				<PL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PL>
 				<PN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PN>
 				<PR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PR>
 				<PS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PS>
 				<PT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PT>
 				<PW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PW>
 				<PY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</PY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</PY>
 				<QA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</QA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</QA>
 				<RO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</RO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</RO>
 				<RS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</RS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</RS>
 				<RU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</RU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</RU>
 				<RW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</RW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</RW>
 				<SA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SA>
 				<SB>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SB>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SB>
 				<SC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SC>
 				<SD>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SD>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SD>
 				<SE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SE>
 				<SG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SG>
 				<SH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SH>
 				<SI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SI>
 				<SJ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SJ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SJ>
 				<SK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SK>
 				<SL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SL>
 				<SM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SM>
 				<SN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SN>
 				<SO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SO>
 				<SR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SR>
 				<ST>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ST>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ST>
 				<SV>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SV>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SV>
 				<SY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SY>
 				<SZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</SZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</SZ>
 				<TC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TC>
 				<TD>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TD>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TD>
 				<TG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TG>
 				<TH>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TH>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TH>
 				<TJ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TJ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TJ>
 				<TK>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TK>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TK>
 				<TL>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TL>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TL>
 				<TM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TM>
 				<TN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TN>
 				<TO>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TO>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TO>
 				<TR>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TR>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TR>
 				<TT>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TT>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TT>
 				<TV>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TV>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TV>
 				<TW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TW>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TW>
 				<TZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</TZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</TZ>
 				<UA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</UA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</UA>
 				<UG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</UG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</UG>
 				<UM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</UM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</UM>
 				<US>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</US>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</US>
 				<UY>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</UY>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</UY>
 				<UZ>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</UZ>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</UZ>
 				<VA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</VA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</VA>
 				<VC>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</VC>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</VC>
 				<VE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</VE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</VE>
 				<VG>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</VG>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</VG>
 				<VI>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</VI>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</VI>
 				<VN>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</VN>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</VN>
 				<VU>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</VU>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</VU>
 				<WS>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</WS>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</WS>
 				<YE>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</YE>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</YE>
 				<ZA>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ZA>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ZA>
 				<ZM>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ZM>
+					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ZM>
 				<ZW>
 					<frontend_model>shippingmax/adminhtml_config_delay</frontend_model>
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<dynamic_group>1</dynamic_group>
-				</ZW>
+ 					<fields>
+						<config>
+							<backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</config>
+					</fields>
+ 				</ZW>
 			</groups>
 		</shippingmax_times>
 	</sections>

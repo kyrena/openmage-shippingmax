@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/14/01/2023
+ * Updated V/03/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -173,6 +173,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		$fake    = Mage::getModel('customer/address')->setData('country_id', $country)->setData('postcode', $postcode);
 		$country = Mage::getBlockSingleton('shippingmax/rewrite_renderer')->render($fake, 'country');
 		$storeId = is_null($storeId) ? Mage::app()->getStore()->getId() : $storeId;
+		$config  = @unserialize(Mage::getStoreConfig('shippingmax_times/'.$country.'/config', $storeId), ['allowed_classes' => false]);
 
 		// recherche des délais
 		// pour shippingmax_chronorelais_cyz_xyz puis pour shippingmax_chronorelais_xyz
@@ -181,11 +182,11 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 			if (empty($postcode)) {
 				// délai sans postcode
 				$key     = $rateCode;
-				$cnf1min = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1min_'.$key, $storeId);
-				$cnf1max = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1max_'.$key, $storeId);
-				$cnf2min = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2min_'.$key, $storeId);
-				$cnf2max = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2max_'.$key, $storeId);
-				$cnf3    = Mage::getStoreConfigFlag('shippingmax_times/'.$country.'/cnf3_'.$key, $storeId);
+				$cnf1min = (int) ($config['cnf1min_'.$key] ?? 0);
+				$cnf1max = (int) ($config['cnf1max_'.$key] ?? 0);
+				$cnf2min = (int) ($config['cnf2min_'.$key] ?? 0);
+				$cnf2max = (int) ($config['cnf2max_'.$key] ?? 0);
+				$cnf3    = $config['cnf3_'.$key] ?? false;
 				if (!empty($cnf2min))
 					break;
 			}
@@ -194,22 +195,22 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 				while (--$nb >= 2) {
 					// délai avec postcode
 					$key     = $rateCode.'_'.mb_substr(trim($postcode), 0, $nb);
-					$cnf1min = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1min_'.$key, $storeId);
-					$cnf1max = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1max_'.$key, $storeId);
-					$cnf2min = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2min_'.$key, $storeId);
-					$cnf2max = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2max_'.$key, $storeId);
-					$cnf3    = Mage::getStoreConfigFlag('shippingmax_times/'.$country.'/cnf3_'.$key, $storeId);
+					$cnf1min = (int) ($config['cnf1min_'.$key] ?? 0);
+					$cnf1max = (int) ($config['cnf1max_'.$key] ?? 0);
+					$cnf2min = (int) ($config['cnf2min_'.$key] ?? 0);
+					$cnf2max = (int) ($config['cnf2max_'.$key] ?? 0);
+					$cnf3    = $config['cnf3_'.$key] ?? false;
 					if (!empty($cnf2min))
 						break 2;
 				}
 				if (empty($cnf2min)) {
 					// délai sans postcode
 					$key     = $rateCode;
-					$cnf1min = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1min_'.$key, $storeId);
-					$cnf1max = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1max_'.$key, $storeId);
-					$cnf2min = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2min_'.$key, $storeId);
-					$cnf2max = (int) Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2max_'.$key, $storeId);
-					$cnf3    = Mage::getStoreConfigFlag('shippingmax_times/'.$country.'/cnf3_'.$key, $storeId);
+					$cnf1min = (int) ($config['cnf1min_'.$key] ?? 0);
+					$cnf1max = (int) ($config['cnf1max_'.$key] ?? 0);
+					$cnf2min = (int) ($config['cnf2min_'.$key] ?? 0);
+					$cnf2max = (int) ($config['cnf2max_'.$key] ?? 0);
+					$cnf3    = $config['cnf3_'.$key] ?? false;
 					if (!empty($cnf2min))
 						break;
 				}

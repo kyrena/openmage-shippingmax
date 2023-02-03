@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated J/29/12/2022
+ * Updated V/03/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -280,22 +280,23 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		$key   = empty($key) ? $code : $code.$key;
 		$price = $this->getCarrierPrice($rate, $storeId);
 
+		$config = @unserialize(Mage::getStoreConfig('shippingmax_times/'.$country.'/config', $storeId), ['allowed_classes' => false]);
 		return [
 			'code'     => $code,
 			'name'     => ($rate->getData('carrier_title') != $rate->getData('method_title')) ?
 				$rate->getData('carrier_title').' / '.$rate->getData('method_title') : $rate->getData('carrier_title'),
 			'country'  => $country,
 			'postcode' => $postcode,
-			'name1min' => 'groups['.$country.'][fields][cnf1min_'.$key.'][value]',
-			'name1max' => 'groups['.$country.'][fields][cnf1max_'.$key.'][value]',
-			'name2min' => 'groups['.$country.'][fields][cnf2min_'.$key.'][value]',
-			'name2max' => 'groups['.$country.'][fields][cnf2max_'.$key.'][value]',
-			'name3'    => 'groups['.$country.'][fields][cnf3_'.$key.'][value]',
-			'cnf1min'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1min_'.$key, $storeId),
-			'cnf1max'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf1max_'.$key, $storeId),
-			'cnf2min'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2min_'.$key, $storeId),
-			'cnf2max'  => Mage::getStoreConfig('shippingmax_times/'.$country.'/cnf2max_'.$key, $storeId),
-			'cnf3'     => Mage::getStoreConfigFlag('shippingmax_times/'.$country.'/cnf3_'.$key, $storeId),
+			'name1min' => 'groups['.$country.'][fields][config][value][cnf1min_'.$key.']',
+			'name1max' => 'groups['.$country.'][fields][config][value][cnf1max_'.$key.']',
+			'name2min' => 'groups['.$country.'][fields][config][value][cnf2min_'.$key.']',
+			'name2max' => 'groups['.$country.'][fields][config][value][cnf2max_'.$key.']',
+			'name3'    => 'groups['.$country.'][fields][config][value][cnf3_'.$key.']',
+			'cnf1min'  => $config['cnf1min_'.$key] ?? '',
+			'cnf1max'  => $config['cnf1max_'.$key] ?? '',
+			'cnf2min'  => $config['cnf2min_'.$key] ?? '',
+			'cnf2max'  => $config['cnf2max_'.$key] ?? '',
+			'cnf3'     => $config['cnf3_'.$key] ?? '',
 			'price'    => [$price => $price],
 		];
 	}

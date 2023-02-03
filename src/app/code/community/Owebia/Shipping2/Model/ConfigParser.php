@@ -14,7 +14,7 @@ class Owebia_Shipping2_Model_ConfigParser
     public const COUPLE_REGEX = '(?:[0-9.]+|\*) *(?:\[|\])? *\: *[0-9.]+';
 
     protected $_constants;
-    protected $_currencyCodes;
+    protected static $_currencyCodes = [];
     protected $_propertiesSort;
     public static $debugIndexCounter = 0;
 
@@ -1940,12 +1940,16 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function addCurrencyCodesForFeesAndConditions($array)
     {
-        if (empty($this->currencyCodes))
-            $this->_currencyCodes = Mage::getSingleton('core/locale_config')->getAllowedCurrencies();
+        if (empty(self::$_currencyCodes)) {
+            $codes = Mage::getSingleton('core/locale_config')->getAllowedCurrencies();
+            foreach ($codes as $code) {
+                self::$_currencyCodes[] = strtolower($code);
+            }
+        }
 
-        foreach ($this->_currencyCodes as $code) {
-            $array[] = 'fees_'.strtolower($code);
-            $array[] = 'conditions_'.strtolower($code);
+        foreach (self::$_currencyCodes as $code) {
+            $array[] = 'fees_'.$code;
+            $array[] = 'conditions_'.$code;
         }
 
         return $array;

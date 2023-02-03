@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/26/12/2022
+ * Updated V/03/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -55,6 +55,7 @@ try {
 			customer_id  int(10) unsigned NOT NULL,
 			details      text             NOT NULL,
 			PRIMARY KEY (order_id),
+			INDEX `customer_id` (`customer_id`),
 			FOREIGN KEY (order_id) REFERENCES '.$this->getTable('sales_flat_order').' (entity_id) ON DELETE CASCADE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	');
