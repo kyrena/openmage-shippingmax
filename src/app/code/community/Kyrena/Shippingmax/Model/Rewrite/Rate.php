@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated J/29/12/2022
+ * Updated M/07/03/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -38,14 +38,18 @@ class Kyrena_Shippingmax_Model_Rewrite_Rate extends Mage_Sales_Model_Resource_Qu
 			$keys = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$item->getData('carrier').'/hide_when')));
 			if (!empty($keys)) {
 				foreach ($keys as $key) {
-					if (in_array($key, $codes))
+					if (in_array($key, $codes)) {
 						$item->isDeleted(true);
+						continue 2;
+					}
 				}
 			}
 
 			$keys = array_filter(explode(',', Mage::getStoreConfig('carriers/'.$item->getData('carrier').'/show_for_customer_group')));
-			if (!empty($keys) && (empty($group) || !in_array($group, $keys)))
+			if (!empty($keys) && (empty($group) || !in_array($group, $keys))) {
 				$item->isDeleted(true);
+				//continue;
+			}
 		}
 
 		return new ArrayIterator($this->_items);

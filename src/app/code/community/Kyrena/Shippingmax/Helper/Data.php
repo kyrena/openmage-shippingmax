@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/03/02/2023
+ * Updated V/03/03/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -161,6 +161,10 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 	public function getShippingDate(string $code, bool $days = false, $country = null, $postcode = null, $storeId = null) {
 
+		// vérifie que c'est bien activé et que le pays est bien présent
+		if (!Mage::getStoreConfigFlag('shippingmax_times/general/enabled'))
+			return null;
+
 		if (empty($country)) {
 			$address  = $this->getSession()->getQuote()->getShippingAddress();
 			$country  = $address->getData('country_id');
@@ -176,7 +180,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		$config  = @unserialize(Mage::getStoreConfig('shippingmax_times/'.$country.'/config', $storeId), ['allowed_classes' => false]);
 
 		// recherche des délais
-		// pour shippingmax_chronorelais_cyz_xyz puis pour shippingmax_chronorelais_xyz
+		// pour shippingmax_supercode_abc_xyz puis pour shippingmax_supercode_abc
 		foreach ([$code, mb_substr($code, 0, mb_strrpos($code, '_'))] as $rateCode) {
 
 			if (empty($postcode)) {
@@ -221,18 +225,33 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		if (empty($cnf2min))
 			return null;
 
-		// nombre de jours de livraison
+		// ajoute des jours
+		if (!empty($add = (int) Mage::getStoreConfig('shippingmax_times/general/add_for_all'))) {
+			$cnf2min += $add;
+			$cnf2max += $add;
+		}
+
+		// nombre de jours de livraison uniquement
 		if ($days) {
 			if ($cnf2min == $cnf2max)
 				return ($cnf2min > 1) ? $this->__('%d days', $cnf2min) : $this->__('%d day', 1);
 			return $this->__('%d/%d days', $cnf2min, $cnf2max);
 		}
 
-		// calcul les dates de livraison par rapport aux délais trouvés
+		// calcul les dates par rapport aux délais trouvés
 		// de 1 (pour Lundi) à 7 (pour Dimanche)
 		$dateFrom = Mage::getSingleton('core/locale')->date();
 		$dateTo   = Mage::getSingleton('core/locale')->date();
 		$today    = $dateFrom->toString(Zend_Date::WEEKDAY_8601);
+		$cutoff   = (int) Mage::getStoreConfig('shippingmax_times/general/cutoff', $storeId);
+
+		if (($dtz = Mage::getStoreConfig('general/locale/timezone', 0)) != ($stz = Mage::getStoreConfig('general/locale/timezone', $storeId))) {
+			$cutoff = (new DateTime())
+				->setTimezone(new DateTimeZone($dtz))
+				->setTime($cutoff, 0)
+				->setTimezone(new DateTimeZone($stz))
+				->format('G');
+		}
 
 		if ($today == 6) { // pas d'expédition le samedi
 			$addMin = $cnf1min + $cnf2min + 1;
@@ -242,7 +261,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 			$addMin = $cnf1min + $cnf2min + 1;
 			$addMax = $cnf1min + $cnf2max + 1;
 		}
-		else if ($dateFrom->toString(Zend_Date::HOUR) < (int) Mage::getStoreConfig('shippingmax_times/general/cutoff', $storeId)) {
+		else if ($dateFrom->toString(Zend_Date::HOUR) < $cutoff) {
 			$addMin = $cnf1min + $cnf2min;
 			$addMax = $cnf1min + $cnf2max;
 		}
@@ -275,6 +294,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 				$addMax--;
 		}
 
+		// estimation de livraison
 		if ($dateFrom == $dateTo)
 			return $this->__('Estimated delivery: %s', $dateFrom->toString(Zend_Date::WEEKDAY).' '.$dateFrom->toString(Zend_Date::DATE_SHORT));
 
@@ -332,7 +352,7 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 		$config = Mage::getStoreConfig('carriers/'.$code.(str_contains($code, 'owebiashipping') ? '/config' : '/owebia_config'), $storeId);
 		if (mb_stripos($config, '"shipto"') !== false) {
 			$config = Mage::getSingleton('shippingmax/addressfilter')->substitute($config);
-			$countries = Mage::getModel('shippingmax/configparser')->init($config, true)->filterCountries($countries);
+			$countries = Mage::getModel('shippingmax/configparser')->init($config, false)->filterCountries($countries); // no auto_correction
 		}
 
 		return array_values($countries);
@@ -412,8 +432,8 @@ class Kyrena_Shippingmax_Helper_Data extends Mage_Core_Helper_Abstract {
 
 	public function getCarrierCode(string $code) {
 
-		// shippingmax_pocztk48Op_std devient shippingmax_pocztk48Op
-		// shippingmax_pocztk48Op reste shippingmax_pocztk48Op
+		// shippingmax_supercode_xyz devient shippingmax_supercode
+		// shippingmax_supercode reste shippingmax_supercode
 		if (substr_count($code, '_') >= 2)
 			return mb_substr($code, 0, mb_strpos($code, '_', mb_strpos($code, '_') + 1));
 

@@ -1302,6 +1302,9 @@ class Owebia_Shipping2_Model_ConfigParser
 
     protected function _parseInput($autoCorrection)
     {
+        if (empty($this->_input) || is_numeric($this->_input))
+            return;
+
         $configString = $this->_parseInputPrepareInput($this->_input);
         $this->debug('parse config (auto correction = ' . self::esc(self::toString($autoCorrection)) . ')');
         $config = null;

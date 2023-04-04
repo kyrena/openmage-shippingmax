@@ -132,7 +132,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
             $this->_parser = Mage::getModel('owebia_shipping2/ConfigParser')
                 ->init(
                     $this->__getConfigData('config'),
-                    (boolean)$this->__getConfigData('auto_correction'),
+                    (boolean)Mage::registry('autofix_onsave'), // auto_correction
                     $this->__getConfigData('title')
                 );
         }
@@ -156,8 +156,8 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
             'config' => $this->_getConfig(),
             'result' => Mage::getModel('shipping/rate_result'),
             'options' => (object)[
-                'auto_escaping' => (boolean)$this->__getConfigData('auto_escaping'),
-                'auto_correction' => (boolean)$this->__getConfigData('auto_correction'),
+                'auto_escaping' => (boolean)Mage::registry('autofix_onsave'),
+                'auto_correction' => (boolean)Mage::registry('autofix_onsave'),
                 'stop_to_first_match' => (boolean)$this->__getConfigData('stop_to_first_match'),
             ],
         ];

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/03/12/2022
+ * Updated J/02/03/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -59,14 +59,25 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Bloc
 				$this->__('INCOMPLETE MODULE INSTALLATION'),
 				$this->__('There is conflict (<em>%s</em>).', $msg));
 
-		$var = (int) ini_get('max_input_vars');
+		$var = (int) ini_get($name = 'max_input_vars');
+		$rav = (int) ini_get($eman = 'suhosin.post.max_vars');
+		if (($rav > 0) && ($rav < $var)) {
+			$name = $eman;
+			$var = $rav;
+		}
+		$rav = (int) ini_get($eman = 'suhosin.request.max_vars');
+		if (($rav > 0) && ($rav < $var)) {
+			$name = $eman;
+			$var = $rav;
+		}
+
 		return sprintf('<p class="box">%s %s <span class="no-display" id="inptvars"></span> <span class="right">Stop russian war. <b>🇺🇦 Free Ukraine!</b> | <a href="%s">github.com/kyrena</a></span></p>%s',
 			'Kyrena/Shippingmax', $version,
 			'https://github.com/kyrena/openmage-shippingmax',
 			'<script type="text/javascript">self.addEventListener("load", function () {'.
 			' var nb = document.querySelectorAll("input, select, textarea").length, elem = document.getElementById("inptvars");'.
 			' if ('.$var.' <= nb) {'.
-			'  elem.innerHTML = " | ⚠ php:max_input_vars '.$var.' <= " + nb + " inputs";'.
+			'  elem.innerHTML = " | ⚠ php:'.$name.' = '.$var.' <= " + nb + " inputs";'.
 			'  elem.setAttribute("class", "error");'.
 			' }'.
 			'});</script>');

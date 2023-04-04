@@ -32,6 +32,7 @@ Event
 - adminhtml | adminhtml_init_system_config                                       | shippingmax/observer::hideConfig
 - adminhtml | admin_system_config_changed_section_carriers                       | shippingmax/observer::clearConfig
 - adminhtml | admin_system_config_changed_section_shippingmax_times              | shippingmax/observer::clearConfig
+- adminhtml | controller_action_predispatch_adminhtml_system_config_save         | shippingmax/observer::autoCorrectConfig
 - frontend  | controller_action_postdispatch_checkout_onepage_saveShippingMethod | shippingmax/observer::updateShippingAddress
 - global    | sales_convert_quote_address_to_order                               | shippingmax/observer::convertShippingAddress
 - global    | sales_order_place_after                                            | shippingmax/observer::saveDetailsAndUpdateShippingDescription

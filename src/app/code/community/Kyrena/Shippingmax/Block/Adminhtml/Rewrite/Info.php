@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/04/2019
- * Updated S/14/01/2023
+ * Updated J/02/03/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -30,9 +30,9 @@ class Kyrena_Shippingmax_Block_Adminhtml_Rewrite_Info extends Mage_Adminhtml_Blo
 		if ($order->getIsVirtual())
 			return parent::_toHtml(); // sinon content vide dans order view
 
-		$desc  = $order->getShippingDescription();
+		$desc = $order->getShippingDescription();
 		$order->setShippingDescription('~!!!~');
-		$html = preg_replace('#<strong>~!!!~</strong>.+</fieldset>#sU', $this->getInfos().'<br /><i>'.$order->getData('shipping_method').'</i></fieldset>', parent::_toHtml());
+		$html = preg_replace('#<strong>~!!!~</strong>.+</fieldset>#sU', $this->getInfos().'<div style="margin-top:10px;">'.$this->__('Total weight of products: %d %s', $order->getData('weight'), Mage::getStoreConfig('owebia_shipping2/general/weight_unit', $order->getStoreId())).'<br /><i>'.$order->getData('shipping_method').'</i></div></fieldset>', parent::_toHtml());
 		$order->setShippingDescription($desc);
 
 		return $html;

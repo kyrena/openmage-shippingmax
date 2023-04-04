@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated V/03/02/2023
+ * Updated V/03/03/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Kyrena_Shippingmax>
-			<version>3.1.0</version>
+			<version>3.2.0</version>
 		</Kyrena_Shippingmax>
 	</modules>
 	<global>
@@ -97,14 +97,6 @@
 			</shippingmax_setup>
 		</resources>
 		<events>
-			<sales_convert_quote_address_to_order>
-				<observers>
-					<shippingmax>
-						<class>shippingmax/observer</class>
-						<method>convertShippingAddress</method>
-					</shippingmax>
-				</observers>
-			</sales_convert_quote_address_to_order>
 			<sales_quote_address_save_before>
 				<observers>
 					<shippingmax>
@@ -113,6 +105,14 @@
 					</shippingmax>
 				</observers>
 			</sales_quote_address_save_before>
+			<sales_convert_quote_address_to_order>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>convertShippingAddress</method>
+					</shippingmax>
+				</observers>
+			</sales_convert_quote_address_to_order>
 			<sales_order_place_after>
 				<observers>
 					<shippingmax>
@@ -216,6 +216,14 @@
 	</admin>
 	<adminhtml>
 		<events>
+			<controller_action_predispatch_adminhtml_system_config_save>
+				<observers>
+					<shippingmax>
+						<class>shippingmax/observer</class>
+						<method>autoCorrectConfig</method>
+					</shippingmax>
+				</observers>
+			</controller_action_predispatch_adminhtml_system_config_save>
 			<admin_system_config_changed_section_shippingmax_times>
 				<observers>
 					<shippingmax>

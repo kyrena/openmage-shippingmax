@@ -141,7 +141,7 @@ diff -r -u -w Shipping2/Model/Carrier/Abstract.php Shipping2/Model/Carrier/Abstr
                  ->init(
                      $this->__getConfigData('config'),
 -                    (boolean)$this->__getConfigData('auto_correction')
-+                    (boolean)$this->__getConfigData('auto_correction'),
++                    (boolean)Mage::registry('autofix_onsave'), // auto_correction
 +                    $this->__getConfigData('title')
                  );
          }
@@ -155,7 +155,7 @@ diff -r -u -w Shipping2/Model/Carrier/Abstract.php Shipping2/Model/Carrier/Abstr
          return $httpRequest->getRouteName() == $router
              && $httpRequest->getControllerName() == $controller
              && $httpRequest->getActionName() == $action;
-@@ -143,7 +150,7 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+@@ -143,18 +150,17 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
      protected function __getProcess($request)
      {
          $data = Mage::helper('owebia_shipping2')->getDataModelMap($this->getParser(), $this->_code, $request);
@@ -164,7 +164,12 @@ diff -r -u -w Shipping2/Model/Carrier/Abstract.php Shipping2/Model/Carrier/Abstr
              'data' => $data,
              'cart.items' => [],
              'config' => $this->_getConfig(),
-@@ -154,7 +161,6 @@ abstract class Owebia_Shipping2_Model_Carrier_Abstract extends Mage_Shipping_Mod
+             'result' => Mage::getModel('shipping/rate_result'),
+             'options' => (object)[
+-                'auto_escaping' => (boolean)$this->__getConfigData('auto_escaping'),
+-                'auto_correction' => (boolean)$this->__getConfigData('auto_correction'),
++                'auto_escaping' => (boolean)Mage::registry('autofix_onsave'),
++                'auto_correction' => (boolean)Mage::registry('autofix_onsave'),
                  'stop_to_first_match' => (boolean)$this->__getConfigData('stop_to_first_match'),
              ],
          ];
@@ -732,7 +737,17 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
              $autoCorrectionWarnings[] = 'JSON: usage of incompatible comments';
              foreach ($result as $set) {
                  $commentLines = explode("\n", $set[1]);
-@@ -1387,7 +1331,7 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1358,6 +1302,9 @@ class Owebia_Shipping2_Model_ConfigParser
+ 
+     protected function _parseInput($autoCorrection)
+     {
++        if (empty($this->_input) || is_numeric($this->_input))
++            return;
++
+         $configString = $this->_parseInputPrepareInput($this->_input);
+         $this->debug('parse config (auto correction = ' . self::esc(self::toString($autoCorrection)) . ')');
+         $config = null;
+@@ -1387,7 +1334,7 @@ class Owebia_Shipping2_Model_ConfigParser
                  }
                  $this->_parseInputIgnore((array)$toIgnore, $json, $autoCorrectionWarnings);
              }
@@ -741,7 +756,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
              $configString = str_replace(["\n"], ["\\n"], $configString);
  
              $lastJsonError = null;
-@@ -1447,10 +1391,10 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1447,10 +1394,10 @@ class Owebia_Shipping2_Model_ConfigParser
          $this->_parseInputAddRowsDetectDeprecatedProperties($autoCorrection, $object, $deprecatedProperties);
  
          $reservedKeys  = ['*id'];
@@ -754,7 +769,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
          if ($autoCorrection) {
              $availableKeys = array_merge(
                  $availableKeys,
-@@ -1459,23 +1403,19 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1459,23 +1406,19 @@ class Owebia_Shipping2_Model_ConfigParser
          }
  
          $row = [];
@@ -780,7 +795,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
          }
          return $row;
      }
-@@ -1524,7 +1464,7 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1524,7 +1467,7 @@ class Owebia_Shipping2_Model_ConfigParser
                  $this->addMessage('error', $row, 'code', 'The id must be unique, `%s` has been found twice', $code);
              }
              while (isset($this->_config[$code])) {
@@ -789,7 +804,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
              }
          }
          $row['*id'] = $code;
-@@ -1575,7 +1515,7 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1575,7 +1518,7 @@ class Owebia_Shipping2_Model_ConfigParser
          // data
          while ($this->_preg_match("#{({$keys})\.([a-z0-9_\+\-\.]+)}#i", $input, $result)) {
              $original = $result[0];
@@ -798,7 +813,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
              $replacement = $this->_loadValue($process, $objectName, $result[2]);
              $input = $this->_replaceVariable($process, $input, $original, $replacement);
          }
-@@ -1620,7 +1560,7 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1620,7 +1563,7 @@ class Owebia_Shipping2_Model_ConfigParser
              foreach ($input as $v) {
                  $items[] = isset($v) && (is_string($v) || empty($v)) ? self::escapeString($v) : self::toString($v);
              }
@@ -807,7 +822,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
          } else {
              return isset($input) && (is_string($input))
                  ? self::escapeString($input) : self::toString($input);
-@@ -1634,9 +1574,9 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1634,9 +1577,9 @@ class Owebia_Shipping2_Model_ConfigParser
              || $operation == 'max'
              || $operation == 'count distinct'
          ) {
@@ -819,7 +834,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
          }
          return null;
      }
-@@ -1680,7 +1620,7 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1680,7 +1623,7 @@ class Owebia_Shipping2_Model_ConfigParser
                  }
                  break;
              case 'sum':
@@ -828,7 +843,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
                  break;
              case 'count distinct':
                  if (!isset($returnValue)) {
-@@ -1748,9 +1688,9 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1748,9 +1691,9 @@ class Owebia_Shipping2_Model_ConfigParser
                  }
                  else $evalResult = true;
  
@@ -840,7 +855,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
                      } else {
                          $value = $this->_getItemProperty($item, $reference);
                          $this->debug(
-@@ -1935,7 +1875,6 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1935,7 +1878,6 @@ class Owebia_Shipping2_Model_ConfigParser
          }
      }
  
@@ -848,7 +863,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
      public function cleanProperty(&$row, $key)
      {
          $input = $row[$key]['value'];
-@@ -1998,4 +1937,21 @@ class Owebia_Shipping2_Model_ConfigParser
+@@ -1998,4 +1940,21 @@ class Owebia_Shipping2_Model_ConfigParser
          }
          $row[$key]['value'] = $input;
      }
@@ -1132,3 +1147,111 @@ diff -r -u -w Shipping2/Model/System/Config/Source/ProcessChildren.php Shipping2
      }
  }
 \ No newline at end of file
+diff -r -u -w Shipping2/etc/config.xml Shipping2/etc/config.xml
+--- Shipping2/etc/config.xml
++++ Shipping2/etc/config.xml
+@@ -87,8 +87,6 @@
+    }
+ }</config>
+                 <debug>0</debug>
+-                <auto_escaping>0</auto_escaping>
+-                <auto_correction>1</auto_correction>
+                 <stop_to_first_match>0</stop_to_first_match>
+                 <sort_order>1</sort_order>
+             </owebiashipping1>
+@@ -103,8 +101,6 @@
+    }
+ }</config>
+                 <debug>0</debug>
+-                <auto_escaping>0</auto_escaping>
+-                <auto_correction>1</auto_correction>
+                 <stop_to_first_match>0</stop_to_first_match>
+                 <sort_order>1</sort_order>
+             </owebiashipping2>
+@@ -119,8 +115,6 @@
+    }
+ }</config>
+                 <debug>0</debug>
+-                <auto_escaping>0</auto_escaping>
+-                <auto_correction>1</auto_correction>
+                 <stop_to_first_match>0</stop_to_first_match>
+                 <sort_order>1</sort_order>
+             </owebiashipping3>
+diff -r -u -w Shipping2/etc/system.xml Shipping2/etc/system.xml
+--- Shipping2/etc/system.xml
++++ Shipping2/etc/system.xml
+@@ -58,24 +58,6 @@
+                             <show_in_website>1</show_in_website>
+                             <show_in_store>1</show_in_store>
+                         </debug>
+-                        <auto_escaping translate="label">
+-                            <label>Auto-escaping</label>
+-                            <frontend_type>select</frontend_type>
+-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <sort_order>7</sort_order>
+-                            <show_in_default>1</show_in_default>
+-                            <show_in_website>1</show_in_website>
+-                            <show_in_store>1</show_in_store>
+-                        </auto_escaping>
+-                        <auto_correction translate="label">
+-                            <label>Auto-correction</label>
+-                            <frontend_type>select</frontend_type>
+-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <sort_order>8</sort_order>
+-                            <show_in_default>1</show_in_default>
+-                            <show_in_website>1</show_in_website>
+-                            <show_in_store>1</show_in_store>
+-                        </auto_correction>
+                         <stop_to_first_match translate="label">
+                             <label>Stop to first match</label>
+                             <frontend_type>select</frontend_type>
+@@ -141,24 +123,6 @@
+                             <show_in_website>1</show_in_website>
+                             <show_in_store>1</show_in_store>
+                         </debug>
+-                        <auto_escaping translate="label">
+-                            <label>Auto-escaping</label>
+-                            <frontend_type>select</frontend_type>
+-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <sort_order>7</sort_order>
+-                            <show_in_default>1</show_in_default>
+-                            <show_in_website>1</show_in_website>
+-                            <show_in_store>1</show_in_store>
+-                        </auto_escaping>
+-                        <auto_correction translate="label">
+-                            <label>Auto-correction</label>
+-                            <frontend_type>select</frontend_type>
+-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <sort_order>8</sort_order>
+-                            <show_in_default>1</show_in_default>
+-                            <show_in_website>1</show_in_website>
+-                            <show_in_store>1</show_in_store>
+-                        </auto_correction>
+                         <stop_to_first_match translate="label">
+                             <label>Stop to first match</label>
+                             <frontend_type>select</frontend_type>
+@@ -224,24 +188,6 @@
+                             <show_in_website>1</show_in_website>
+                             <show_in_store>1</show_in_store>
+                         </debug>
+-                        <auto_escaping translate="label">
+-                            <label>Auto-escaping</label>
+-                            <frontend_type>select</frontend_type>
+-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <sort_order>7</sort_order>
+-                            <show_in_default>1</show_in_default>
+-                            <show_in_website>1</show_in_website>
+-                            <show_in_store>1</show_in_store>
+-                        </auto_escaping>
+-                        <auto_correction translate="label">
+-                            <label>Auto-correction</label>
+-                            <frontend_type>select</frontend_type>
+-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+-                            <sort_order>8</sort_order>
+-                            <show_in_default>1</show_in_default>
+-                            <show_in_website>1</show_in_website>
+-                            <show_in_store>1</show_in_store>
+-                        </auto_correction>
+                         <stop_to_first_match translate="label">
+                             <label>Stop to first match</label>
+                             <frontend_type>select</frontend_type>

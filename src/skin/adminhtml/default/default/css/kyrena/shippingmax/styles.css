@@ -1,6 +1,6 @@
 /**
  * Created V/12/04/2019
- * Updated S/14/01/2023
+ * Updated V/10/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -44,6 +44,22 @@ img.logo.shippingmax {
 	float:right; display:inline-block; margin:0 0 0.5em 2em; max-width:150px; height:50px;
 	image-rendering:optimizeQuality; image-rendering:-moz-crisp-edges;
 }
+
+span.shippingmax.autocorrect { font-weight:normal; }
+
+span.shippingmax.autocorrect input {
+	display:inline; margin:0; padding:0; vertical-align:inherit;
+	font-size:inherit; text-decoration:underline; cursor:pointer; color:currentColor; border:0; background:none;
+}
+
+span.shippingmax.diff {
+	display:block; padding:0.7em; white-space:pre-wrap; line-height:12px;
+	font-weight:normal; color:#666; border:1px solid #DADFE0; background-color:#F6F6F6;
+}
+
+span.shippingmax.diff * { display:inline-block; width:100%; text-decoration:none; }
+span.shippingmax.diff del { color:#555; background-color:#FCC; }
+span.shippingmax.diff ins { background-color:#CFC; }
 
 div.comment.shippingmax { padding-bottom:1em; }
 div.comment.shippingmax + table { clear:both; }

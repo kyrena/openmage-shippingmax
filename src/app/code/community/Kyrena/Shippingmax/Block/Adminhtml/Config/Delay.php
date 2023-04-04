@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated V/03/02/2023
+ * Updated V/10/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -129,7 +129,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 						// 2/ réessaye avec des codes postaux trouvés dans la config du mode de livraison
 						// car certains modes de livraisons sont limités à certains codes postaux
 						$cps = Mage::getStoreConfig('carriers/'.$code.(str_contains($code, 'owebiashipping') ? '/config' : '/owebia_config'), $storeId);
-						$cps = Mage::getModel('shippingmax/configparser')->init($cps, true)->extractAllPostcodes($country);
+						$cps = Mage::getModel('shippingmax/configparser')->init($cps, false)->extractAllPostcodes($country); // no auto_correction
 
 						foreach ($cps as $grp) {
 							foreach ($grp as $cp) {

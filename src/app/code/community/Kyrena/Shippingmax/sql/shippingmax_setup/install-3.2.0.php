@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/03/02/2023
+ * Updated V/10/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -60,6 +60,8 @@ try {
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	');
 	// DELETE FROM '.$this->getTable('core_config_data').' WHERE path LIKE "customer/address_templates/%";
+	$this->run('DELETE FROM '.$this->getTable('core_config_data').' WHERE path LIKE "carriers/%/auto_escaping"');
+	$this->run('DELETE FROM '.$this->getTable('core_config_data').' WHERE path LIKE "carriers/%/auto_correction"');
 
 	$table = $this->getTable('sales_flat_order');
 	if (!$this->getConnection()->tableColumnExists($table, 'estimated_shipping_date'))

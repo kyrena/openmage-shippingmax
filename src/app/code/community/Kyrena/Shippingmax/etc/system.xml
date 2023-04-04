@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/12/04/2019
- * Updated V/03/02/2023
+ * Updated M/14/02/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -6108,8 +6108,8 @@
 			<tab>sales</tab>
 			<sort_order>319</sort_order>
 			<show_in_default>1</show_in_default>
-			<show_in_website>0</show_in_website>
-			<show_in_store>0</show_in_store>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
 			<groups>
 				<shippingmax_help>
 					<frontend_model>shippingmax/adminhtml_config_help</frontend_model>
@@ -6122,8 +6122,8 @@
 					<label>General</label>
 					<sort_order>-1</sort_order>
 					<show_in_default>1</show_in_default>
-					<show_in_website>0</show_in_website>
-					<show_in_store>0</show_in_store>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
 					<fields>
 						<enabled translate="label comment">
 							<label>Enable</label>
@@ -6147,10 +6147,20 @@
 								<enabled>0</enabled>
 							</depends>
 						</remove>
-						<cutoff translate="label">
-							<label>Cut-off time for same day shipment</label>
-							<validate>required-entry validate-number validate-number-range-0-24</validate>
+						<add_for_all translate="label comment">
+							<label>Add days for all methods</label>
+							<comment>Leave empty to do nothing.</comment>
+							<validate>validate-number</validate>
 							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</add_for_all>
+						<cutoff translate="label comment">
+							<label>Cut-off time for same day shipment</label>
+							<comment>Relative to the default time zone.</comment>
+							<validate>required-entry validate-number validate-number-range-0-24</validate>
+							<sort_order>4</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
 							<show_in_store>0</show_in_store>
