@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/17/07/2020
- * Updated V/10/02/2023
+ * Updated V/14/04/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -56,7 +56,7 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 
 	protected function getArrayConfig() {
 
-		$storeIds = Mage::getResourceModel('core/store_collection')->setOrder('name', 'asc')->getAllIds();
+		$storeIds = array_filter(Mage::getResourceModel('core/store_collection')->setOrder('name', 'asc')->getAllIds()); // with, then without admin
 		$dromcom  = $this->helper('shippingmax')->getFranceDromCom(false);
 		$items    = [];
 
@@ -72,8 +72,6 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Delay extends Mage_Adminhtml_Blo
 		];
 
 		foreach ($storeIds as $storeId) {
-
-			if (empty($storeId)) continue;
 
 			$carriers  = Mage::getSingleton('shipping/config')->getActiveCarriers($storeId);
 			$countries = explode(',', Mage::getStoreConfig('general/country/allow', $storeId));

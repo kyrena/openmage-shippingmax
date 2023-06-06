@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated S/14/01/2023
+ * Updated V/02/06/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -27,6 +27,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 	protected $_maxPoints = 50;
 	protected $_cacheLifetime = 3600;       // 1 heure en secondes
 	protected $_fullCacheLifetime = 432000; // 5 jours en secondes
+	protected $_fullCacheHourForUpdate;     // UTC hour or null for auto
 	protected $_zipOnly = false;
 
 	// openmage
@@ -155,7 +156,7 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 
 			// charge les données depuis le cache fichier s'il n'a pas expiré
 			// puis sauvegarde dans le cache openmage
-			if ((empty($items) || !is_array($items)) && is_file($cache) && (filemtime($cache) > (time() - $life))) {
+			if ((empty($items) || !is_array($items)) && $this->isFullCacheFileValid()) {
 
 				$items = file_get_contents($cache);
 				$items = empty($items) ? null : @unserialize($items, ['allowed_classes' => false]);
@@ -290,6 +291,30 @@ abstract class Kyrena_Shippingmax_Model_Carrier extends Owebia_Shipping2_Model_C
 		}
 
 		return [];
+	}
+
+	public function isFullCacheFileValid(bool $cron = false) {
+
+		$cache = $this->getCacheFile();
+		$life  = $this->getFullCacheLifetime() - ($cron ? 600 : 0); // 10 minutes
+		$valid = false;
+
+		if (is_file($cache)) {
+			if ($cron && !empty($this->_fullCacheHourForUpdate)) {
+				if (date('G') >= $this->_fullCacheHourForUpdate) {
+					if (filemtime($cache) > mktime($this->_fullCacheHourForUpdate, 0, 0))
+						$valid = true;
+				}
+				else if (filemtime($cache) > (time() - $life)) {
+					$valid = true;
+				}
+			}
+			else if (filemtime($cache) > (time() - $life)) {
+				$valid = true;
+			}
+		}
+
+		return $valid;
 	}
 
 	protected function runCurl($ch, bool $json = true) {

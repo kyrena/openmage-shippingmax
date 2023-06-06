@@ -1412,7 +1412,7 @@ class Owebia_Shipping2_Model_ConfigParser
             }
             if (in_array($propertyName, $availableKeys)
                 || strpos($propertyName, '_') === 0
-                || in_array($object['type'], ['data', 'meta'])
+                || in_array($object['type'] ?? '', ['data', 'meta'])
             ) {
                 if (isset($propertyValue)) {
                     $row[$propertyName] = ['value' => $propertyValue, 'original_value' => $propertyValue];
@@ -1623,7 +1623,7 @@ class Owebia_Shipping2_Model_ConfigParser
                 }
                 break;
             case 'sum':
-                $returnValue = ($returnValue ?? 0) + $value * $item->qty;
+                $returnValue = (float)($returnValue ?? 0) + $value * $item->qty;
                 break;
             case 'count distinct':
                 if (!isset($returnValue)) {
@@ -1693,7 +1693,7 @@ class Owebia_Shipping2_Model_ConfigParser
 
                 if ($evalResult) {
                     if ($operation == 'count') {
-                        $returnValue = ($returnValue ?? 0) + $item->qty;
+                        $returnValue = (float)($returnValue ?? 0) + $item->qty;
                     } else {
                         $value = $this->_getItemProperty($item, $reference);
                         $this->debug(

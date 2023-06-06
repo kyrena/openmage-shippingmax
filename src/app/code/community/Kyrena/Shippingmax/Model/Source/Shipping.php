@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated J/20/10/2022
+ * Updated L/24/04/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -28,10 +28,10 @@ class Kyrena_Shippingmax_Model_Source_Shipping {
 
 			$this->_options = [];
 
-			$storeId = $this->getStoreId();
-			$codes   = array_keys(Mage::getConfig()->getNode('default/carriers')->asArray());
+			$storeId  = $this->getStoreId();
+			$carriers = array_keys(Mage::getConfig()->getNode('default/carriers')->asArray());
 
-			foreach ($codes as $code) {
+			foreach ($carriers as $code) {
 				$text = Mage::getStoreConfig('carriers/'.$code.'/title', $storeId);
 				$this->_options[$code] = ['value' => $code, 'label' => empty($text) ? $code : $code.' / '.$text];
 			}

@@ -128,8 +128,8 @@ License: MIT (https://opensource.org/licenses/mit)
 Files: /skin/frontend/base/default/*/kyrena/shippingmax/leaflet.min.*
 Files: /skin/*/*/default/images/kyrena/shippingmax/layers*.png
 Files: /skin/*/*/default/images/kyrena/shippingmax/marker*.png
-Source: https://leafletjs.com/ (1.9.3)
-Copyright: 2010-2022 Vladimir Agafonkin
+Source: https://leafletjs.com/ (1.9.4)
+Copyright: 2010-2023 Vladimir Agafonkin
 Copyright: 2010-2011 CloudMade
 License: BSD 2-clauses (https://opensource.org/licenses/BSDplusPatent)
 

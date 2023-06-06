@@ -95,7 +95,7 @@ diff -r -u -w Shipping2/Model/AddressFilterParser.php Shipping2/Model/AddressFil
 -
          $this->_input = $input;
 -        $this->length = strlen($this->_input);
-+        $this->_length = strlen($this->_input);
++        $this->_length = strlen((string)$this->_input);
          // look at each character
          $this->_join = ' && ';
 -        for ($this->_position = 0; $this->_position < $this->length; $this->_position++) {
@@ -780,8 +780,9 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
              }
              if (in_array($propertyName, $availableKeys)
 -                || substr($propertyName, 0, 1) == '_'
+-                || in_array($object['type'], ['data', 'meta'])
 +                || strpos($propertyName, '_') === 0
-                 || in_array($object['type'], ['data', 'meta'])
++                || in_array($object['type'] ?? '', ['data', 'meta'])
              ) {
                  if (isset($propertyValue)) {
                      $row[$propertyName] = ['value' => $propertyValue, 'original_value' => $propertyValue];
@@ -839,7 +840,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
                  break;
              case 'sum':
 -                $returnValue = (isset($returnValue) ? $returnValue : 0) + $value * $item->qty;
-+                $returnValue = ($returnValue ?? 0) + $value * $item->qty;
++                $returnValue = (float)($returnValue ?? 0) + $value * $item->qty;
                  break;
              case 'count distinct':
                  if (!isset($returnValue)) {
@@ -851,7 +852,7 @@ diff -r -u -w Shipping2/Model/ConfigParser.php Shipping2/Model/ConfigParser.php
 +                if ($evalResult) {
                      if ($operation == 'count') {
 -                        $returnValue = (isset($returnValue) ? $returnValue : 0) + $item->qty;
-+                        $returnValue = ($returnValue ?? 0) + $item->qty;
++                        $returnValue = (float)($returnValue ?? 0) + $item->qty;
                      } else {
                          $value = $this->_getItemProperty($item, $reference);
                          $this->debug(
@@ -1230,6 +1231,15 @@ diff -r -u -w Shipping2/etc/system.xml Shipping2/etc/system.xml
                          <stop_to_first_match translate="label">
                              <label>Stop to first match</label>
                              <frontend_type>select</frontend_type>
+@@ -213,7 +195,7 @@
+         <owebia_shipping2>
+             <label>Owebia Shipping</label>
+             <tab>sales</tab>
+-            <sort_order>100</sort_order>
++            <sort_order>311</sort_order>
+             <show_in_default>1</show_in_default>
+             <show_in_website>1</show_in_website>
+             <show_in_store>1</show_in_store>
 @@ -224,24 +188,6 @@
                              <show_in_website>1</show_in_website>
                              <show_in_store>1</show_in_store>

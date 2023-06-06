@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/06/11/2020
- * Updated M/15/11/2022
+ * Updated V/02/06/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -21,9 +21,10 @@
 class Kyrena_Shippingmax_Model_Carrier_Colisprivpts extends Kyrena_Shippingmax_Model_Carrier {
 
 	protected $_code = 'shippingmax_colisprivpts';
-	protected $_api  = true;
-	protected $_fullCacheLifetime = 21600; // 6 heures en secondes
 	protected $_full; // isFull()
+	protected $_api  = true;
+	protected $_fullCacheLifetime = 86400;  // 24 heures en secondes
+	protected $_fullCacheHourForUpdate = 3; // UTC hour
 
 	public function isFull() {
 

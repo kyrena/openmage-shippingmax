@@ -39,7 +39,7 @@ class Owebia_Shipping2_Model_AddressFilterParser
     public function parse($input)
     {
         $this->_input = $input;
-        $this->_length = strlen($this->_input);
+        $this->_length = strlen((string)$this->_input);
         // look at each character
         $this->_join = ' && ';
         for ($this->_position = 0; $this->_position < $this->_length; $this->_position++) {

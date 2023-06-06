@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/02/02/2021
- * Updated M/15/11/2022
+ * Updated V/02/06/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -23,7 +23,8 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 	protected $_code = 'shippingmax_przesodbpk';
 	protected $_full = true;
 	protected $_api  = true;
-	protected $_fullCacheLifetime = 86400; // 24 heures en secondes
+	protected $_fullCacheLifetime = 86400;  // 24 heures en secondes
+	protected $_fullCacheHourForUpdate = 3; // UTC hour
 
 	public function loadItemsFromApi(object $address) {
 
@@ -32,16 +33,53 @@ class Kyrena_Shippingmax_Model_Carrier_Przesodbpk extends Kyrena_Shippingmax_Mod
 		if ($limit < 1073741824)
 			ini_set('memory_limit', '1G');
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $this->getConfigData('api_url'));
+		$ch  = curl_init();
+		$url = $this->getConfigData('api_url');
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // v5
 
 		$items   = [];
 		$results = $this->runCurl($ch);
 
 		//echo '<pre>';print_r(array_slice($results['data'], 0, 20));exit;
+		// https://docs.packetery.com/01-pickup-point-selection/04-branch-export-v4.html
 		if (!empty($results['data']) && is_array($results['data'])) {
 
 			foreach ($results['data'] as $result) {
+
+				if (empty($result['id']) || empty($result['status']['statusId']) || ($result['status']['statusId'] != 1))
+					continue;
+
+				$items[$result['id']] = [
+					'id'          => $result['id'],
+					'lat'         => (float) str_replace(',', '.', $result['latitude']),
+					'lng'         => (float) str_replace(',', '.', $result['longitude']),
+					'name'        => $result['name'],
+					'street'      => implode("\n", array_filter([$result['street'], $result['place']])),
+					'postcode'    => $result['zip'],
+					'city'        => $result['city'],
+					'region'      => $result['region'] ?? null,
+					'country_id'  => strtoupper($result['country']),
+					'description' => $this->getDescription($result['openingHours']['regular']),
+					//'max_weight'  => $result['maxWeight'] ?? null, // kg
+					'cod'         => ($result['creditCardPayment'] == 'yes') && (stripos($result['name'], 'ZBOX') === false) && (stripos($result['name'], 'Z BOX') === false) && (stripos($result['name'], 'Z-BOX') === false) && (stripos($result['name'], 'ALZABOX') === false) && (stripos($result['name'], 'ALZA-BOX') === false) && (stripos($result['name'], 'ALZA BOX') === false),
+				];
+			}
+		}
+		//echo '<pre>';print_r(array_slice($results, 0, 20));exit;
+		// https://docs.packetery.com/01-pickup-point-selection/05-branch-export-v5.html
+		// The feed branch.json contains only pickup points / The boxes is available in the separated box.json feed.
+		else if (!empty($results) && is_array($results)) {
+
+			usleep(10000); // 0.1s
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, str_replace('branch', 'box', $url));
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // v5
+			$boxes = $this->runCurl($ch);
+			if (!empty($boxes) && is_array($boxes) && (count($boxes) != count($results)))
+				$results = array_merge($results, $boxes);
+
+			foreach ($results as $result) {
 
 				if (empty($result['id']) || empty($result['status']['statusId']) || ($result['status']['statusId'] != 1))
 					continue;

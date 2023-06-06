@@ -1,7 +1,7 @@
 <?php
 /**
  * Created J/04/02/2021
- * Updated J/29/12/2022
+ * Updated L/24/04/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -39,7 +39,8 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Blo
 			$txt = $this->__('Last pick up stations file update on the <em>%s</em> (cron job #<a %s>%d</a>).',
 				Mage::getSingleton('core/locale')->date($lastjob->getData('finished_at'))->toString(Zend_Date::DATETIME_LONG),
 				'href="'.$this->helper('adminhtml')->getUrl('*/cronlog_history/view', ['id' => $lastjob->getId()]).'"',
-				$lastjob->getId());
+				$lastjob->getId()
+			);
 			$summary = [$this->helper('core')->isModuleEnabled('Luigifab_Cronlog') ? $txt : strip_tags($txt)];
 		}
 		else {
@@ -50,17 +51,17 @@ class Kyrena_Shippingmax_Block_Adminhtml_Config_Files extends Mage_Adminhtml_Blo
 		$files = glob(Mage::getBaseDir('var').'/shippingmax/*.dat');
 		foreach ($files as $file) {
 			try {
-				$name   = basename($file);
-				$pos    = str_contains($name, '_') ? strrpos($file, '_') : false;
-				$module = empty($pos) ? 'shippingmax' : substr($file, 0, $pos);
-				$model  = Mage::getSingleton('shipping/config')->getCarrierInstance($module.'_'.substr($name, 0, -4));
-				if ($model) {
+				$name = basename($file);
+				$pos  = str_contains($name, '_') ? strrpos($file, '_') : false;
+				$mod  = empty($pos) ? 'shippingmax' : substr($file, 0, $pos);
+				$carrier = Mage::getSingleton('shipping/config')->getCarrierInstance($mod.'_'.substr($name, 0, -4));
+				if ($carrier) {
 					$summary[] = sprintf('%s<br />&nbsp; <em>%s = %s k<br />&nbsp; file lifetime: %d hours, %d day(s)</em>',
 						$name,
 						$this->formatDate(date('Y-m-d H:i:s', filemtime($file)), Mage_Core_Model_Locale::FORMAT_TYPE_SHORT, true),
 						$this->helper('shippingmax')->getNumber(filesize($file) / 1024, ['precision' => 2]),
-						$model->getFullCacheLifetime() / 60 / 60,
-						$model->getFullCacheLifetime() / 60 / 60 / 24
+						$carrier->getFullCacheLifetime() / 60 / 60,
+						$carrier->getFullCacheLifetime() / 60 / 60 / 24
 					);
 				}
 			}

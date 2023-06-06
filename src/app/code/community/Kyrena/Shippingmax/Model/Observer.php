@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated V/03/03/2023
+ * Updated L/24/04/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -304,17 +304,18 @@ class Kyrena_Shippingmax_Model_Observer {
 		}
 	}
 
-	// CRON shippingmax_update_files
+	// CRON shippingmax_update_files (every hour)
 	public function updateFullFiles($cron = null, $force = false) {
 
-		$app = Mage::app();
-		$msg = [];
+		$help = Mage::helper('shippingmax');
+		$app  = Mage::app();
+		$msg  = [];
 
-		$help     = Mage::helper('shippingmax');
-		$storeIds = Mage::getResourceModel('core/store_collection')->getAllIds();
-		$carriers = Mage::getSingleton('shipping/config')->getAllCarriers();
-		$address  = new Varien_Object(['lat' => -1, 'lng' => -1]);
 		$hasError = false;
+		$address  = new Varien_Object(['lat' => -1, 'lng' => -1]);
+		$carriers = Mage::getSingleton('shipping/config')->getAllCarriers();
+		$storeIds = Mage::getResourceModel('core/store_collection')->getAllIds(); // with admin
+		sort($storeIds);
 
 		foreach ($carriers as $code => $carrier) {
 
@@ -333,9 +334,7 @@ class Kyrena_Shippingmax_Model_Observer {
 							continue;
 
 						$cache = $carrier->getCacheFile();
-						$life  = $carrier->getFullCacheLifetime() - 600; // 10 minutes
-
-						if ($force || !is_file($cache) || (filemtime($cache) < (time() - $life))) {
+						if ($force || !$carrier->isFullCacheFileValid(true)) {
 
 							$dir = dirname($cache);
 							if (!is_dir($dir))

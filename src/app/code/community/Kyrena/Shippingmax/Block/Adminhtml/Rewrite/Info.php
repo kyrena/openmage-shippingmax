@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/04/2019
- * Updated J/02/03/2023
+ * Updated M/02/05/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -64,10 +64,11 @@ class Kyrena_Shippingmax_Block_Adminhtml_Rewrite_Info extends Mage_Adminhtml_Blo
 					$label = '';
 
 				// essaye d'afficher le libellé du mode de livraison dans la langue de l'utilisateur du back-office
-				$storeIds = array_filter(Mage::getResourceModel('core/store_collection')->getAllIds());
+				$storeIds = array_filter(Mage::getResourceModel('core/store_collection')->getAllIds()); // with, then without admin
 				foreach ($storeIds as $storeId) {
 					if ($locale == Mage::getStoreConfig('general/locale/code', $storeId)) {
-						$label = (empty($label) ? '' : $label.' / ').Mage::getStoreConfig('carriers/'.$code.'/title', $storeId);
+						$lebal = Mage::getStoreConfig('carriers/'.$code.'/title', $storeId);
+						$label = ((empty($label) || ($label == $lebal)) ? '' : $label.' / ').$lebal;
 						break;
 					}
 				}

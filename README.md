@@ -11,7 +11,7 @@ Composer dependencies:
 
 Included dependencies:
 * [owebia/shipping](https://github.com/owebia/magento1-module-advanced-shipping) (2.6.10-lite, without jquery/editor/phpparser/doc)
-* [leaflet](https://leafletjs.com/) (1.9.3)
+* [leaflet](https://leafletjs.com/) (1.9.4)
 
 External services:
 * [Nominatim](https://nominatim.org/): addresses geocoding (results are stored in database)
@@ -95,7 +95,7 @@ To display delivery times, you must edit your template with:
 
 ## Copyright and Credits
 
-- Current version: 3.2.0 (04/04/2023)
+- Current version: 3.3.0 (06/06/2023)
 - Compatibility: OpenMage 19.x / 20.x / 21.x, PHP 7.2 / 7.3 / 7.4 / 8.0 / 8.1 / 8.2
 - Client compatibility: Firefox 36+, Chrome 32+, Opera 19+, Edge 16+, Safari 9+
 - Translations: English (en), French (fr-FR/fr-CA), German (de), Italian (it), Portuguese (pt-PT/pt-BR), Spanish (es) / Chinese (zh), Czech (cs), Dutch (nl), Greek (el), Hungarian (hu), Japanese (ja), Polish (pl), Romanian (ro), Russian (ru), Slovak (sk), Turkish (tr), Ukrainian (uk)

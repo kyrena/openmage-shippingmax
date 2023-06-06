@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated J/02/02/2023
+ * Updated D/04/06/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -303,6 +303,9 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	public function updateAction() {
 
+		if (!$this->_validateFormKey())
+			return;
+
 		$request  = $this->getRequest();
 		$code     = $request->getParam('code');
 		$city     = $request->getPost('city');
@@ -396,6 +399,9 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 
 	public function saveAction() {
 
+		if (!$this->_validateFormKey())
+			return;
+
 		$code = $this->getRequest()->getParam('code');
 		$id   = $this->getRequest()->getPost('id');
 
@@ -461,6 +467,27 @@ class Kyrena_Shippingmax_MapController extends Mage_Core_Controller_Front_Action
 		else {
 			$this->_redirect('*/*/index', ['code' => $code]);
 		}
+	}
+
+	protected function _validateFormKey() {
+
+		if (!parent::_validateFormKey()) {
+
+			if ($this->isAjax()) {
+				$this->getResponse()
+					->setHttpResponseCode(200)
+					->setHeader('Content-Type', 'application/json', true)
+					->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+					->setBody(json_encode(['status' => false, 'error' => 'refresh', 'type' => 'form_key']));
+			}
+			else {
+				$this->_redirect('*/*/index', ['code' => $code]);
+			}
+
+			return false;
+		}
+
+		return true;
 	}
 
 
