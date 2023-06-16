@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/12/04/2019
- * Updated L/24/04/2023
+ * Updated L/05/06/2023
  *
  * Copyright 2019-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * Copyright 2019-2022 | Jérôme Siau <jerome~cellublue~com>
@@ -311,7 +311,6 @@ class Kyrena_Shippingmax_Model_Observer {
 		$app  = Mage::app();
 		$msg  = [];
 
-		$hasError = false;
 		$address  = new Varien_Object(['lat' => -1, 'lng' => -1]);
 		$carriers = Mage::getSingleton('shipping/config')->getAllCarriers();
 		$storeIds = Mage::getResourceModel('core/store_collection')->getAllIds(); // with admin
@@ -370,9 +369,6 @@ class Kyrena_Shippingmax_Model_Observer {
 							$msg[] = '- '.$code.': already up to date';
 						}
 
-						if (is_object($cron))
-							$cron->setData('messages', implode("\n", $msg))->save();
-
 						// global (ignore les autres stores)
 						continue 2;
 					}
@@ -380,20 +376,28 @@ class Kyrena_Shippingmax_Model_Observer {
 					$msg[] = '- '.$code.': disabled';
 				}
 				catch (Throwable $t) {
-					$hasError = true;
 					Mage::logException($t);
 					$msg[] = '- '.$code.': '.$t->getMessage();
+					if (is_object($cron))
+						$cron->setIsError(true);
 				}
+
+				if (is_object($cron))
+					$cron->setData('messages', $this->getCronMessage($msg))->save();
 			}
 		}
 
 		if (is_object($cron)) {
-			$cron->setData('messages', 'memory: '.((int) (memory_get_peak_usage(true) / 1024 / 1024)).'M (max: '.ini_get('memory_limit').')'."\n".implode("\n", $msg));
-			if ($hasError) // pour le statut du cron
+			$cron->setData('messages', $this->getCronMessage($msg));
+			if (!method_exists($cron, 'getIsError') && ($cron->getIsError() === true)) // without PR 3310
 				Mage::throwException('At least one error occurred while downloading files.'."\n\n".$cron->getData('messages')."\n\n");
 		}
 
 		return $msg;
+	}
+
+	protected function getCronMessage($msg) {
+		return 'memory: '.((int) (memory_get_peak_usage(true) / 1024 / 1024)).'M (max: '.ini_get('memory_limit').')'."\n".implode("\n", $msg);
 	}
 
 	// recherche l'id de la région

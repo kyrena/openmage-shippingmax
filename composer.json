@@ -35,7 +35,7 @@
         "ext-mbstring": "*",
         "ext-simplexml": "*",
         "ext-soap": "*"
-	},
+    },
     "replace": {
         "kyrena/openmage-shippingmax-alone": "*",
         "owebia/magento1-module-advanced-shipping": "*",
